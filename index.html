@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root {
-            --bg: #05060a;
-            --accent: #6b8bff;
-            --accent-soft: rgba(107, 139, 255, 0.25);
-            --text: #f5f7ff;
-            --muted: #8b90a5;
+            --bg: #050712;
+            --bg-deep: #02030a;
+            --accent: #5f8bff;
+            --accent-soft: rgba(95, 139, 255, 0.35);
+            --text: #f7f8ff;
+            --muted: #9aa0c0;
             --danger: #ff4b6b;
+            --border-soft: rgba(255, 255, 255, 0.16);
+            --border-faint: rgba(255, 255, 255, 0.08);
+            --white-soft: rgba(255, 255, 255, 0.7);
         }
 
         * {
@@ -22,17 +26,19 @@
         }
 
         body {
-            background: radial-gradient(circle at top, #15182a 0, #05060a 55%, #020308 100%);
-            color: var(--text);
             height: 100vh;
             overflow: hidden;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top, #151b3a 0, #050712 45%, #02030a 100%);
         }
 
         /* Splash / boot screen */
         #splash {
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at top, #1b2140 0, #05060a 60%, #000 100%);
+            background:
+                radial-gradient(circle at top, #1f2648 0, #050712 55%, #02030a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -44,33 +50,51 @@
         }
 
         #splashLogo {
-            width: 140px;
-            height: 140px;
+            width: 150px;
+            height: 150px;
             border-radius: 32px;
-            border: 2px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(5, 7, 18, 0.98));
             box-shadow:
-                0 0 40px rgba(107, 139, 255, 0.45),
-                0 0 120px rgba(107, 139, 255, 0.25);
+                0 0 0 1px rgba(255, 255, 255, 0.12),
+                0 0 40px var(--accent-soft),
+                0 0 120px rgba(0, 0, 0, 0.9);
+        }
+
+        #splashLogo::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background: conic-gradient(
+                from 0deg,
+                rgba(95, 139, 255, 0.0),
+                rgba(95, 139, 255, 0.7),
+                rgba(95, 139, 255, 0.0)
+            );
+            opacity: 0.6;
+            mix-blend-mode: screen;
+            animation: spinGlow 4s linear infinite;
         }
 
         #splashGlyph {
             position: relative;
-            font-size: 42px;
+            font-size: 44px;
             font-weight: 800;
-            letter-spacing: 0.16em;
+            letter-spacing: 0.18em;
+            color: var(--white-soft);
         }
 
         #splashTitle {
             font-size: 22px;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: var(--text);
-            opacity: 0.9;
+            color: var(--white-soft);
         }
 
         #splashSubtitle {
@@ -94,7 +118,7 @@
             position: absolute;
             inset: 0;
             width: 40%;
-            background: linear-gradient(90deg, rgba(107, 139, 255, 0.1), rgba(107, 139, 255, 0.9));
+            background: linear-gradient(90deg, rgba(95, 139, 255, 0.1), rgba(95, 139, 255, 0.9));
             border-radius: inherit;
             animation: splashProgress 1.8s ease-in-out infinite;
         }
@@ -110,6 +134,10 @@
                 opacity: 0;
                 visibility: hidden;
             }
+        }
+
+        @keyframes spinGlow {
+            to { transform: rotate(360deg); }
         }
 
         /* Desktop */
@@ -163,11 +191,12 @@
             font-size: 12px;
             padding: 6px 14px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 6, 10, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(5, 7, 18, 0.98));
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.06),
-                0 0 18px rgba(107, 139, 255, 0.35);
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                0 0 18px var(--accent-soft);
             letter-spacing: 0.12em;
             text-transform: uppercase;
             display: inline-flex;
@@ -183,11 +212,12 @@
         }
 
         #readmeLink a:hover {
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.16), rgba(5, 6, 10, 0.95));
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 7, 18, 0.98));
             transform: translateY(-1px);
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.12),
-                0 0 26px rgba(107, 139, 255, 0.6);
+                0 0 0 1px rgba(255, 255, 255, 0.16),
+                0 0 26px var(--accent-soft);
         }
 
         /* Title */
@@ -195,27 +225,29 @@
             pointer-events: auto;
             padding: 6px 16px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), rgba(5, 6, 10, 0.9));
+            border: 1px solid var(--border-soft);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 7, 18, 0.98));
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.04),
-                0 0 24px rgba(0, 0, 0, 0.8);
+                0 0 0 1px var(--border-faint),
+                0 0 24px rgba(0, 0, 0, 0.9);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
         #titleGlyph {
-            width: 22px;
-            height: 22px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            width: 24px;
+            height: 24px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
             font-weight: 700;
             letter-spacing: 0.08em;
+            color: var(--white-soft);
         }
 
         #titleText {
@@ -240,8 +272,9 @@
             font-size: 12px;
             padding: 6px 14px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 6, 10, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(5, 7, 18, 0.98));
             color: var(--text);
             letter-spacing: 0.12em;
             text-transform: uppercase;
@@ -250,8 +283,8 @@
             gap: 6px;
             cursor: pointer;
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.06),
-                0 0 18px rgba(107, 139, 255, 0.35);
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                0 0 18px var(--accent-soft);
             transition: 0.18s ease;
         }
 
@@ -261,11 +294,12 @@
         }
 
         #settingsButton button:hover {
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.16), rgba(5, 6, 10, 0.95));
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 7, 18, 0.98));
             transform: translateY(-1px);
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.12),
-                0 0 26px rgba(107, 139, 255, 0.6);
+                0 0 0 1px rgba(255, 255, 255, 0.16),
+                0 0 26px var(--accent-soft);
         }
 
         @keyframes fadeIn {
@@ -286,13 +320,13 @@
         /* Desktop grid */
         #desktopGrid {
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--border-soft);
             background:
-                radial-gradient(circle at top left, rgba(107, 139, 255, 0.18), transparent 55%),
-                radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.9), #05060a 70%);
+                radial-gradient(circle at top left, rgba(95, 139, 255, 0.22), transparent 55%),
+                radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.9), #050712 70%);
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.04),
-                0 24px 80px rgba(0, 0, 0, 0.9);
+                0 0 0 1px var(--border-faint),
+                0 24px 80px rgba(0, 0, 0, 0.95);
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -329,7 +363,7 @@
             z-index: 1;
             margin-top: 8px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 18px;
         }
 
@@ -337,11 +371,13 @@
             position: relative;
             border-radius: 18px;
             padding: 12px 10px 10px 10px;
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), rgba(5, 6, 10, 0.9));
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.10), rgba(5, 7, 18, 0.98));
+            border: 1px solid rgba(255, 255, 255, 0.35);
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.04),
-                0 10px 30px rgba(0, 0, 0, 0.8);
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                0 10px 30px rgba(0, 0, 0, 0.9),
+                0 0 20px rgba(95, 139, 255, 0.25);
             cursor: pointer;
             transition: 0.16s ease;
         }
@@ -349,21 +385,24 @@
         .iconCard:hover {
             transform: translateY(-3px);
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.12),
-                0 18px 40px rgba(0, 0, 0, 0.95);
+                0 0 0 1px rgba(255, 255, 255, 0.16),
+                0 18px 40px rgba(0, 0, 0, 0.98),
+                0 0 26px rgba(95, 139, 255, 0.45);
         }
 
         .iconGlyph {
-            width: 40px;
-            height: 40px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 18px;
             margin-bottom: 6px;
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 6, 10, 0.9));
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 7, 18, 0.98));
+            color: var(--white-soft);
         }
 
         .iconTitle {
@@ -389,11 +428,12 @@
 
         .panel {
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.04), rgba(5, 6, 10, 0.96));
+            border: 1px solid var(--border-soft);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 7, 18, 0.98));
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.04),
-                0 18px 60px rgba(0, 0, 0, 0.9);
+                0 0 0 1px var(--border-faint),
+                0 18px 60px rgba(0, 0, 0, 0.95);
             padding: 14px;
         }
 
@@ -430,13 +470,15 @@
             font-size: 11px;
             padding: 6px 8px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.03);
             cursor: pointer;
             transition: 0.15s ease;
+            border: 1px solid transparent;
         }
 
         .recentItem:hover {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.18);
         }
 
         .recentName {
@@ -464,11 +506,12 @@
             width: 380px;
             max-width: 90vw;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 6, 10, 0.98));
+            border: 1px solid var(--border-soft);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.10), rgba(5, 7, 18, 0.98));
             box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.06),
-                0 24px 80px rgba(0, 0, 0, 0.95);
+                0 0 0 1px var(--border-faint),
+                0 24px 80px rgba(0, 0, 0, 0.98);
             padding: 16px 16px 14px 16px;
         }
 
@@ -513,8 +556,8 @@
             font-size: 10px;
             padding: 3px 8px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(5, 6, 10, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(5, 7, 18, 0.98);
             color: var(--muted);
             cursor: pointer;
             transition: 0.14s ease;
@@ -527,13 +570,13 @@
         }
 
         .chip:hover {
-            border-color: rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.45);
         }
 
         .dangerZone {
             margin-top: 10px;
             padding-top: 8px;
-            border-top: 1px dashed rgba(255, 255, 255, 0.12);
+            border-top: 1px dashed rgba(255, 255, 255, 0.18);
         }
 
         .dangerButton {
@@ -542,16 +585,16 @@
             font-size: 11px;
             padding: 6px 10px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(40, 0, 10, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(40, 0, 10, 0.95);
             color: var(--danger);
             cursor: pointer;
             transition: 0.16s ease;
         }
 
         .dangerButton:hover {
-            border-color: rgba(255, 75, 107, 0.8);
-            box-shadow: 0 0 18px rgba(255, 75, 107, 0.4);
+            border-color: rgba(255, 75, 107, 0.9);
+            box-shadow: 0 0 18px rgba(255, 75, 107, 0.45);
         }
 
         .field {
@@ -572,8 +615,8 @@
             font-size: 11px;
             padding: 5px 8px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(5, 6, 10, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(5, 7, 18, 0.98);
             color: var(--text);
             outline: none;
         }
@@ -589,15 +632,16 @@
             font-size: 11px;
             padding: 6px 10px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.16), rgba(5, 6, 10, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 7, 18, 0.98));
             color: var(--text);
             cursor: pointer;
             transition: 0.16s ease;
         }
 
         .primaryButton:hover {
-            border-color: rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.45);
             box-shadow: 0 0 18px var(--accent-soft);
         }
 
@@ -617,8 +661,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), rgba(5, 6, 10, 0.98));
+            border-bottom: 1px solid var(--border-soft);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 7, 18, 0.98));
         }
 
         #gameOverlayTitle {
@@ -651,7 +696,7 @@
             font-size: 9px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.18);
+            color: rgba(255, 255, 255, 0.22);
         }
 
         @media (max-width: 900px) {
@@ -710,7 +755,6 @@
                 <div id="desktopHeader">
                     <div id="desktopHeaderTitle">Desktop</div>
                     <div id="desktopHeaderActions">
-                        <!-- No admin shortcut hint here -->
                         System Ready
                     </div>
                 </div>
@@ -739,7 +783,7 @@
                     </div>
                     <div class="panelBody">
                         <div style="font-size: 11px; color: var(--muted);">
-                            Apex Zero is a local, client‑side game hub.  
+                            Apex Zero is a local, client‑side game hub.<br>
                             Use the Admin Panel to add or remove games, reset the system, or change layout.
                         </div>
                     </div>
@@ -809,7 +853,7 @@
                 </div>
                 <div class="field">
                     <label for="gameUrlInput">Game File / URL</label>
-                    <input type="text" id="gameUrlInput" placeholder="Eaglercraft_1.12.2_WASM_Offline.html">
+                    <input type="text" id="gameUrlInput" placeholder="Eaglercraft_1.12.2_WASM_Offline_Download (2).html">
                 </div>
                 <button class="primaryButton" id="addGameButton">Add Game</button>
 
@@ -837,10 +881,14 @@
             ADMIN_PASSWORD: "apexZero_adminPassword"
         };
 
-        // --- Default games (empty; you add via Admin or here) ---
+        // --- Default games: your exact list, in your order ---
         const defaultGames = [
-            // Example:
-            // { name: "Minecraft 1.12.2", url: "Eaglercraft_1.12.2_WASM_Offline_Download (2).html", glyph: "MC" }
+            { name: "2048 Cupcakes", url: "2048cupcakes.html", glyph: "2" },
+            { name: "Agario Lite", url: "agariolite.html", glyph: "A" },
+            { name: "Cookie Clicker", url: "cookieclicker (1).htm", glyph: "C" },
+            { name: "Minecraft 1.12.2", url: "Eaglercraft_1.12.2_WASM_Offline_Download (2).html", glyph: "M" },
+            { name: "Paper.io 2", url: "paperio2.htm", glyph: "P" },
+            { name: "Rooftop Snipers 2", url: "rooftopsnipers2.html", glyph: "R" }
         ];
 
         let games = [];
@@ -887,7 +935,8 @@
 
                 const glyph = document.createElement("div");
                 glyph.className = "iconGlyph";
-                glyph.textContent = (game.glyph || game.name[0] || "?").toUpperCase().slice(0, 2);
+                const g = (game.glyph || game.name[0] || "?").toString();
+                glyph.textContent = g.toUpperCase().slice(0, 2);
 
                 const title = document.createElement("div");
                 title.className = "iconTitle";
@@ -933,7 +982,6 @@
                 row.appendChild(name);
                 row.appendChild(time);
 
-                // Make Recently Played clickable
                 row.addEventListener("click", () => {
                     const game = games.find(g => g.name === item.name);
                     if (game) openGame(game);
@@ -989,8 +1037,8 @@
                     root.style.setProperty("--accent-soft", "rgba(255, 255, 255, 0.25)");
                     break;
                 default:
-                    root.style.setProperty("--accent", "#6b8bff");
-                    root.style.setProperty("--accent-soft", "rgba(107, 139, 255, 0.25)");
+                    root.style.setProperty("--accent", "#5f8bff");
+                    root.style.setProperty("--accent-soft", "rgba(95, 139, 255, 0.35)");
             }
             if (persist) localStorage.setItem(STORAGE_KEYS.THEME, theme);
 
@@ -1003,19 +1051,21 @@
             const body = document.body;
             switch (bg) {
                 case "gradient":
-                    body.style.background = "radial-gradient(circle at top, #262a40 0, #05060a 55%, #020308 100%)";
+                    body.style.background =
+                        "radial-gradient(circle at top, #262a40 0, #050712 55%, #02030a 100%)";
                     break;
                 case "scanlines":
-                    body.style.background = "#05060a";
+                    body.style.background = "#050712";
                     body.style.backgroundImage =
                         "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)";
                     body.style.backgroundSize = "100% 3px";
                     break;
                 case "dark":
-                    body.style.background = "#020308";
+                    body.style.background = "#02030a";
                     break;
                 default:
-                    body.style.background = "radial-gradient(circle at top, #15182a 0, #05060a 55%, #020308 100%)";
+                    body.style.background =
+                        "radial-gradient(circle at top, #151b3a 0, #050712 45%, #02030a 100%)";
             }
             if (persist) localStorage.setItem(STORAGE_KEYS.BG, bg);
 
@@ -1113,8 +1163,8 @@
                 removeBtn.style.fontSize = "10px";
                 removeBtn.style.padding = "2px 6px";
                 removeBtn.style.borderRadius = "999px";
-                removeBtn.style.border = "1px solid rgba(255,255,255,0.18)";
-                removeBtn.style.background = "rgba(40,0,10,0.9)";
+                removeBtn.style.border = "1px solid rgba(255,255,255,0.22)";
+                removeBtn.style.background = "rgba(40,0,10,0.95)";
                 removeBtn.style.color = "var(--danger)";
                 removeBtn.style.cursor = "pointer";
 
