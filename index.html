@@ -7,7 +7,6 @@
 <style>
 :root {
     --accent: #4fd1ff; /* main OS accent */
-    --relay-accent: #3dfcd2; /* surprise emerald-cyan hybrid */
     --danger: #ff4b4b;
     --bg-dark: #02030a;
     --text-light: #ffffff;
@@ -207,6 +206,54 @@ body {
 }
 
 /* ============================
+   RECENTLY PLAYED STRIP
+============================ */
+#recentContainer {
+    width: 100%;
+    text-align: center;
+    margin-top: 70px;
+    margin-bottom: 10px;
+    display: none;
+    animation: fadeIn 0.4s ease;
+    z-index: 6;
+    position: relative;
+}
+#recentTitle {
+    font-size: 14px;
+    letter-spacing: 3px;
+    opacity: 0.7;
+    margin-bottom: 6px;
+}
+#recentItems {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+.recentItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 13px;
+}
+.recentItem:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(79,209,255,0.4);
+}
+.recentDot {
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 3px;
+}
+
+/* ============================
    DESKTOP GRID
 ============================ */
 #desktop {
@@ -266,77 +313,151 @@ body {
     cursor: pointer;
     font-size: 14px;
 }
-
-/* ============================
-   MINECRAFT RELAY HUB WINDOW
-============================ */
-#relayHubWindow {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 480px;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.92);
-    border: 2px solid var(--relay-accent);
-    border-radius: 16px;
-    padding: 20px;
-    z-index: 3000;
-    display: none;
-    animation: relayFade 0.3s ease;
-}
-@keyframes relayFade {
-    from { opacity: 0; transform: translate(-50%, -48%); }
-    to   { opacity: 1; transform: translate(-50%, -50%); }
-}
-#relayHubWindow h2 {
-    margin-top: 0;
-    color: var(--relay-accent);
-    text-align: center;
-}
-.relayInput {
-    width: 100%;
-    padding: 8px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border: 2px solid var(--relay-accent);
-    background: #05060b;
-    color: white;
-}
-#relayInstructions {
-    width: 100%;
-    height: 120px;
-    padding: 8px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border: 2px solid var(--relay-accent);
-    background: #05060b;
-    color: white;
-    resize: none;
-}
-#relaySaveBtn, #relayCopyBtn, #relayCloseBtn {
-    width: 100%;
-    padding: 10px;
-    margin-top: 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-}
-#relaySaveBtn {
-    background: var(--relay-accent);
-    color: black;
-}
-#relayCopyBtn {
-    background: #1a1a1a;
-    border: 2px solid var(--relay-accent);
-}
-#relayCloseBtn {
-    background: #333;
-    color: white;
-}
 </style>
 </head>
 <body>
+
+<!-- ============================
+     SPLASH SCREEN
+============================ -->
+<div id="splash">
+    <svg class="splash-logo" viewBox="0 0 100 100">
+        <path class="apex-logo" d="M10 80 L50 10 L90 80 Z" stroke-width="6"/>
+    </svg>
+    <div class="splash-text-main">APEX ZERO</div>
+    <div class="splash-text-sub">SYSTEM BOOTING</div>
+</div>
+
+<!-- ============================
+     BACKGROUND WATERMARK
+============================ -->
+<div id="watermark">
+    <svg width="300" height="300" viewBox="0 0 100 100">
+        <path class="apex-logo" d="M10 80 L50 10 L90 80 Z" stroke-width="4"/>
+    </svg>
+</div>
+
+<!-- ============================
+     TITLE BAR
+============================ -->
+<div id="titleBarContainer">
+    <div id="titleBar">APEX ZERO</div>
+</div>
+
+<!-- ============================
+     SETTINGS BUTTON
+============================ -->
+<div id="settingsBtn">Settings</div>
+
+<!-- ============================
+     SETTINGS PANEL
+============================ -->
+<div id="settingsPanel" class="panel">
+    <h3>Settings</h3>
+
+    <label>Theme Preset</label>
+    <select id="themePreset">
+        <option value="blue">Blue</option>
+        <option value="purple">Purple</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="mono">Monochrome</option>
+    </select>
+
+    <br><br>
+
+    <label>Background Style</label>
+    <select id="backgroundStyle">
+        <option value="dark">Dark</option>
+        <option value="grid">Grid</option>
+        <option value="gradient">Gradient</option>
+        <option value="scanlines">Scanlines</option>
+    </select>
+
+    <br><br>
+
+    <label>Layout Mode</label>
+    <select id="layoutMode">
+        <option value="grid">Grid</option>
+        <option value="compact">Compact</option>
+        <option value="wide">Wide</option>
+    </select>
+
+    <br><br>
+
+    <label>Icon Shape</label>
+    <select id="iconShape">
+        <option value="rounded">Rounded</option>
+        <option value="square">Square</option>
+        <option value="pill">Pill</option>
+    </select>
+</div>
+
+<!-- ============================
+     ADMIN PANEL
+============================ -->
+<div id="adminPanel" class="panel">
+    <button id="closeAdminBtn">Close</button>
+    <h3>Admin Panel</h3>
+
+    <label>Grid Spacing</label>
+    <input type="range" id="gridSpacing" min="10" max="80" value="40">
+
+    <label>Icon Radius</label>
+    <input type="range" id="iconRadius" min="0" max="60" value="14">
+
+    <label>Watermark Opacity</label>
+    <input type="range" id="watermarkOpacity" min="0" max="100" value="6">
+
+    <label>Title Size</label>
+    <input type="range" id="titleSize" min="20" max="60" value="30">
+
+    <h4>Game Manager</h4>
+    <div id="gameList" style="max-height:200px; overflow-y:auto;"></div>
+    <button id="addGameBtn" style="margin-top:10px;">Add Game</button>
+
+    <div id="dangerToggle">Danger Zone ▼</div>
+    <div id="dangerZone" style="display:none;">
+        <button id="resetSystem">Reset System</button>
+        <button id="resetPassword">Reset Admin Password</button>
+    </div>
+</div>
+
+<!-- ============================
+     PASSWORD SETUP MODAL
+============================ -->
+<div id="passwordSetupModal" class="modalOverlay">
+    <div class="modalBox">
+        <h3>Set Admin Password</h3>
+        <input id="newAdminPassword" type="password" placeholder="New password">
+        <button id="saveAdminPassword">Save Password</button>
+    </div>
+</div>
+
+<!-- ============================
+     ADMIN PASSWORD ENTRY
+============================ -->
+<div id="adminPasswordModal" class="modalOverlay">
+    <div class="modalBox">
+        <h3>Enter Admin Password</h3>
+        <input id="adminPasswordInput" type="password" placeholder="Password">
+        <button id="adminPasswordSubmit">Enter</button>
+    </div>
+</div>
+
+<!-- ============================
+     RECENTLY PLAYED STRIP
+============================ -->
+<div id="recentContainer">
+    <div id="recentTitle">RECENTLY PLAYED</div>
+    <div id="recentItems"></div>
+</div>
+
+<!-- ============================
+     DESKTOP GRID
+============================ -->
+<div id="desktop"></div>
+
 <script>
 /* ============================
    GAME LIST (DEFAULT)
@@ -345,12 +466,49 @@ let games = [
     { name: "2048 Cupcakes", url: "2048cupcakes.html" },
     { name: "Agario Lite", url: "agariolite.html" },
     { name: "Cookie Clicker", url: "cookieclicker (1).htm" },
-    { name: "Minecraft 1.12.2", url: "Eaglercraft_1.12.2_WASM_Offline_Download (2).html" },
+    { name: "Minecraft 1.12.2", url: "Eaglercraft_1.12.2_WASM_Offline_Download.html" },
     { name: "Paper.io 2", url: "paperio2.htm" },
     { name: "Rooftop Snipers 2", url: "rooftopsnipers2.html" }
 ];
 
 let currentIconRadius = 14;
+
+/* ============================
+   RECENTLY PLAYED SYSTEM
+============================ */
+let recentlyPlayed = JSON.parse(localStorage.getItem("recentlyPlayed") || "[]");
+
+function addRecentlyPlayed(game) {
+    recentlyPlayed = recentlyPlayed.filter(g => g.name !== game.name);
+    recentlyPlayed.unshift(game);
+    if (recentlyPlayed.length > 5) recentlyPlayed.pop();
+    localStorage.setItem("recentlyPlayed", JSON.stringify(recentlyPlayed));
+    renderRecentlyPlayed();
+}
+
+function renderRecentlyPlayed() {
+    const container = document.getElementById("recentContainer");
+    const items = document.getElementById("recentItems");
+
+    if (recentlyPlayed.length === 0) {
+        container.style.display = "none";
+        return;
+    }
+
+    container.style.display = "block";
+    items.innerHTML = "";
+
+    recentlyPlayed.forEach(game => {
+        const item = document.createElement("div");
+        item.className = "recentItem";
+        item.innerHTML = `
+            <div class="recentDot"></div>
+            <span>${game.name}</span>
+        `;
+        item.addEventListener("click", () => window.open(game.url, "_blank"));
+        items.appendChild(item);
+    });
+}
 
 /* ============================
    SPLASH SCREEN
@@ -381,6 +539,7 @@ window.addEventListener("load", () => {
     }
 
     renderDesktop();
+    renderRecentlyPlayed();
 });
 
 /* ============================
@@ -390,21 +549,6 @@ function renderDesktop() {
     const desktop = document.getElementById("desktop");
     desktop.innerHTML = "";
 
-    // Add Minecraft Relay Hub icon
-    const relayIcon = document.createElement("div");
-    relayIcon.className = "desktopIcon";
-    relayIcon.style.borderRadius = currentIconRadius + "px";
-    relayIcon.innerHTML = `
-        <div style="font-size:40px; color: var(--relay-accent);">⬢</div>
-        <div class="iconLabel">Minecraft Relay Hub</div>
-    `;
-    relayIcon.addEventListener("click", () => {
-        document.getElementById("relayHubWindow").style.display = "block";
-        loadRelayHubData();
-    });
-    desktop.appendChild(relayIcon);
-
-    // Add all games
     games.forEach((game) => {
         const icon = document.createElement("div");
         icon.className = "desktopIcon";
@@ -415,7 +559,11 @@ function renderDesktop() {
             <div class="iconLabel">${game.name}</div>
         `;
 
-        icon.addEventListener("click", () => window.open(game.url, "_blank"));
+        icon.addEventListener("click", () => {
+            addRecentlyPlayed(game);
+            window.open(game.url, "_blank");
+        });
+
         desktop.appendChild(icon);
     });
 }
@@ -686,210 +834,6 @@ document.addEventListener("click", (e) => {
     }
 });
 </script>
-<script>
-/* ============================
-   MINECRAFT RELAY HUB LOGIC
-============================ */
-
-/* Load saved relay info */
-function loadRelayHubData() {
-    document.getElementById("relayServer").value =
-        localStorage.getItem("relayServer") || "";
-
-    document.getElementById("relayCode").value =
-        localStorage.getItem("relayCode") || "";
-
-    document.getElementById("relayInstructions").value =
-        localStorage.getItem("relayInstructions") ||
-        "1. Open Multiplayer\n2. Click Direct Connect\n3. Paste the relay server\n4. Enter the connect code\n5. Join the world";
-}
-
-/* Save relay info */
-document.getElementById("relaySaveBtn").addEventListener("click", () => {
-    const server = document.getElementById("relayServer").value.trim();
-    const code = document.getElementById("relayCode").value.trim();
-    const instructions = document.getElementById("relayInstructions").value.trim();
-
-    localStorage.setItem("relayServer", server);
-    localStorage.setItem("relayCode", code);
-    localStorage.setItem("relayInstructions", instructions);
-
-    alert("Relay Hub updated.");
-});
-
-/* Copy all relay info */
-document.getElementById("relayCopyBtn").addEventListener("click", () => {
-    const server = localStorage.getItem("relayServer") || "";
-    const code = localStorage.getItem("relayCode") || "";
-    const instructions = localStorage.getItem("relayInstructions") || "";
-
-    const fullText =
-        "Minecraft Relay Hub Info\n\n" +
-        "Relay Server:\n" + server + "\n\n" +
-        "Connect Code:\n" + code + "\n\n" +
-        "Instructions:\n" + instructions;
-
-    navigator.clipboard.writeText(fullText);
-    alert("Copied to clipboard.");
-});
-
-/* Close Relay Hub window */
-document.getElementById("relayCloseBtn").addEventListener("click", () => {
-    document.getElementById("relayHubWindow").style.display = "none";
-});
-</script>
-<!-- ============================
-     SPLASH SCREEN
-============================ -->
-<div id="splash">
-    <svg class="splash-logo" viewBox="0 0 100 100">
-        <path class="apex-logo" d="M10 80 L50 10 L90 80 Z" stroke-width="6"/>
-    </svg>
-    <div class="splash-text-main">APEX ZERO</div>
-    <div class="splash-text-sub">SYSTEM BOOTING</div>
-</div>
-
-<!-- ============================
-     BACKGROUND WATERMARK
-============================ -->
-<div id="watermark">
-    <svg width="300" height="300" viewBox="0 0 100 100">
-        <path class="apex-logo" d="M10 80 L50 10 L90 80 Z" stroke-width="4"/>
-    </svg>
-</div>
-
-<!-- ============================
-     TITLE BAR
-============================ -->
-<div id="titleBarContainer">
-    <div id="titleBar">APEX ZERO</div>
-</div>
-
-<!-- ============================
-     SETTINGS BUTTON
-============================ -->
-<div id="settingsBtn">Settings</div>
-
-<!-- ============================
-     SETTINGS PANEL
-============================ -->
-<div id="settingsPanel" class="panel">
-    <h3>Settings</h3>
-
-    <label>Theme Preset</label>
-    <select id="themePreset">
-        <option value="blue">Blue</option>
-        <option value="purple">Purple</option>
-        <option value="red">Red</option>
-        <option value="green">Green</option>
-        <option value="mono">Monochrome</option>
-    </select>
-
-    <br><br>
-
-    <label>Background Style</label>
-    <select id="backgroundStyle">
-        <option value="dark">Dark</option>
-        <option value="grid">Grid</option>
-        <option value="gradient">Gradient</option>
-        <option value="scanlines">Scanlines</option>
-    </select>
-
-    <br><br>
-
-    <label>Layout Mode</label>
-    <select id="layoutMode">
-        <option value="grid">Grid</option>
-        <option value="compact">Compact</option>
-        <option value="wide">Wide</option>
-    </select>
-
-    <br><br>
-
-    <label>Icon Shape</label>
-    <select id="iconShape">
-        <option value="rounded">Rounded</option>
-        <option value="square">Square</option>
-        <option value="pill">Pill</option>
-    </select>
-</div>
-
-<!-- ============================
-     ADMIN PANEL
-============================ -->
-<div id="adminPanel" class="panel">
-    <button id="closeAdminBtn">Close</button>
-    <h3>Admin Panel</h3>
-
-    <label>Grid Spacing</label>
-    <input type="range" id="gridSpacing" min="10" max="80" value="40">
-
-    <label>Icon Radius</label>
-    <input type="range" id="iconRadius" min="0" max="60" value="14">
-
-    <label>Watermark Opacity</label>
-    <input type="range" id="watermarkOpacity" min="0" max="100" value="6">
-
-    <label>Title Size</label>
-    <input type="range" id="titleSize" min="20" max="60" value="30">
-
-    <h4>Game Manager</h4>
-    <div id="gameList" style="max-height:200px; overflow-y:auto;"></div>
-    <button id="addGameBtn" style="margin-top:10px;">Add Game</button>
-
-    <div id="dangerToggle">Danger Zone ▼</div>
-    <div id="dangerZone" style="display:none;">
-        <button id="resetSystem">Reset System</button>
-        <button id="resetPassword">Reset Admin Password</button>
-    </div>
-</div>
-
-<!-- ============================
-     PASSWORD SETUP MODAL
-============================ -->
-<div id="passwordSetupModal" class="modalOverlay">
-    <div class="modalBox">
-        <h3>Set Admin Password</h3>
-        <input id="newAdminPassword" type="password" placeholder="New password">
-        <button id="saveAdminPassword">Save Password</button>
-    </div>
-</div>
-
-<!-- ============================
-     ADMIN PASSWORD ENTRY
-============================ -->
-<div id="adminPasswordModal" class="modalOverlay">
-    <div class="modalBox">
-        <h3>Enter Admin Password</h3>
-        <input id="adminPasswordInput" type="password" placeholder="Password">
-        <button id="adminPasswordSubmit">Enter</button>
-    </div>
-</div>
-
-<!-- ============================
-     DESKTOP GRID
-============================ -->
-<div id="desktop"></div>
-
-<!-- ============================
-     MINECRAFT RELAY HUB WINDOW
-============================ -->
-<div id="relayHubWindow">
-    <h2>Minecraft Relay Hub</h2>
-
-    <label>Relay Server</label>
-    <input id="relayServer" class="relayInput" placeholder="wss://relay.example.com">
-
-    <label>Connect Code</label>
-    <input id="relayCode" class="relayInput" placeholder="XXXX-XXXX-XXXX">
-
-    <label>Instructions</label>
-    <textarea id="relayInstructions"></textarea>
-
-    <button id="relaySaveBtn">Save</button>
-    <button id="relayCopyBtn">Copy to Clipboard</button>
-    <button id="relayCloseBtn">Close</button>
-</div>
 
 </body>
 </html>
