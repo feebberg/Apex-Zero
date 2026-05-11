@@ -30,7 +30,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000;
 }
 .splash-logo {
     width: 140px;
@@ -59,6 +59,88 @@ body {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
+}
+
+/* Login screen */
+#loginScreen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.96);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+}
+
+.login-box {
+    background: #05060c;
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 24px 26px 22px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 0 24px rgba(0,0,0,0.8);
+    animation: loginFade 0.4s ease-out;
+}
+
+.login-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+}
+
+.login-title {
+    font-size: 18px;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+}
+
+.login-sub {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-bottom: 14px;
+}
+
+#loginPasswordInput {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background: #02030a;
+    color: white;
+    margin-bottom: 10px;
+}
+
+#loginSubmitBtn {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-error {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #ff4b4b;
+    min-height: 14px;
+}
+
+@keyframes loginFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes loginShake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
 }
 
 /* Background logo */
@@ -258,32 +340,53 @@ select, input[type="range"] {
 </style>
 </head>
 <body>
-
 <!-- SPLASH SCREEN -->
 <div id="splash">
     <div class="splash-logo">
         <svg viewBox="0 0 200 200" class="apex-logo">
-            <polygon points="100,20 20,180 180,180" stroke-width="10"/>
-            <polygon points="100,50 55,160 145,160" stroke-width="6"/>
+            <polygon points="100,20 60,90 140,90" stroke-width="10"/>
+            <polygon points="60,110 20,180 100,180" stroke-width="10"/>
+            <polygon points="100,180 180,180 140,110" stroke-width="10"/>
         </svg>
     </div>
     <div class="splash-text-main">APEX ZERO</div>
-    <div class="splash-text-sub">ACCESSING INTERFACE…</div>
+    <div class="splash-text-sub">BOOTING SYSTEM…</div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+    <div class="login-box" id="loginBox">
+        <div class="login-logo">
+            <svg viewBox="0 0 200 200" class="apex-logo">
+                <polygon points="100,20 60,90 140,90" stroke-width="10"/>
+                <polygon points="60,110 20,180 100,180" stroke-width="10"/>
+                <polygon points="100,180 180,180 140,110" stroke-width="10"/>
+            </svg>
+        </div>
+        <div class="login-title">APEX ZERO</div>
+        <div class="login-sub">LOGIN REQUIRED</div>
+
+        <input id="loginPasswordInput" type="password" placeholder="Enter password">
+        <button id="loginSubmitBtn">Login</button>
+        <div class="login-error" id="loginError"></div>
+    </div>
 </div>
 
 <!-- BACKGROUND LOGO -->
 <div id="watermark">
     <svg width="420" height="420" viewBox="0 0 200 200" class="apex-logo">
-        <polygon points="100,20 20,180 180,180" stroke-width="10"/>
-        <polygon points="100,50 55,160 145,160" stroke-width="6"/>
+        <polygon points="100,20 60,90 140,90" stroke-width="10"/>
+        <polygon points="60,110 20,180 100,180" stroke-width="10"/>
+        <polygon points="100,180 180,180 140,110" stroke-width="10"/>
     </svg>
 </div>
 
 <!-- TITLE BAR -->
 <div id="titleBarContainer">
     <svg width="34" height="34" viewBox="0 0 200 200" class="apex-logo">
-        <polygon points="100,20 20,180 180,180" stroke-width="10"/>
-        <polygon points="100,50 55,160 145,160" stroke-width="6"/>
+        <polygon points="100,20 60,90 140,90" stroke-width="10"/>
+        <polygon points="60,110 20,180 100,180" stroke-width="10"/>
+        <polygon points="100,180 180,180 140,110" stroke-width="10"/>
     </svg>
     <div id="titleBar">APEX ZERO</div>
 </div>
@@ -327,7 +430,7 @@ select, input[type="range"] {
     </select>
 </div>
 
-<!-- PASSWORD SETUP MODAL -->
+<!-- PASSWORD SETUP MODAL (ADMIN) -->
 <div id="passwordSetupModal" class="modalOverlay">
     <div class="modalBox">
         <h2>Create Admin Password</h2>
@@ -378,193 +481,7 @@ select, input[type="range"] {
 <!-- DESKTOP GRID -->
 <div id="desktop"></div>
 
-<!-- SCRIPT STARTS NEXT -->
 <script>
-/* ============================
-   ALPHABETIZED GAME LIST
-============================ */
-let games = [
-    { name: "2048 Cupcakes", url: "2048cupcakes.html" },
-    { name: "Agario Lite", url: "agariolite.html" },
-    { name: "Cookie Clicker", url: "cookieclicker (1).htm" },
-    { name: "Minecraft 1.12.2", url: "Minecraft 1.12.2 - Eaglercraft_1.12.2_WASM_Offline_Download (2).html" },
-    { name: "Paper.io 2", url: "paperio2.htm" },
-    { name: "Rooftop Snipers 2", url: "rooftopsnipers2.html" }
-];
-
-let currentIconRadius = 14;
-
-/* ============================
-   SPLASH SCREEN
-============================ */
-window.addEventListener("load", () => {
-    const splash = document.getElementById("splash");
-    setTimeout(() => {
-        splash.classList.add("splash-hide");
-        setTimeout(() => splash.style.display = "none", 400);
-    }, 1600);
-
-    const stored = localStorage.getItem("adminPassword");
-    if (!stored) {
-        document.getElementById("passwordSetupModal").style.display = "flex";
-    }
-});
-
-/* ============================
-   DESKTOP RENDER
-============================ */
-function renderDesktop() {
-    const desktop = document.getElementById("desktop");
-    desktop.innerHTML = "";
-
-    games.forEach((game) => {
-        const icon = document.createElement("div");
-        icon.className = "desktopIcon";
-        icon.style.borderRadius = currentIconRadius + "px";
-
-        icon.innerHTML = `
-            <div style="font-size:40px;">🎮</div>
-            <div class="iconLabel">${game.name}</div>
-        `;
-
-        icon.addEventListener("click", () => window.open(game.url, "_blank"));
-        desktop.appendChild(icon);
-    });
-}
-renderDesktop();
-
-/* ============================
-   PASSWORD SETUP
-============================ */
-document.getElementById("saveAdminPassword").addEventListener("click", () => {
-    const pw = document.getElementById("newAdminPassword").value.trim();
-    if (!pw) { alert("Password cannot be empty."); return; }
-    localStorage.setItem("adminPassword", pw);
-    document.getElementById("passwordSetupModal").style.display = "none";
-});
-
-/* ============================
-   SECRET ADMIN TRIGGER (Shift+A → Z)
-============================ */
-let awaitingZ = false;
-document.addEventListener("keydown", (e) => {
-    if (e.shiftKey && e.key.toLowerCase() === "a") {
-        awaitingZ = true;
-        return;
-    }
-    if (awaitingZ && e.key.toLowerCase() === "z") {
-        awaitingZ = false;
-        if (!localStorage.getItem("adminPassword")) return;
-        document.getElementById("adminPasswordModal").style.display = "flex";
-    } else {
-        awaitingZ = false;
-    }
-});
-
-/* ============================
-   ADMIN PASSWORD CHECK
-============================ */
-document.getElementById("adminPasswordSubmit").addEventListener("click", () => {
-    const stored = localStorage.getItem("adminPassword");
-    const entered = document.getElementById("adminPasswordInput").value;
-
-    if (entered === stored) {
-        document.getElementById("adminPasswordModal").style.display = "none";
-        openAdminPanel();
-    } else {
-        alert("Incorrect password.");
-    }
-});
-
-/* ============================
-   ADMIN PANEL
-============================ */
-function openAdminPanel() {
-    document.getElementById("adminPanel").style.display = "block";
-    hookAdminControls();
-    updateGameList();
-}
-
-document.getElementById("closeAdminBtn").addEventListener("click", () => {
-    document.getElementById("adminPanel").style.display = "none";
-});
-
-/* ============================
-   ADMIN CONTROLS
-============================ */
-function hookAdminControls() {
-    const spacing = document.getElementById("gridSpacing");
-    const radius = document.getElementById("iconRadius");
-    const opacity = document.getElementById("watermarkOpacity");
-    const titleSize = document.getElementById("titleSize");
-
-    spacing.oninput = () => {
-        document.getElementById("desktop").style.gap = spacing.value + "px";
-    };
-    radius.oninput = () => {
-        currentIconRadius = radius.value;
-        renderDesktop();
-    };
-    opacity.oninput = () => {
-        document.getElementById("watermark").style.opacity = opacity.value / 100;
-    };
-    titleSize.oninput = () => {
-        document.getElementById("titleBar").style.fontSize = titleSize.value + "px";
-    };
-}
-
-/* ============================
-   GAME MANAGER
-============================ */
-function updateGameList() {
-    const list = document.getElementById("gameList");
-    list.innerHTML = "";
-
-    games.forEach((game, index) => {
-        const row = document.createElement("div");
-        row.style.display = "flex";
-        row.style.justifyContent = "space-between";
-        row.style.alignItems = "center";
-        row.style.padding = "4px 0";
-        row.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
-
-        const nameSpan = document.createElement("span");
-        nameSpan.textContent = game.name;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.textContent = "Remove";
-        removeBtn.style.padding = "3px 8px";
-        removeBtn.style.background = "var(--danger)";
-        removeBtn.style.border = "none";
-        removeBtn.style.borderRadius = "6px";
-        removeBtn.style.cursor = "pointer";
-        removeBtn.style.fontSize = "12px";
-
-        removeBtn.addEventListener("click", () => {
-            games.splice(index, 1);
-            localStorage.setItem("games", JSON.stringify(games));
-            renderDesktop();
-            updateGameList();
-        });
-
-        row.appendChild(nameSpan);
-        row.appendChild(removeBtn);
-        list.appendChild(row);
-    });
-}
-
-document.getElementById("addGameBtn").addEventListener("click", () => {
-    const name = prompt("Game name:");
-    if (!name) return;
-
-    const url = prompt("Game URL or filename:");
-    if (!url) return;
-
-    games.push({ name, url });
-    localStorage.setItem("games", JSON.stringify(games));
-    renderDesktop();
-    updateGameList();
-});
 /* ============================
    DANGER ZONE
 ============================ */
@@ -686,7 +603,6 @@ document.addEventListener("click", (e) => {
     const panel = document.getElementById("adminPanel");
 
     if (panel.style.display === "block" && !panel.contains(e.target)) {
-        // Don't close if clicking inside password modal or settings
         if (
             !e.target.closest(".modalOverlay") &&
             e.target.id !== "settingsBtn" &&
