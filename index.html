@@ -61,7 +61,7 @@ body {
     transition: opacity 0.4s ease;
 }
 
-/* Background logo (secret trigger) */
+/* Background logo */
 #watermark {
     position: fixed;
     top: 50%;
@@ -69,13 +69,11 @@ body {
     transform: translate(-50%, -50%);
     opacity: 0.06;
     z-index: 1;
-    cursor: pointer;
-    pointer-events: auto;
+    pointer-events: none;
 }
-.apex-shard {
+.apex-logo {
     fill: none;
     stroke: white;
-    stroke-width: 6;
 }
 
 /* Title bar */
@@ -141,6 +139,20 @@ body {
     left: 26px;
     width: 300px;
     display: none;
+    position: fixed;
+}
+
+/* Close button */
+#closeAdminBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: 2px solid white;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 /* Modals */
@@ -250,34 +262,28 @@ select, input[type="range"] {
 <!-- SPLASH SCREEN -->
 <div id="splash">
     <div class="splash-logo">
-        <svg viewBox="0 0 200 200" class="apex-shard">
-            <polygon points="100,20 25,170 175,170" />
-            <polygon points="100,20 60,150 100,150" stroke-width="4" />
-            <polygon points="100,20 100,150 140,150" stroke-width="4" />
-            <line x1="55" y1="140" x2="155" y2="80" stroke-width="4" />
+        <svg viewBox="0 0 200 200" class="apex-logo">
+            <polygon points="100,20 20,180 180,180" stroke-width="10"/>
+            <polygon points="100,50 55,160 145,160" stroke-width="6"/>
         </svg>
     </div>
     <div class="splash-text-main">APEX ZERO</div>
     <div class="splash-text-sub">ACCESSING INTERFACE…</div>
 </div>
 
-<!-- BACKGROUND LOGO (SECRET ADMIN TRIGGER) -->
+<!-- BACKGROUND LOGO -->
 <div id="watermark">
-    <svg width="420" height="420" viewBox="0 0 200 200" class="apex-shard">
-        <polygon points="100,20 25,170 175,170" />
-        <polygon points="100,20 60,150 100,150" stroke-width="4" />
-        <polygon points="100,20 100,150 140,150" stroke-width="4" />
-        <line x1="55" y1="140" x2="155" y2="80" stroke-width="4" />
+    <svg width="420" height="420" viewBox="0 0 200 200" class="apex-logo">
+        <polygon points="100,20 20,180 180,180" stroke-width="10"/>
+        <polygon points="100,50 55,160 145,160" stroke-width="6"/>
     </svg>
 </div>
 
 <!-- TITLE BAR -->
 <div id="titleBarContainer">
-    <svg width="34" height="34" viewBox="0 0 200 200" class="apex-shard">
-        <polygon points="100,20 25,170 175,170" />
-        <polygon points="100,20 60,150 100,150" stroke-width="4" />
-        <polygon points="100,20 100,150 140,150" stroke-width="4" />
-        <line x1="55" y1="140" x2="155" y2="80" stroke-width="4" />
+    <svg width="34" height="34" viewBox="0 0 200 200" class="apex-logo">
+        <polygon points="100,20 20,180 180,180" stroke-width="10"/>
+        <polygon points="100,50 55,160 145,160" stroke-width="6"/>
     </svg>
     <div id="titleBar">APEX ZERO</div>
 </div>
@@ -342,6 +348,7 @@ select, input[type="range"] {
 <!-- ADMIN PANEL -->
 <div id="adminPanel" class="panel">
     <h3 style="margin-top:0;">Admin Mode</h3>
+    <button id="closeAdminBtn">X</button>
 
     <label><b>Grid Spacing</b></label>
     <input id="gridSpacing" type="range" min="40" max="200" value="100">
@@ -370,6 +377,8 @@ select, input[type="range"] {
 
 <!-- DESKTOP GRID -->
 <div id="desktop"></div>
+
+<!-- SCRIPT STARTS NEXT -->
 <script>
 /* ============================
    ALPHABETIZED GAME LIST
@@ -435,15 +444,8 @@ document.getElementById("saveAdminPassword").addEventListener("click", () => {
 });
 
 /* ============================
-   SECRET ADMIN TRIGGERS
+   SECRET ADMIN TRIGGER (Shift+A → Z)
 ============================ */
-// Double-click logo
-document.getElementById("watermark").addEventListener("dblclick", () => {
-    if (!localStorage.getItem("adminPassword")) return;
-    document.getElementById("adminPasswordModal").style.display = "flex";
-});
-
-// Shift + A then Z
 let awaitingZ = false;
 document.addEventListener("keydown", (e) => {
     if (e.shiftKey && e.key.toLowerCase() === "a") {
@@ -483,6 +485,13 @@ function openAdminPanel() {
     updateGameList();
 }
 
+document.getElementById("closeAdminBtn").addEventListener("click", () => {
+    document.getElementById("adminPanel").style.display = "none";
+});
+
+/* ============================
+   ADMIN CONTROLS
+============================ */
 function hookAdminControls() {
     const spacing = document.getElementById("gridSpacing");
     const radius = document.getElementById("iconRadius");
@@ -556,7 +565,6 @@ document.getElementById("addGameBtn").addEventListener("click", () => {
     renderDesktop();
     updateGameList();
 });
-
 /* ============================
    DANGER ZONE
 ============================ */
@@ -585,7 +593,9 @@ document.getElementById("settingsBtn").addEventListener("click", () => {
     panel.style.display = panel.style.display === "none" ? "block" : "none";
 });
 
-/* Theme */
+/* ============================
+   THEME PRESETS
+============================ */
 document.getElementById("themePreset").addEventListener("change", (e) => {
     const theme = e.target.value;
 
@@ -611,7 +621,9 @@ document.getElementById("themePreset").addEventListener("change", (e) => {
     }
 });
 
-/* Background */
+/* ============================
+   BACKGROUND STYLES
+============================ */
 document.getElementById("backgroundStyle").addEventListener("change", (e) => {
     const bg = e.target.value;
 
@@ -634,7 +646,9 @@ document.getElementById("backgroundStyle").addEventListener("change", (e) => {
     }
 });
 
-/* Layout */
+/* ============================
+   LAYOUT MODES
+============================ */
 document.getElementById("layoutMode").addEventListener("change", (e) => {
     const mode = e.target.value;
     const desktop = document.getElementById("desktop");
@@ -653,7 +667,9 @@ document.getElementById("layoutMode").addEventListener("change", (e) => {
     }
 });
 
-/* Icon shape */
+/* ============================
+   ICON SHAPE
+============================ */
 document.getElementById("iconShape").addEventListener("change", (e) => {
     const shape = e.target.value;
 
@@ -662,6 +678,23 @@ document.getElementById("iconShape").addEventListener("change", (e) => {
     if (shape === "pill") currentIconRadius = 40;
 
     renderDesktop();
+});
+/* ============================
+   CLICK OUTSIDE TO CLOSE ADMIN
+============================ */
+document.addEventListener("click", (e) => {
+    const panel = document.getElementById("adminPanel");
+
+    if (panel.style.display === "block" && !panel.contains(e.target)) {
+        // Don't close if clicking inside password modal or settings
+        if (
+            !e.target.closest(".modalOverlay") &&
+            e.target.id !== "settingsBtn" &&
+            !document.getElementById("settingsPanel").contains(e.target)
+        ) {
+            panel.style.display = "none";
+        }
+    }
 });
 </script>
 
