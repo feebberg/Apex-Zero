@@ -6,23 +6,32 @@
 
 <style>
     :root {
-        --accent: #3aa9ff;
+        --accent: #4fd1ff;
         --danger: #ff4b4b;
-        --bg-dark: #000;
-        --text-light: #fff;
+        --bg-dark: #02030a;
+        --text-light: #ffffff;
     }
+
+    * { box-sizing: border-box; }
 
     body {
         margin: 0;
         background: var(--bg-dark);
-        font-family: 'Segoe UI', sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: var(--text-light);
         overflow: hidden;
     }
 
     @keyframes fadeIn { to { opacity: 1; } }
 
-    /* Watermark logo (secret trigger) */
+    /* NEW LOGO STYLE (hex + core) */
+    .apex-logo-main {
+        fill: none;
+        stroke: white;
+        stroke-width: 6;
+    }
+
+    /* Background logo (secret trigger) */
     #watermark {
         position: fixed;
         top: 50%;
@@ -30,32 +39,27 @@
         transform: translate(-50%, -50%);
         opacity: 0.06;
         z-index: 1;
-        cursor: default;
-    }
-
-    .triangleCoreLogo {
-        fill: none;
-        stroke: white;
-        stroke-width: 6;
+        cursor: pointer;
+        pointer-events: auto;
     }
 
     /* Title bar */
     #titleBarContainer {
         position: fixed;
-        top: 20px;
+        top: 18px;
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
         z-index: 10;
         opacity: 0;
-        animation: fadeIn 0.8s ease forwards;
-        animation-delay: 0.6s;
+        animation: fadeIn 0.7s ease forwards;
+        animation-delay: 0.4s;
     }
 
     #titleBar {
-        font-size: 32px;
+        font-size: 30px;
         font-weight: 700;
         letter-spacing: 4px;
     }
@@ -63,24 +67,24 @@
     /* Settings button */
     #settingsBtn {
         position: fixed;
-        top: 20px;
-        right: 30px;
-        font-size: 16px;
+        top: 18px;
+        right: 26px;
+        font-size: 14px;
         padding: 6px 12px;
         border: 2px solid white;
         border-radius: 10px;
         cursor: pointer;
         transition: 0.2s;
         opacity: 0;
-        animation: fadeIn 0.8s ease forwards;
-        animation-delay: 0.8s;
+        animation: fadeIn 0.7s ease forwards;
+        animation-delay: 0.6s;
         z-index: 10;
     }
 
     #settingsBtn:hover {
         background: white;
         color: black;
-        transform: scale(1.05);
+        transform: translateY(-1px);
     }
 
     /* Panels */
@@ -89,21 +93,21 @@
         background: rgba(0,0,0,0.9);
         border: 2px solid var(--accent);
         border-radius: 14px;
-        padding: 18px;
+        padding: 16px;
         z-index: 20;
     }
 
     #settingsPanel {
-        top: 80px;
-        right: 30px;
-        width: 280px;
+        top: 70px;
+        right: 26px;
+        width: 260px;
         display: none;
     }
 
     #adminPanel {
-        top: 80px;
-        left: 30px;
-        width: 320px;
+        top: 70px;
+        left: 26px;
+        width: 300px;
         display: none;
     }
 
@@ -120,8 +124,8 @@
     }
 
     .modalBox {
-        background: #111;
-        padding: 24px;
+        background: #080910;
+        padding: 22px;
         border-radius: 14px;
         border: 2px solid var(--accent);
         width: 320px;
@@ -134,6 +138,8 @@
         margin-top: 10px;
         border-radius: 8px;
         border: none;
+        background: #05060b;
+        color: white;
     }
 
     .modalBox button {
@@ -150,11 +156,11 @@
     /* Desktop grid */
     #desktop {
         position: fixed;
-        top: 140px;
+        top: 120px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
-        height: calc(100% - 160px);
+        height: calc(100% - 140px);
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         grid-auto-rows: 140px;
@@ -169,16 +175,17 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background: rgba(255,255,255,0.05);
-        border: 2px solid rgba(255,255,255,0.15);
-        border-radius: 12px;
+        background: rgba(255,255,255,0.04);
+        border: 2px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
         cursor: pointer;
-        transition: 0.2s;
+        transition: 0.18s;
     }
 
     .desktopIcon:hover {
         transform: translateY(-4px);
         border-color: var(--accent);
+        box-shadow: 0 0 12px rgba(79,209,255,0.4);
     }
 
     .desktopIcon .iconLabel {
@@ -191,7 +198,8 @@
     #dangerToggle {
         color: var(--danger);
         cursor: pointer;
-        margin-top: 16px;
+        margin-top: 14px;
+        font-size: 14px;
     }
 
     #dangerZone button {
@@ -203,26 +211,36 @@
         color: white;
         margin-top: 8px;
         cursor: pointer;
+        font-size: 14px;
+    }
+
+    select, input[type="range"] {
+        width: 100%;
+        margin-bottom: 10px;
     }
 </style>
 </head>
 <body>
 
-<!-- BACKGROUND WATERMARK (SECRET ADMIN TRIGGER) -->
+<!-- BACKGROUND LOGO (SECRET ADMIN TRIGGER) -->
 <div id="watermark">
-    <svg width="420" height="420" viewBox="0 0 200 200" class="triangleCoreLogo">
-        <circle cx="100" cy="100" r="90"/>
-        <polygon points="100,30 30,170 170,170"/>
-        <rect x="70" y="70" width="60" height="60"/>
+    <!-- NEW LOGO: hex shell + inner core + slash -->
+    <svg width="420" height="420" viewBox="0 0 200 200" class="apex-logo-main">
+        <!-- Hexagon shell -->
+        <polygon points="100,10 170,50 170,130 100,170 30,130 30,50" />
+        <!-- Inner core triangle -->
+        <polygon points="100,35 55,125 145,125" />
+        <!-- Diagonal slash -->
+        <line x1="55" y1="135" x2="150" y2="65" />
     </svg>
 </div>
 
-<!-- TITLE BAR WITH LOGO -->
+<!-- TITLE BAR WITH SMALL LOGO -->
 <div id="titleBarContainer">
-    <svg width="36" height="36" viewBox="0 0 200 200" class="triangleCoreLogo">
-        <circle cx="100" cy="100" r="90"/>
-        <polygon points="100,30 30,170 170,170"/>
-        <rect x="70" y="70" width="60" height="60"/>
+    <svg width="34" height="34" viewBox="0 0 200 200" class="apex-logo-main">
+        <polygon points="100,10 170,50 170,130 100,170 30,130 30,50" />
+        <polygon points="100,35 55,125 145,125" />
+        <line x1="55" y1="135" x2="150" y2="65" />
     </svg>
     <div id="titleBar">APEX ZERO</div>
 </div>
@@ -232,10 +250,10 @@
 
 <!-- SETTINGS PANEL (PUBLIC) -->
 <div id="settingsPanel" class="panel">
-    <h2 style="margin-top:0;">Settings</h2>
+    <h3 style="margin-top:0;">Settings</h3>
 
     <label><b>Theme</b></label>
-    <select id="themePreset" style="width:100%;padding:6px;margin-bottom:10px;">
+    <select id="themePreset">
         <option value="blue">Blue Core</option>
         <option value="purple">Purple Neon</option>
         <option value="red">Red Pulse</option>
@@ -244,7 +262,7 @@
     </select>
 
     <label><b>Background</b></label>
-    <select id="backgroundStyle" style="width:100%;padding:6px;margin-bottom:10px;">
+    <select id="backgroundStyle">
         <option value="dark">Dark</option>
         <option value="grid">Grid</option>
         <option value="gradient">Gradient</option>
@@ -252,14 +270,14 @@
     </select>
 
     <label><b>Layout</b></label>
-    <select id="layoutMode" style="width:100%;padding:6px;margin-bottom:10px;">
+    <select id="layoutMode">
         <option value="grid">Grid</option>
         <option value="compact">Compact</option>
         <option value="wide">Wide</option>
     </select>
 
     <label><b>Icon Shape</b></label>
-    <select id="iconShape" style="width:100%;padding:6px;margin-bottom:10px;">
+    <select id="iconShape">
         <option value="rounded">Rounded</option>
         <option value="square">Square</option>
         <option value="pill">Pill</option>
@@ -286,27 +304,27 @@
 
 <!-- ADMIN PANEL -->
 <div id="adminPanel" class="panel">
-    <h2 style="margin-top:0;">Admin Mode</h2>
+    <h3 style="margin-top:0;">Admin Mode</h3>
 
     <label><b>Grid Spacing</b></label>
-    <input id="gridSpacing" type="range" min="40" max="200" value="100" style="width:100%;">
+    <input id="gridSpacing" type="range" min="40" max="200" value="100">
 
     <label><b>Icon Corner Radius</b></label>
-    <input id="iconRadius" type="range" min="0" max="40" value="12" style="width:100%;">
+    <input id="iconRadius" type="range" min="0" max="40" value="14">
 
     <label><b>Watermark Opacity</b></label>
-    <input id="watermarkOpacity" type="range" min="0" max="100" value="6" style="width:100%;">
+    <input id="watermarkOpacity" type="range" min="0" max="100" value="6">
 
     <label><b>Title Size</b></label>
-    <input id="titleSize" type="range" min="20" max="60" value="32" style="width:100%;">
+    <input id="titleSize" type="range" min="20" max="60" value="30">
 
-    <hr style="margin:16px 0;">
+    <hr style="margin:14px 0;">
 
-    <h3>Game Manager</h3>
-    <button id="addGameBtn" style="width:100%;padding:8px;margin-bottom:8px;">Add Game</button>
-    <div id="gameList" style="max-height:160px;overflow-y:auto;"></div>
+    <h4>Game Manager</h4>
+    <button id="addGameBtn" style="width:100%;padding:6px;margin-bottom:6px;">Add Game</button>
+    <div id="gameList" style="max-height:150px;overflow-y:auto;font-size:13px;"></div>
 
-    <h3 id="dangerToggle">▼ Danger Zone</h3>
+    <h4 id="dangerToggle">▼ Danger Zone</h4>
     <div id="dangerZone" style="display:none;">
         <button id="resetSystem">Reset System</button>
         <button id="resetPassword">Reset Admin Password</button>
@@ -325,7 +343,7 @@
         { name: "Game 2", url: "https://example.com" }
     ];
 
-    let currentIconRadius = 12;
+    let currentIconRadius = 14;
 
     // ============================
     // DESKTOP RENDER
@@ -340,7 +358,7 @@
             icon.style.borderRadius = currentIconRadius + "px";
 
             icon.innerHTML = `
-                <div style="font-size:42px;">🎮</div>
+                <div style="font-size:40px;">🎮</div>
                 <div class="iconLabel">${game.name}</div>
             `;
 
@@ -377,24 +395,27 @@
     // ============================
     // SECRET ADMIN TRIGGERS
     // ============================
+    // Double-click logo
     document.getElementById("watermark").addEventListener("dblclick", () => {
         if (!localStorage.getItem("adminPassword")) return;
         document.getElementById("adminPasswordModal").style.display = "flex";
     });
 
+    // Shift + A then Z
+    let awaitingZ = false;
     document.addEventListener("keydown", (e) => {
         if (e.shiftKey && e.key.toLowerCase() === "a") {
-            document.addEventListener("keydown", secondKeyOnce);
+            awaitingZ = true;
+            return;
         }
-    });
-
-    function secondKeyOnce(e) {
-        if (e.key.toLowerCase() === "z") {
+        if (awaitingZ && e.key.toLowerCase() === "z") {
+            awaitingZ = false;
             if (!localStorage.getItem("adminPassword")) return;
             document.getElementById("adminPasswordModal").style.display = "flex";
+        } else {
+            awaitingZ = false;
         }
-        document.removeEventListener("keydown", secondKeyOnce);
-    }
+    });
 
     // ============================
     // ADMIN PASSWORD CHECK
@@ -463,11 +484,12 @@
 
             const removeBtn = document.createElement("button");
             removeBtn.textContent = "Remove";
-            removeBtn.style.padding = "4px 8px";
+            removeBtn.style.padding = "3px 8px";
             removeBtn.style.background = "var(--danger)";
             removeBtn.style.border = "none";
             removeBtn.style.borderRadius = "6px";
             removeBtn.style.cursor = "pointer";
+            removeBtn.style.fontSize = "12px";
 
             removeBtn.addEventListener("click", () => {
                 games.splice(index, 1);
@@ -526,23 +548,23 @@
     document.getElementById("themePreset").addEventListener("change", (e) => {
         const theme = e.target.value;
         if (theme === "blue") {
-            document.body.style.background = "#000814";
-            document.documentElement.style.setProperty("--accent", "#3aa9ff");
+            document.body.style.background = "#02030a";
+            document.documentElement.style.setProperty("--accent", "#4fd1ff");
         }
         if (theme === "purple") {
-            document.body.style.background = "#0a0014";
-            document.documentElement.style.setProperty("--accent", "#b44bff");
+            document.body.style.background = "#0b0214";
+            document.documentElement.style.setProperty("--accent", "#c26bff");
         }
         if (theme === "red") {
-            document.body.style.background = "#140000";
+            document.body.style.background = "#140003";
             document.documentElement.style.setProperty("--accent", "#ff4b4b");
         }
         if (theme === "green") {
-            document.body.style.background = "#001400";
-            document.documentElement.style.setProperty("--accent", "#00ff88");
+            document.body.style.background = "#00140a";
+            document.documentElement.style.setProperty("--accent", "#00ff9a");
         }
         if (theme === "mono") {
-            document.body.style.background = "#000";
+            document.body.style.background = "#000000";
             document.documentElement.style.setProperty("--accent", "#ffffff");
         }
     });
@@ -551,7 +573,7 @@
     document.getElementById("backgroundStyle").addEventListener("change", (e) => {
         const bg = e.target.value;
         if (bg === "dark") {
-            document.body.style.background = "#000";
+            document.body.style.background = "#02030a";
         }
         if (bg === "grid") {
             document.body.style.background = `
@@ -560,7 +582,7 @@
             `;
         }
         if (bg === "gradient") {
-            document.body.style.background = "linear-gradient(135deg, #001, #113, #001)";
+            document.body.style.background = "linear-gradient(135deg, #02030a, #111b3a, #02030a)";
         }
         if (bg === "scanlines") {
             document.body.style.background = `
@@ -590,7 +612,7 @@
     // Icon shape
     document.getElementById("iconShape").addEventListener("change", (e) => {
         const shape = e.target.value;
-        if (shape === "rounded") currentIconRadius = 12;
+        if (shape === "rounded") currentIconRadius = 14;
         if (shape === "square") currentIconRadius = 0;
         if (shape === "pill") currentIconRadius = 40;
         renderDesktop();
