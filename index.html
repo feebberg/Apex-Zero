@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Apex Zero</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: #000;
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    /* Subtle animated gradient */
+    .bg {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #000 0%, #0a0a0f 50%, #000 100%);
+        animation: shift 12s ease-in-out infinite alternate;
+        z-index: -1;
+    }
+
+    @keyframes shift {
+        from { filter: brightness(1); }
+        to { filter: brightness(1.25); }
+    }
+
+    /* Apex Zero Title */
+    h1 {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 64px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        color: #ffffff;
+        text-transform: uppercase;
+    }
+
+    /* Accent bar under title */
+    .bar {
+        width: 180px;
+        height: 4px;
+        background: #ffffff;
+        margin: 20px auto 40px auto;
+        border-radius: 2px;
+    }
+
+    /* Button */
+    .btn {
+        display: block;
+        width: 340px;
+        margin: 18px auto;
+        padding: 18px;
+        text-align: center;
+        font-size: 22px;
+        text-decoration: none;
+        color: #000;
+        background: #ffffff;
+        border-radius: 6px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        transition: 0.2s;
+    }
+
+    .btn:hover {
+        transform: translateY(-4px);
+        background: #dcdcdc;
+    }
+
+    /* Footer */
+    .footer {
+        position: fixed;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        color: #555;
+        letter-spacing: 1px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<!-- APEX ZERO SYSTEMS LOGO -->
+<svg width="140" height="140" viewBox="0 0 200 200" fill="none"
+xmlns="http://www.w3.org/2000/svg"
+style="display:block;margin:40px auto 10px auto;">
+    <circle cx="100" cy="100" r="90" stroke="white" stroke-width="6"/>
+    <path d="M60 130 L100 40 L140 130 Z" stroke="white" stroke-width="6" fill="none"/>
+    <rect x="85" y="130" width="30" height="30" stroke="white" stroke-width="6" fill="none"/>
+</svg>
+
+<h1>APEX ZERO</h1>
+<div class="bar"></div>
+
+<!-- ALPHABETIZED GAME LIST -->
+
+<a class="btn" href="2048cupcakes.html">2048 Cupcakes</a>
+
+<a class="btn" href="agariolite.html">Agario Lite</a>
+
+<a class="btn" href="cookieclicker (1).htm">Cookie Clicker</a>
+
+<a class="btn" href="Eaglercraft_1.12.2_WASM_Offline_Download (2).html">
+    Minecraft 1.12.2
+</a>
+
+<a class="btn" href="paperio2.htm">Paper.io 2</a>
+
+<a class="btn" href="rooftopsnipers2.html">Rooftop Snipers 2</a>
+
+<div class="footer">© 2026 Apex Zero Systems — feebberg</div>
+
+</body>
+</html>
