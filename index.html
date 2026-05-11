@@ -44,8 +44,8 @@
         }
 
         #splashLogo {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 32px;
             border: 2px solid rgba(255, 255, 255, 0.12);
             display: flex;
@@ -58,39 +58,16 @@
                 0 0 120px rgba(107, 139, 255, 0.25);
         }
 
-        #splashLogo::before {
-            content: "";
-            position: absolute;
-            inset: -40%;
-            background:
-                radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.12), transparent 55%),
-                radial-gradient(circle at 100% 100%, rgba(107, 139, 255, 0.45), transparent 60%);
-            mix-blend-mode: screen;
-            opacity: 0.9;
-        }
-
         #splashGlyph {
             position: relative;
-            width: 52px;
-            height: 52px;
-            border-radius: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text);
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            font-size: 14px;
-            text-transform: uppercase;
-            box-shadow:
-                0 0 18px rgba(255, 255, 255, 0.45),
-                0 0 40px rgba(107, 139, 255, 0.6);
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
         }
 
         #splashTitle {
-            font-size: 20px;
-            letter-spacing: 0.16em;
+            font-size: 22px;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--text);
             opacity: 0.9;
@@ -105,7 +82,7 @@
 
         #splashProgress {
             margin-top: 18px;
-            width: 220px;
+            width: 260px;
             height: 3px;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.08);
@@ -140,7 +117,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            padding: 56px 24px 24px 24px;
+            padding: 64px 24px 24px 24px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -149,7 +126,7 @@
         /* Top bar */
         #topBar {
             position: absolute;
-            top: 12px;
+            top: 16px;
             left: 0;
             right: 0;
             height: 32px;
@@ -161,7 +138,7 @@
 
         #topBarInner {
             width: 100%;
-            max-width: 980px;
+            max-width: 1280px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -169,10 +146,10 @@
             pointer-events: none;
         }
 
-        /* README button – top left, only button there */
+        /* README button – top left */
         #readmeLink {
             position: absolute;
-            left: 16px;
+            left: 20px;
             top: 0;
             pointer-events: auto;
             opacity: 0;
@@ -184,7 +161,7 @@
             color: var(--text);
             text-decoration: none;
             font-size: 12px;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, 0.35);
             background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 6, 10, 0.9));
@@ -216,7 +193,7 @@
         /* Title */
         #titleBar {
             pointer-events: auto;
-            padding: 4px 12px;
+            padding: 6px 16px;
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, 0.16);
             background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), rgba(5, 6, 10, 0.9));
@@ -225,24 +202,24 @@
                 0 0 24px rgba(0, 0, 0, 0.8);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         #titleGlyph {
-            width: 18px;
-            height: 18px;
-            border-radius: 6px;
+            width: 22px;
+            height: 22px;
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 700;
             letter-spacing: 0.08em;
         }
 
         #titleText {
-            font-size: 11px;
+            font-size: 12px;
             letter-spacing: 0.22em;
             text-transform: uppercase;
             color: var(--muted);
@@ -251,7 +228,7 @@
         /* Settings button – top right */
         #settingsButton {
             position: absolute;
-            right: 16px;
+            right: 20px;
             top: 0;
             pointer-events: auto;
             opacity: 0;
@@ -261,7 +238,7 @@
 
         #settingsButton button {
             font-size: 12px;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, 0.35);
             background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 6, 10, 0.9));
@@ -298,12 +275,12 @@
         /* Main layout */
         #mainLayout {
             width: 100%;
-            max-width: 980px;
+            max-width: 1280px;
             margin: 0 auto;
             height: 100%;
             display: grid;
             grid-template-columns: 3fr 2fr;
-            gap: 18px;
+            gap: 24px;
         }
 
         /* Desktop grid */
@@ -316,26 +293,12 @@
             box-shadow:
                 0 0 0 1px rgba(255, 255, 255, 0.04),
                 0 24px 80px rgba(0, 0, 0, 0.9);
-            padding: 18px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
             position: relative;
             overflow: hidden;
-        }
-
-        #desktopGrid::before {
-            content: "";
-            position: absolute;
-            inset: -40%;
-            background-image: linear-gradient(
-                rgba(255, 255, 255, 0.06) 1px,
-                transparent 1px
-            );
-            background-size: 32px 32px;
-            opacity: 0.25;
-            mix-blend-mode: soft-light;
-            pointer-events: none;
         }
 
         #desktopHeader {
@@ -354,34 +317,26 @@
         }
 
         #desktopHeaderActions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .pill {
             font-size: 10px;
-            text-transform: uppercase;
             letter-spacing: 0.16em;
-            padding: 3px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-transform: uppercase;
             color: var(--muted);
-            background: rgba(5, 6, 10, 0.8);
+            opacity: 0.7;
         }
 
         #desktopIcons {
             position: relative;
             z-index: 1;
-            margin-top: 6px;
+            margin-top: 8px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 18px;
         }
 
         .iconCard {
             position: relative;
             border-radius: 18px;
-            padding: 10px 8px 8px 8px;
+            padding: 12px 10px 10px 10px;
             background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), rgba(5, 6, 10, 0.9));
             border: 1px solid rgba(255, 255, 255, 0.12);
             box-shadow:
@@ -392,27 +347,27 @@
         }
 
         .iconCard:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow:
                 0 0 0 1px rgba(255, 255, 255, 0.12),
                 0 18px 40px rgba(0, 0, 0, 0.95);
         }
 
         .iconGlyph {
-            width: 32px;
-            height: 32px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             margin-bottom: 6px;
             background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 6, 10, 0.9));
         }
 
         .iconTitle {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text);
             white-space: nowrap;
             overflow: hidden;
@@ -420,7 +375,7 @@
         }
 
         .iconMeta {
-            font-size: 9px;
+            font-size: 10px;
             color: var(--muted);
             margin-top: 2px;
         }
@@ -429,7 +384,7 @@
         #rightColumn {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .panel {
@@ -473,9 +428,15 @@
             align-items: center;
             justify-content: space-between;
             font-size: 11px;
-            padding: 4px 6px;
+            padding: 6px 8px;
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+
+        .recentItem:hover {
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .recentName {
@@ -487,7 +448,7 @@
             font-size: 10px;
         }
 
-        /* Settings modal */
+        /* Settings & Admin modals */
         #settingsModal,
         #adminModal {
             position: fixed;
@@ -500,7 +461,7 @@
         }
 
         .modalInner {
-            width: 360px;
+            width: 380px;
             max-width: 90vw;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.16);
@@ -749,10 +710,11 @@
                 <div id="desktopHeader">
                     <div id="desktopHeaderTitle">Desktop</div>
                     <div id="desktopHeaderActions">
-                        <div class="pill">Shift + A then Z → Admin</div>
+                        <!-- No admin shortcut hint here -->
+                        System Ready
                     </div>
                 </div>
-                <div id="desktopIcons" id="desktopIconsContainer">
+                <div id="desktopIcons">
                     <!-- Icons injected by JS -->
                 </div>
                 <div id="watermark">APEX ZERO</div>
@@ -830,7 +792,7 @@
             <div id="adminAuthSection">
                 <div class="modalSectionTitle">Admin Access</div>
                 <div id="adminAuthBody" style="font-size: 11px; color: var(--muted); margin-top: 4px;">
-                    <!-- Filled by JS (create or enter password) -->
+                    <!-- Filled by JS -->
                 </div>
                 <div class="field">
                     <label for="adminPasswordInput">Password</label>
@@ -875,12 +837,10 @@
             ADMIN_PASSWORD: "apexZero_adminPassword"
         };
 
-        // --- Default games ---
+        // --- Default games (empty; you add via Admin or here) ---
         const defaultGames = [
-            { name: "Snake", url: "snake.html", glyph: "S" },
-            { name: "2048", url: "2048.html", glyph: "2" },
-            { name: "Dino", url: "dino.html", glyph: "D" },
-            { name: "Eaglercraft 1.12.2", url: "Eaglercraft_1.12.2_WASM_Offline.html", glyph: "MC" }
+            // Example:
+            // { name: "Minecraft 1.12.2", url: "Eaglercraft_1.12.2_WASM_Offline_Download (2).html", glyph: "MC" }
         ];
 
         let games = [];
@@ -912,6 +872,14 @@
         function renderDesktop() {
             const container = document.getElementById("desktopIcons");
             container.innerHTML = "";
+            if (!games.length) {
+                const empty = document.createElement("div");
+                empty.style.fontSize = "11px";
+                empty.style.color = "var(--muted)";
+                empty.textContent = "No games configured. Open Admin to add some.";
+                container.appendChild(empty);
+                return;
+            }
             games.forEach((game, index) => {
                 const card = document.createElement("div");
                 card.className = "iconCard";
@@ -964,6 +932,13 @@
 
                 row.appendChild(name);
                 row.appendChild(time);
+
+                // Make Recently Played clickable
+                row.addEventListener("click", () => {
+                    const game = games.find(g => g.name === item.name);
+                    if (game) openGame(game);
+                });
+
                 container.appendChild(row);
             });
         }
@@ -1191,15 +1166,12 @@
             refreshAdminAuthView();
         }
 
-        // --- Keyboard shortcut: Shift + A then Z ---
+        // --- Keyboard shortcut: Shift + A then Z (secret, no UI hint) ---
         let adminSequence = [];
         document.addEventListener("keydown", (e) => {
             if (e.key === "Shift") return;
             adminSequence.push(e.key.toLowerCase());
             if (adminSequence.length > 2) adminSequence.shift();
-            if (adminSequence[0] === "shift" || e.shiftKey) {
-                // we only care about A then Z while shift is held
-            }
             if (adminSequence.join("") === "az" && e.shiftKey) {
                 openAdminModal();
                 adminSequence = [];
@@ -1245,7 +1217,6 @@
                 chip.addEventListener("click", () => applyBackground(chip.dataset.bg));
             });
 
-            // Initial admin view
             refreshAdminAuthView();
         });
     </script>
