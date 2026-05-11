@@ -2,119 +2,225 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Apex Zero</title>
+<title>Apex Zero OS</title>
 
 <style>
     body {
         margin: 0;
-        font-family: 'Segoe UI', sans-serif;
         background: #000;
-        color: #fff;
-        overflow-x: hidden;
+        font-family: 'Segoe UI', sans-serif;
+        color: white;
+        overflow: hidden;
     }
 
-    /* Subtle animated gradient */
-    .bg {
+    /* Loading Screen */
+    #loadingScreen {
         position: fixed;
         inset: 0;
-        background: linear-gradient(135deg, #000 0%, #0a0a0f 50%, #000 100%);
-        animation: shift 12s ease-in-out infinite alternate;
-        z-index: -1;
+        background: black;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        animation: fadeOut 1s ease forwards;
+        animation-delay: 3.5s;
     }
 
-    @keyframes shift {
-        from { filter: brightness(1); }
-        to { filter: brightness(1.25); }
-    }
-
-    /* Apex Zero Title */
-    h1 {
-        text-align: center;
-        margin-top: 10px;
-        font-size: 64px;
-        font-weight: 700;
-        letter-spacing: 4px;
-        color: #ffffff;
-        text-transform: uppercase;
-    }
-
-    /* Accent bar under title */
-    .bar {
-        width: 180px;
-        height: 4px;
-        background: #ffffff;
-        margin: 20px auto 40px auto;
-        border-radius: 2px;
-    }
-
-    /* Button */
-    .btn {
-        display: block;
-        width: 340px;
-        margin: 18px auto;
-        padding: 18px;
-        text-align: center;
+    #loadingText {
         font-size: 22px;
-        text-decoration: none;
-        color: #000;
-        background: #ffffff;
-        border-radius: 6px;
-        font-weight: 600;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    #loadingBar {
+        width: 300px;
+        height: 6px;
+        background: #222;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    #loadingFill {
+        width: 0%;
+        height: 100%;
+        background: white;
+        animation: loadBar 3s ease forwards;
+    }
+
+    @keyframes loadBar {
+        to { width: 100%; }
+    }
+
+    @keyframes fadeOut {
+        to { opacity: 0; visibility: hidden; }
+    }
+
+    /* Desktop */
+    #desktop {
+        opacity: 0;
+        animation: fadeIn 1s ease forwards;
+        animation-delay: 4s;
+        padding: 40px;
+    }
+
+    @keyframes fadeIn {
+        to { opacity: 1; }
+    }
+
+    /* Icons */
+    .icon {
+        width: 110px;
+        text-align: center;
+        margin: 20px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .icon img {
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        background: white;
+        padding: 10px;
         transition: 0.2s;
     }
 
-    .btn:hover {
-        transform: translateY(-4px);
+    .icon img:hover {
+        transform: scale(1.1);
         background: #dcdcdc;
     }
 
-    /* Footer */
-    .footer {
+    .icon span {
+        display: block;
+        margin-top: 8px;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    /* Window */
+    #window {
         position: fixed;
-        bottom: 20px;
+        top: 50%;
+        left: 50%;
+        width: 80%;
+        height: 80%;
+        transform: translate(-50%, -50%);
+        background: #0a0a0f;
+        border: 2px solid white;
+        border-radius: 8px;
+        display: none;
+        flex-direction: column;
+        z-index: 5000;
+    }
+
+    #windowHeader {
+        padding: 12px;
+        background: white;
+        color: black;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #closeBtn {
+        cursor: pointer;
+        font-size: 20px;
+        padding: 0 10px;
+    }
+
+    #windowFrame {
+        flex: 1;
+        border: none;
         width: 100%;
-        text-align: center;
+        height: 100%;
+    }
+
+    /* Footer */
+    #footer {
+        position: fixed;
+        bottom: 10px;
+        right: 20px;
         font-size: 14px;
         color: #555;
         letter-spacing: 1px;
+        opacity: 0;
+        animation: fadeIn 1s ease forwards;
+        animation-delay: 4.5s;
     }
 </style>
-</head>
 
+<script>
+    function openGame(title, file) {
+        document.getElementById("windowTitle").innerText = title;
+        document.getElementById("windowFrame").src = file;
+        document.getElementById("window").style.display = "flex";
+    }
+
+    function closeWindow() {
+        document.getElementById("window").style.display = "none";
+        document.getElementById("windowFrame").src = "";
+    }
+</script>
+
+</head>
 <body>
 
-<div class="bg"></div>
+<!-- Loading Screen -->
+<div id="loadingScreen">
+    <div id="loadingText">APEX ZERO SYSTEMS<br>Initializing Core Modules...</div>
+    <div id="loadingBar"><div id="loadingFill"></div></div>
+</div>
 
-<!-- APEX ZERO SYSTEMS LOGO -->
-<svg width="140" height="140" viewBox="0 0 200 200" fill="none"
-xmlns="http://www.w3.org/2000/svg"
-style="display:block;margin:40px auto 10px auto;">
-    <circle cx="100" cy="100" r="90" stroke="white" stroke-width="6"/>
-    <path d="M60 130 L100 40 L140 130 Z" stroke="white" stroke-width="6" fill="none"/>
-    <rect x="85" y="130" width="30" height="30" stroke="white" stroke-width="6" fill="none"/>
-</svg>
+<!-- Desktop -->
+<div id="desktop">
 
-<h1>APEX ZERO</h1>
-<div class="bar"></div>
+    <!-- Icons -->
+    <div class="icon" onclick="openGame('2048 Cupcakes', '2048cupcakes.html')">
+        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+        <span>2048 Cupcakes</span>
+    </div>
 
-<!-- ALPHABETIZED GAME LIST -->
+    <div class="icon" onclick="openGame('Agario Lite', 'agariolite.html')">
+        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+        <span>Agario Lite</span>
+    </div>
 
-<a class="btn" href="2048cupcakes.html">2048 Cupcakes</a>
+    <div class="icon" onclick="openGame('Cookie Clicker', 'cookieclicker (1).htm')">
+        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+        <span>Cookie Clicker</span>
+    </div>
 
-<a class="btn" href="agariolite.html">Agario Lite</a>
+    <div class="icon" onclick="openGame('Minecraft 1.12.2', 'Eaglercraft_1.12.2_WASM_Offline_Download (2).html')">
+        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+        <span>Minecraft 1.12.2</span>
+    </div>
 
-<a class="btn" href="cookieclicker (1).htm">Cookie Clicker</a>
+    <div class="icon" onclick="openGame('Paper.io 2', 'paperio2.htm')">
+        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+        <span>Paper.io 2</span>
+    </div>
 
-<a class="btn" href="Eaglercraft_1.12.2_WASM_Offline_Download (2).html">
-    Minecraft 1.12.2
-</a>
+    <div class="icon" onclick="openGame('Rooftop Snipers 2', 'rooftopsnipers2.html')">
+        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+        <span>Rooftop Snipers 2</span>
+    </div>
 
-<a class="btn" href="paperio2.htm">Paper.io 2</a>
+</div>
 
-<a class="btn" href="rooftopsnipers2.html">Rooftop Snipers 2</a>
+<!-- Window -->
+<div id="window">
+    <div id="windowHeader">
+        <span id="windowTitle">Game</span>
+        <span id="closeBtn" onclick="closeWindow()">✕</span>
+    </div>
+    <iframe id="windowFrame"></iframe>
+</div>
 
-<div class="footer">© 2026 Apex Zero Systems — feebberg</div>
+<!-- Footer -->
+<div id="footer">© 2026 Apex Zero Systems — feebberg</div>
 
 </body>
 </html>
