@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Apex Zero OS</title>
+<title>Apex Zero</title>
 
 <style>
     body {
@@ -49,29 +49,24 @@
         animation: loadBar 3s ease forwards;
     }
 
-    @keyframes loadBar {
-        to { width: 100%; }
-    }
-
-    @keyframes fadeOut {
-        to { opacity: 0; visibility: hidden; }
-    }
+    @keyframes loadBar { to { width: 100%; } }
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
     /* Desktop */
     #desktop {
         opacity: 0;
         animation: fadeIn 1s ease forwards;
         animation-delay: 4s;
-        padding: 40px;
+        padding-top: 80px;
         position: relative;
         z-index: 2;
+        display: flex;
+        justify-content: center;
     }
 
-    @keyframes fadeIn {
-        to { opacity: 1; }
-    }
+    @keyframes fadeIn { to { opacity: 1; } }
 
-    /* Centered Apex Zero watermark logo */
+    /* Watermark Logo */
     #watermark {
         position: fixed;
         top: 50%;
@@ -82,26 +77,31 @@
         pointer-events: none;
     }
 
-    /* Icons */
+    /* Icon Grid */
+    #iconGrid {
+        display: grid;
+        grid-template-columns: repeat(3, 140px);
+        grid-gap: 40px;
+        justify-items: center;
+        align-items: center;
+    }
+
     .icon {
-        width: 110px;
         text-align: center;
-        margin: 20px;
-        display: inline-block;
         cursor: pointer;
     }
 
     .iconBox {
-        width: 80px;
-        height: 80px;
-        border-radius: 20px;
+        width: 100px;
+        height: 100px;
+        border-radius: 22px;
         background: white;
         color: black;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        font-size: 22px;
+        font-size: 26px;
         letter-spacing: 1px;
         transition: 0.2s;
         box-shadow: 0 0 0px rgba(255,255,255,0);
@@ -114,8 +114,8 @@
 
     .icon span {
         display: block;
-        margin-top: 8px;
-        font-size: 14px;
+        margin-top: 10px;
+        font-size: 15px;
         letter-spacing: 1px;
     }
 
@@ -138,16 +138,12 @@
     /* TRUE FULLSCREEN LAUNCH */
     function openGameFullscreen(file) {
         const win = window.open(file, "_blank");
+        if (!win) return;
 
-        if (!win) return; // popup blocked
-
-        // Try to request fullscreen once the new tab loads
         win.onload = () => {
             try {
                 win.document.documentElement.requestFullscreen();
-            } catch (e) {
-                // Some games request fullscreen themselves
-            }
+            } catch (e) {}
         };
     }
 </script>
@@ -161,9 +157,9 @@
     <div id="loadingBar"><div id="loadingFill"></div></div>
 </div>
 
-<!-- Centered Apex Zero watermark logo -->
+<!-- Watermark Logo -->
 <div id="watermark">
-    <svg width="260" height="260" viewBox="0 0 200 200" fill="none"
+    <svg width="300" height="300" viewBox="0 0 200 200" fill="none"
          xmlns="http://www.w3.org/2000/svg">
         <circle cx="100" cy="100" r="90" stroke="white" stroke-width="6"/>
         <path d="M60 130 L100 40 L140 130 Z" stroke="white" stroke-width="6" fill="none"/>
@@ -173,37 +169,39 @@
 
 <!-- Desktop -->
 <div id="desktop">
+    <div id="iconGrid">
 
-    <div class="icon" onclick="openGameFullscreen('2048cupcakes.html')">
-        <div class="iconBox">2048</div>
-        <span>2048 Cupcakes</span>
+        <div class="icon" onclick="openGameFullscreen('2048cupcakes.html')">
+            <div class="iconBox">2048</div>
+            <span>2048 Cupcakes</span>
+        </div>
+
+        <div class="icon" onclick="openGameFullscreen('agariolite.html')">
+            <div class="iconBox">AG</div>
+            <span>Agario Lite</span>
+        </div>
+
+        <div class="icon" onclick="openGameFullscreen('cookieclicker (1).htm')">
+            <div class="iconBox">CK</div>
+            <span>Cookie Clicker</span>
+        </div>
+
+        <div class="icon" onclick="openGameFullscreen('Eaglercraft_1.12.2_WASM_Offline_Download (2).html')">
+            <div class="iconBox">MC</div>
+            <span>Minecraft 1.12.2</span>
+        </div>
+
+        <div class="icon" onclick="openGameFullscreen('paperio2.htm')">
+            <div class="iconBox">P2</div>
+            <span>Paper.io 2</span>
+        </div>
+
+        <div class="icon" onclick="openGameFullscreen('rooftopsnipers2.html')">
+            <div class="iconBox">RS2</div>
+            <span>Rooftop Snipers 2</span>
+        </div>
+
     </div>
-
-    <div class="icon" onclick="openGameFullscreen('agariolite.html')">
-        <div class="iconBox">AG</div>
-        <span>Agario Lite</span>
-    </div>
-
-    <div class="icon" onclick="openGameFullscreen('cookieclicker (1).htm')">
-        <div class="iconBox">CK</div>
-        <span>Cookie Clicker</span>
-    </div>
-
-    <div class="icon" onclick="openGameFullscreen('Eaglercraft_1.12.2_WASM_Offline_Download (2).html')">
-        <div class="iconBox">MC</div>
-        <span>Minecraft 1.12.2</span>
-    </div>
-
-    <div class="icon" onclick="openGameFullscreen('paperio2.htm')">
-        <div class="iconBox">P2</div>
-        <span>Paper.io 2</span>
-    </div>
-
-    <div class="icon" onclick="openGameFullscreen('rooftopsnipers2.html')">
-        <div class="iconBox">RS2</div>
-        <span>Rooftop Snipers 2</span>
-    </div>
-
 </div>
 
 <!-- Footer -->
