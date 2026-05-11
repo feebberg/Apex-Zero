@@ -5,242 +5,279 @@
 <title>Apex Zero</title>
 
 <style>
-    :root {
-        --accent: #4fd1ff;
-        --danger: #ff4b4b;
-        --bg-dark: #02030a;
-        --text-light: #ffffff;
-    }
+:root {
+    --accent: #4fd1ff;
+    --danger: #ff4b4b;
+    --bg-dark: #02030a;
+    --text-light: #ffffff;
+}
+* { box-sizing: border-box; }
 
-    * { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: var(--bg-dark);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text-light);
+    overflow: hidden;
+}
 
-    body {
-        margin: 0;
-        background: var(--bg-dark);
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: var(--text-light);
-        overflow: hidden;
-    }
+/* Splash screen */
+#splash {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.splash-logo {
+    width: 140px;
+    height: 140px;
+    animation: glitch 0.9s ease-in-out 1;
+}
+.splash-text-main {
+    margin-top: 14px;
+    font-size: 22px;
+    letter-spacing: 6px;
+}
+.splash-text-sub {
+    margin-top: 4px;
+    font-size: 11px;
+    opacity: 0.7;
+}
+@keyframes glitch {
+    0%   { transform: translate(0,0); filter: drop-shadow(0 0 0 #f00); }
+    20%  { transform: translate(-3px,1px); filter: drop-shadow(-2px 0 #f00); }
+    40%  { transform: translate(3px,-1px); filter: drop-shadow(2px 0 #0ff); }
+    60%  { transform: translate(-2px,2px); filter: drop-shadow(-2px 0 #0ff); }
+    80%  { transform: translate(2px,-2px); filter: drop-shadow(2px 0 #f0f); }
+    100% { transform: translate(0,0); filter: drop-shadow(0 0 0 #000); }
+}
+.splash-hide {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
 
-    @keyframes fadeIn { to { opacity: 1; } }
+/* Background logo (secret trigger) */
+#watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.06;
+    z-index: 1;
+    cursor: pointer;
+    pointer-events: auto;
+}
+.apex-shard {
+    fill: none;
+    stroke: white;
+    stroke-width: 6;
+}
 
-    /* NEW LOGO STYLE (hex + core) */
-    .apex-logo-main {
-        fill: none;
-        stroke: white;
-        stroke-width: 6;
-    }
+/* Title bar */
+#titleBarContainer {
+    position: fixed;
+    top: 18px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+    opacity: 0;
+    animation: fadeIn 0.7s ease forwards;
+    animation-delay: 0.4s;
+}
+#titleBar {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+@keyframes fadeIn { to { opacity: 1; } }
 
-    /* Background logo (secret trigger) */
-    #watermark {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.06;
-        z-index: 1;
-        cursor: pointer;
-        pointer-events: auto;
-    }
+/* Settings button */
+#settingsBtn {
+    position: fixed;
+    top: 18px;
+    right: 26px;
+    font-size: 14px;
+    padding: 6px 12px;
+    border: 2px solid white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    opacity: 0;
+    animation: fadeIn 0.7s ease forwards;
+    animation-delay: 0.6s;
+    z-index: 10;
+}
+#settingsBtn:hover {
+    background: white;
+    color: black;
+    transform: translateY(-1px);
+}
 
-    /* Title bar */
-    #titleBarContainer {
-        position: fixed;
-        top: 18px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        z-index: 10;
-        opacity: 0;
-        animation: fadeIn 0.7s ease forwards;
-        animation-delay: 0.4s;
-    }
+/* Panels */
+.panel {
+    position: fixed;
+    background: rgba(0,0,0,0.9);
+    border: 2px solid var(--accent);
+    border-radius: 14px;
+    padding: 16px;
+    z-index: 20;
+}
+#settingsPanel {
+    top: 70px;
+    right: 26px;
+    width: 260px;
+    display: none;
+}
+#adminPanel {
+    top: 70px;
+    left: 26px;
+    width: 300px;
+    display: none;
+}
 
-    #titleBar {
-        font-size: 30px;
-        font-weight: 700;
-        letter-spacing: 4px;
-    }
+/* Modals */
+.modalOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+.modalBox {
+    background: #080910;
+    padding: 22px;
+    border-radius: 14px;
+    border: 2px solid var(--accent);
+    width: 320px;
+    text-align: center;
+}
+.modalBox input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #05060b;
+    color: white;
+}
+.modalBox button {
+    margin-top: 12px;
+    padding: 8px 16px;
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
 
-    /* Settings button */
-    #settingsBtn {
-        position: fixed;
-        top: 18px;
-        right: 26px;
-        font-size: 14px;
-        padding: 6px 12px;
-        border: 2px solid white;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-        opacity: 0;
-        animation: fadeIn 0.7s ease forwards;
-        animation-delay: 0.6s;
-        z-index: 10;
-    }
+/* Desktop grid */
+#desktop {
+    position: fixed;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: calc(100% - 140px);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-auto-rows: 140px;
+    gap: 40px;
+    padding-bottom: 40px;
+    overflow-y: auto;
+    z-index: 5;
+}
+.desktopIcon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.18s;
+}
+.desktopIcon:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(79,209,255,0.4);
+}
+.desktopIcon .iconLabel {
+    margin-top: 6px;
+    font-size: 14px;
+    text-align: center;
+}
 
-    #settingsBtn:hover {
-        background: white;
-        color: black;
-        transform: translateY(-1px);
-    }
+/* Danger Zone */
+#dangerToggle {
+    color: var(--danger);
+    cursor: pointer;
+    margin-top: 14px;
+    font-size: 14px;
+}
+#dangerZone button {
+    width: 100%;
+    padding: 8px;
+    background: var(--danger);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    margin-top: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
 
-    /* Panels */
-    .panel {
-        position: fixed;
-        background: rgba(0,0,0,0.9);
-        border: 2px solid var(--accent);
-        border-radius: 14px;
-        padding: 16px;
-        z-index: 20;
-    }
-
-    #settingsPanel {
-        top: 70px;
-        right: 26px;
-        width: 260px;
-        display: none;
-    }
-
-    #adminPanel {
-        top: 70px;
-        left: 26px;
-        width: 300px;
-        display: none;
-    }
-
-    /* Modals */
-    .modalOverlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.85);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 999;
-    }
-
-    .modalBox {
-        background: #080910;
-        padding: 22px;
-        border-radius: 14px;
-        border: 2px solid var(--accent);
-        width: 320px;
-        text-align: center;
-    }
-
-    .modalBox input {
-        width: 100%;
-        padding: 8px;
-        margin-top: 10px;
-        border-radius: 8px;
-        border: none;
-        background: #05060b;
-        color: white;
-    }
-
-    .modalBox button {
-        margin-top: 12px;
-        padding: 8px 16px;
-        width: 100%;
-        background: var(--accent);
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 15px;
-    }
-
-    /* Desktop grid */
-    #desktop {
-        position: fixed;
-        top: 120px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        height: calc(100% - 140px);
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        grid-auto-rows: 140px;
-        gap: 40px;
-        padding-bottom: 40px;
-        overflow-y: auto;
-        z-index: 5;
-    }
-
-    .desktopIcon {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: rgba(255,255,255,0.04);
-        border: 2px solid rgba(255,255,255,0.12);
-        border-radius: 14px;
-        cursor: pointer;
-        transition: 0.18s;
-    }
-
-    .desktopIcon:hover {
-        transform: translateY(-4px);
-        border-color: var(--accent);
-        box-shadow: 0 0 12px rgba(79,209,255,0.4);
-    }
-
-    .desktopIcon .iconLabel {
-        margin-top: 6px;
-        font-size: 14px;
-        text-align: center;
-    }
-
-    /* Danger Zone */
-    #dangerToggle {
-        color: var(--danger);
-        cursor: pointer;
-        margin-top: 14px;
-        font-size: 14px;
-    }
-
-    #dangerZone button {
-        width: 100%;
-        padding: 8px;
-        background: var(--danger);
-        border: none;
-        border-radius: 8px;
-        color: white;
-        margin-top: 8px;
-        cursor: pointer;
-        font-size: 14px;
-    }
-
-    select, input[type="range"] {
-        width: 100%;
-        margin-bottom: 10px;
-    }
+select, input[type="range"] {
+    width: 100%;
+    margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
 
+<!-- SPLASH SCREEN -->
+<div id="splash">
+    <div class="splash-logo">
+        <svg viewBox="0 0 200 200" class="apex-shard">
+            <polygon points="100,20 25,170 175,170" />
+            <polygon points="100,20 60,150 100,150" stroke-width="4" />
+            <polygon points="100,20 100,150 140,150" stroke-width="4" />
+            <line x1="55" y1="140" x2="155" y2="80" stroke-width="4" />
+        </svg>
+    </div>
+    <div class="splash-text-main">APEX ZERO</div>
+    <div class="splash-text-sub">ACCESSING INTERFACE…</div>
+</div>
+
 <!-- BACKGROUND LOGO (SECRET ADMIN TRIGGER) -->
 <div id="watermark">
-    <!-- NEW LOGO: hex shell + inner core + slash -->
-    <svg width="420" height="420" viewBox="0 0 200 200" class="apex-logo-main">
-        <!-- Hexagon shell -->
-        <polygon points="100,10 170,50 170,130 100,170 30,130 30,50" />
-        <!-- Inner core triangle -->
-        <polygon points="100,35 55,125 145,125" />
-        <!-- Diagonal slash -->
-        <line x1="55" y1="135" x2="150" y2="65" />
+    <svg width="420" height="420" viewBox="0 0 200 200" class="apex-shard">
+        <polygon points="100,20 25,170 175,170" />
+        <polygon points="100,20 60,150 100,150" stroke-width="4" />
+        <polygon points="100,20 100,150 140,150" stroke-width="4" />
+        <line x1="55" y1="140" x2="155" y2="80" stroke-width="4" />
     </svg>
 </div>
 
-<!-- TITLE BAR WITH SMALL LOGO -->
+<!-- TITLE BAR -->
 <div id="titleBarContainer">
-    <svg width="34" height="34" viewBox="0 0 200 200" class="apex-logo-main">
-        <polygon points="100,10 170,50 170,130 100,170 30,130 30,50" />
-        <polygon points="100,35 55,125 145,125" />
-        <line x1="55" y1="135" x2="150" y2="65" />
+    <svg width="34" height="34" viewBox="0 0 200 200" class="apex-shard">
+        <polygon points="100,20 25,170 175,170" />
+        <polygon points="100,20 60,150 100,150" stroke-width="4" />
+        <polygon points="100,20 100,150 140,150" stroke-width="4" />
+        <line x1="55" y1="140" x2="155" y2="80" stroke-width="4" />
     </svg>
     <div id="titleBar">APEX ZERO</div>
 </div>
@@ -248,7 +285,7 @@
 <!-- SETTINGS BUTTON -->
 <div id="settingsBtn">Settings</div>
 
-<!-- SETTINGS PANEL (PUBLIC) -->
+<!-- SETTINGS PANEL -->
 <div id="settingsPanel" class="panel">
     <h3 style="margin-top:0;">Settings</h3>
 
@@ -333,290 +370,299 @@
 
 <!-- DESKTOP GRID -->
 <div id="desktop"></div>
-
 <script>
-    // ============================
-    // STATE
-    // ============================
-    let games = JSON.parse(localStorage.getItem("games")) || [
-        { name: "Game 1", url: "https://example.com" },
-        { name: "Game 2", url: "https://example.com" }
-    ];
+/* ============================
+   ALPHABETIZED GAME LIST
+============================ */
+let games = [
+    { name: "2048 Cupcakes", url: "2048cupcakes.html" },
+    { name: "Agario Lite", url: "agariolite.html" },
+    { name: "Cookie Clicker", url: "cookieclicker (1).htm" },
+    { name: "Minecraft 1.12.2", url: "Minecraft 1.12.2 - Eaglercraft_1.12.2_WASM_Offline_Download (2).html" },
+    { name: "Paper.io 2", url: "paperio2.htm" },
+    { name: "Rooftop Snipers 2", url: "rooftopsnipers2.html" }
+];
 
-    let currentIconRadius = 14;
+let currentIconRadius = 14;
 
-    // ============================
-    // DESKTOP RENDER
-    // ============================
-    function renderDesktop() {
-        const desktop = document.getElementById("desktop");
-        desktop.innerHTML = "";
+/* ============================
+   SPLASH SCREEN
+============================ */
+window.addEventListener("load", () => {
+    const splash = document.getElementById("splash");
+    setTimeout(() => {
+        splash.classList.add("splash-hide");
+        setTimeout(() => splash.style.display = "none", 400);
+    }, 1600);
 
-        games.forEach((game) => {
-            const icon = document.createElement("div");
-            icon.className = "desktopIcon";
-            icon.style.borderRadius = currentIconRadius + "px";
-
-            icon.innerHTML = `
-                <div style="font-size:40px;">🎮</div>
-                <div class="iconLabel">${game.name}</div>
-            `;
-
-            icon.addEventListener("click", () => {
-                window.open(game.url, "_blank");
-            });
-
-            desktop.appendChild(icon);
-        });
+    const stored = localStorage.getItem("adminPassword");
+    if (!stored) {
+        document.getElementById("passwordSetupModal").style.display = "flex";
     }
+});
 
-    renderDesktop();
+/* ============================
+   DESKTOP RENDER
+============================ */
+function renderDesktop() {
+    const desktop = document.getElementById("desktop");
+    desktop.innerHTML = "";
 
-    // ============================
-    // PASSWORD SETUP (FIRST TIME)
-    // ============================
-    window.addEventListener("load", () => {
-        const stored = localStorage.getItem("adminPassword");
-        if (!stored) {
-            document.getElementById("passwordSetupModal").style.display = "flex";
-        }
+    games.forEach((game) => {
+        const icon = document.createElement("div");
+        icon.className = "desktopIcon";
+        icon.style.borderRadius = currentIconRadius + "px";
+
+        icon.innerHTML = `
+            <div style="font-size:40px;">🎮</div>
+            <div class="iconLabel">${game.name}</div>
+        `;
+
+        icon.addEventListener("click", () => window.open(game.url, "_blank"));
+        desktop.appendChild(icon);
     });
+}
+renderDesktop();
 
-    document.getElementById("saveAdminPassword").addEventListener("click", () => {
-        const pw = document.getElementById("newAdminPassword").value.trim();
-        if (!pw) {
-            alert("Password cannot be empty.");
-            return;
-        }
-        localStorage.setItem("adminPassword", pw);
-        document.getElementById("passwordSetupModal").style.display = "none";
-    });
+/* ============================
+   PASSWORD SETUP
+============================ */
+document.getElementById("saveAdminPassword").addEventListener("click", () => {
+    const pw = document.getElementById("newAdminPassword").value.trim();
+    if (!pw) { alert("Password cannot be empty."); return; }
+    localStorage.setItem("adminPassword", pw);
+    document.getElementById("passwordSetupModal").style.display = "none";
+});
 
-    // ============================
-    // SECRET ADMIN TRIGGERS
-    // ============================
-    // Double-click logo
-    document.getElementById("watermark").addEventListener("dblclick", () => {
+/* ============================
+   SECRET ADMIN TRIGGERS
+============================ */
+// Double-click logo
+document.getElementById("watermark").addEventListener("dblclick", () => {
+    if (!localStorage.getItem("adminPassword")) return;
+    document.getElementById("adminPasswordModal").style.display = "flex";
+});
+
+// Shift + A then Z
+let awaitingZ = false;
+document.addEventListener("keydown", (e) => {
+    if (e.shiftKey && e.key.toLowerCase() === "a") {
+        awaitingZ = true;
+        return;
+    }
+    if (awaitingZ && e.key.toLowerCase() === "z") {
+        awaitingZ = false;
         if (!localStorage.getItem("adminPassword")) return;
         document.getElementById("adminPasswordModal").style.display = "flex";
-    });
-
-    // Shift + A then Z
-    let awaitingZ = false;
-    document.addEventListener("keydown", (e) => {
-        if (e.shiftKey && e.key.toLowerCase() === "a") {
-            awaitingZ = true;
-            return;
-        }
-        if (awaitingZ && e.key.toLowerCase() === "z") {
-            awaitingZ = false;
-            if (!localStorage.getItem("adminPassword")) return;
-            document.getElementById("adminPasswordModal").style.display = "flex";
-        } else {
-            awaitingZ = false;
-        }
-    });
-
-    // ============================
-    // ADMIN PASSWORD CHECK
-    // ============================
-    document.getElementById("adminPasswordSubmit").addEventListener("click", () => {
-        const stored = localStorage.getItem("adminPassword");
-        const entered = document.getElementById("adminPasswordInput").value;
-        if (entered === stored) {
-            document.getElementById("adminPasswordModal").style.display = "none";
-            openAdminPanel();
-        } else {
-            alert("Incorrect password.");
-        }
-    });
-
-    // ============================
-    // ADMIN PANEL LOGIC
-    // ============================
-    function openAdminPanel() {
-        document.getElementById("adminPanel").style.display = "block";
-        hookAdminControls();
-        updateGameList();
+    } else {
+        awaitingZ = false;
     }
+});
 
-    function hookAdminControls() {
-        const spacing = document.getElementById("gridSpacing");
-        const radius = document.getElementById("iconRadius");
-        const opacity = document.getElementById("watermarkOpacity");
-        const titleSize = document.getElementById("titleSize");
+/* ============================
+   ADMIN PASSWORD CHECK
+============================ */
+document.getElementById("adminPasswordSubmit").addEventListener("click", () => {
+    const stored = localStorage.getItem("adminPassword");
+    const entered = document.getElementById("adminPasswordInput").value;
 
-        spacing.oninput = () => {
-            document.getElementById("desktop").style.gap = spacing.value + "px";
-        };
+    if (entered === stored) {
+        document.getElementById("adminPasswordModal").style.display = "none";
+        openAdminPanel();
+    } else {
+        alert("Incorrect password.");
+    }
+});
 
-        radius.oninput = () => {
-            currentIconRadius = radius.value;
+/* ============================
+   ADMIN PANEL
+============================ */
+function openAdminPanel() {
+    document.getElementById("adminPanel").style.display = "block";
+    hookAdminControls();
+    updateGameList();
+}
+
+function hookAdminControls() {
+    const spacing = document.getElementById("gridSpacing");
+    const radius = document.getElementById("iconRadius");
+    const opacity = document.getElementById("watermarkOpacity");
+    const titleSize = document.getElementById("titleSize");
+
+    spacing.oninput = () => {
+        document.getElementById("desktop").style.gap = spacing.value + "px";
+    };
+    radius.oninput = () => {
+        currentIconRadius = radius.value;
+        renderDesktop();
+    };
+    opacity.oninput = () => {
+        document.getElementById("watermark").style.opacity = opacity.value / 100;
+    };
+    titleSize.oninput = () => {
+        document.getElementById("titleBar").style.fontSize = titleSize.value + "px";
+    };
+}
+
+/* ============================
+   GAME MANAGER
+============================ */
+function updateGameList() {
+    const list = document.getElementById("gameList");
+    list.innerHTML = "";
+
+    games.forEach((game, index) => {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        row.style.padding = "4px 0";
+        row.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = game.name;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Remove";
+        removeBtn.style.padding = "3px 8px";
+        removeBtn.style.background = "var(--danger)";
+        removeBtn.style.border = "none";
+        removeBtn.style.borderRadius = "6px";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.style.fontSize = "12px";
+
+        removeBtn.addEventListener("click", () => {
+            games.splice(index, 1);
+            localStorage.setItem("games", JSON.stringify(games));
             renderDesktop();
-        };
-
-        opacity.oninput = () => {
-            document.getElementById("watermark").style.opacity = opacity.value / 100;
-        };
-
-        titleSize.oninput = () => {
-            document.getElementById("titleBar").style.fontSize = titleSize.value + "px";
-        };
-    }
-
-    // ============================
-    // GAME MANAGER
-    // ============================
-    function updateGameList() {
-        const list = document.getElementById("gameList");
-        list.innerHTML = "";
-
-        games.forEach((game, index) => {
-            const row = document.createElement("div");
-            row.style.display = "flex";
-            row.style.justifyContent = "space-between";
-            row.style.alignItems = "center";
-            row.style.padding = "4px 0";
-            row.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
-
-            const nameSpan = document.createElement("span");
-            nameSpan.textContent = game.name;
-
-            const removeBtn = document.createElement("button");
-            removeBtn.textContent = "Remove";
-            removeBtn.style.padding = "3px 8px";
-            removeBtn.style.background = "var(--danger)";
-            removeBtn.style.border = "none";
-            removeBtn.style.borderRadius = "6px";
-            removeBtn.style.cursor = "pointer";
-            removeBtn.style.fontSize = "12px";
-
-            removeBtn.addEventListener("click", () => {
-                games.splice(index, 1);
-                localStorage.setItem("games", JSON.stringify(games));
-                renderDesktop();
-                updateGameList();
-            });
-
-            row.appendChild(nameSpan);
-            row.appendChild(removeBtn);
-            list.appendChild(row);
+            updateGameList();
         });
+
+        row.appendChild(nameSpan);
+        row.appendChild(removeBtn);
+        list.appendChild(row);
+    });
+}
+
+document.getElementById("addGameBtn").addEventListener("click", () => {
+    const name = prompt("Game name:");
+    if (!name) return;
+
+    const url = prompt("Game URL or filename:");
+    if (!url) return;
+
+    games.push({ name, url });
+    localStorage.setItem("games", JSON.stringify(games));
+    renderDesktop();
+    updateGameList();
+});
+
+/* ============================
+   DANGER ZONE
+============================ */
+document.getElementById("dangerToggle").addEventListener("click", () => {
+    const dz = document.getElementById("dangerZone");
+    dz.style.display = dz.style.display === "none" ? "block" : "none";
+});
+
+document.getElementById("resetSystem").addEventListener("click", () => {
+    if (!confirm("Reset all settings and games?")) return;
+    localStorage.clear();
+    location.reload();
+});
+
+document.getElementById("resetPassword").addEventListener("click", () => {
+    if (!confirm("Reset admin password?")) return;
+    localStorage.removeItem("adminPassword");
+    location.reload();
+});
+
+/* ============================
+   SETTINGS PANEL
+============================ */
+document.getElementById("settingsBtn").addEventListener("click", () => {
+    const panel = document.getElementById("settingsPanel");
+    panel.style.display = panel.style.display === "none" ? "block" : "none";
+});
+
+/* Theme */
+document.getElementById("themePreset").addEventListener("change", (e) => {
+    const theme = e.target.value;
+
+    if (theme === "blue") {
+        document.body.style.background = "#02030a";
+        document.documentElement.style.setProperty("--accent", "#4fd1ff");
     }
+    if (theme === "purple") {
+        document.body.style.background = "#0b0214";
+        document.documentElement.style.setProperty("--accent", "#c26bff");
+    }
+    if (theme === "red") {
+        document.body.style.background = "#140003";
+        document.documentElement.style.setProperty("--accent", "#ff4b4b");
+    }
+    if (theme === "green") {
+        document.body.style.background = "#00140a";
+        document.documentElement.style.setProperty("--accent", "#00ff9a");
+    }
+    if (theme === "mono") {
+        document.body.style.background = "#000000";
+        document.documentElement.style.setProperty("--accent", "#ffffff");
+    }
+});
 
-    document.getElementById("addGameBtn").addEventListener("click", () => {
-        const name = prompt("Game name:");
-        if (!name) return;
-        const url = prompt("Game URL:");
-        if (!url) return;
+/* Background */
+document.getElementById("backgroundStyle").addEventListener("change", (e) => {
+    const bg = e.target.value;
 
-        games.push({ name, url });
-        localStorage.setItem("games", JSON.stringify(games));
-        renderDesktop();
-        updateGameList();
-    });
+    if (bg === "dark") {
+        document.body.style.background = "#02030a";
+    }
+    if (bg === "grid") {
+        document.body.style.background = `
+            repeating-linear-gradient(0deg, #020202 0px, #020202 1px, #000 1px, #000 40px),
+            repeating-linear-gradient(90deg, #020202 0px, #020202 1px, #000 1px, #000 40px)
+        `;
+    }
+    if (bg === "gradient") {
+        document.body.style.background = "linear-gradient(135deg, #02030a, #111b3a, #02030a)";
+    }
+    if (bg === "scanlines") {
+        document.body.style.background = `
+            repeating-linear-gradient(0deg, #000 0px, #000 2px, #020202 2px, #020202 4px)
+        `;
+    }
+});
 
-    // ============================
-    // DANGER ZONE
-    // ============================
-    document.getElementById("dangerToggle").addEventListener("click", () => {
-        const dz = document.getElementById("dangerZone");
-        dz.style.display = dz.style.display === "none" ? "block" : "none";
-    });
+/* Layout */
+document.getElementById("layoutMode").addEventListener("change", (e) => {
+    const mode = e.target.value;
+    const desktop = document.getElementById("desktop");
 
-    document.getElementById("resetSystem").addEventListener("click", () => {
-        if (!confirm("Reset all settings and games?")) return;
-        localStorage.clear();
-        location.reload();
-    });
+    if (mode === "grid") {
+        desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(120px, 1fr))";
+        desktop.style.gridAutoRows = "140px";
+    }
+    if (mode === "compact") {
+        desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(100px, 1fr))";
+        desktop.style.gridAutoRows = "120px";
+    }
+    if (mode === "wide") {
+        desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(180px, 1fr))";
+        desktop.style.gridAutoRows = "160px";
+    }
+});
 
-    document.getElementById("resetPassword").addEventListener("click", () => {
-        if (!confirm("Reset admin password?")) return;
-        localStorage.removeItem("adminPassword");
-        location.reload();
-    });
+/* Icon shape */
+document.getElementById("iconShape").addEventListener("change", (e) => {
+    const shape = e.target.value;
 
-    // ============================
-    // SETTINGS PANEL
-    // ============================
-    document.getElementById("settingsBtn").addEventListener("click", () => {
-        const panel = document.getElementById("settingsPanel");
-        panel.style.display = panel.style.display === "none" ? "block" : "none";
-    });
+    if (shape === "rounded") currentIconRadius = 14;
+    if (shape === "square") currentIconRadius = 0;
+    if (shape === "pill") currentIconRadius = 40;
 
-    // Theme
-    document.getElementById("themePreset").addEventListener("change", (e) => {
-        const theme = e.target.value;
-        if (theme === "blue") {
-            document.body.style.background = "#02030a";
-            document.documentElement.style.setProperty("--accent", "#4fd1ff");
-        }
-        if (theme === "purple") {
-            document.body.style.background = "#0b0214";
-            document.documentElement.style.setProperty("--accent", "#c26bff");
-        }
-        if (theme === "red") {
-            document.body.style.background = "#140003";
-            document.documentElement.style.setProperty("--accent", "#ff4b4b");
-        }
-        if (theme === "green") {
-            document.body.style.background = "#00140a";
-            document.documentElement.style.setProperty("--accent", "#00ff9a");
-        }
-        if (theme === "mono") {
-            document.body.style.background = "#000000";
-            document.documentElement.style.setProperty("--accent", "#ffffff");
-        }
-    });
-
-    // Background
-    document.getElementById("backgroundStyle").addEventListener("change", (e) => {
-        const bg = e.target.value;
-        if (bg === "dark") {
-            document.body.style.background = "#02030a";
-        }
-        if (bg === "grid") {
-            document.body.style.background = `
-                repeating-linear-gradient(0deg, #020202 0px, #020202 1px, #000 1px, #000 40px),
-                repeating-linear-gradient(90deg, #020202 0px, #020202 1px, #000 1px, #000 40px)
-            `;
-        }
-        if (bg === "gradient") {
-            document.body.style.background = "linear-gradient(135deg, #02030a, #111b3a, #02030a)";
-        }
-        if (bg === "scanlines") {
-            document.body.style.background = `
-                repeating-linear-gradient(0deg, #000 0px, #000 2px, #020202 2px, #020202 4px)
-            `;
-        }
-    });
-
-    // Layout
-    document.getElementById("layoutMode").addEventListener("change", (e) => {
-        const mode = e.target.value;
-        const desktop = document.getElementById("desktop");
-        if (mode === "grid") {
-            desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(120px, 1fr))";
-            desktop.style.gridAutoRows = "140px";
-        }
-        if (mode === "compact") {
-            desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(100px, 1fr))";
-            desktop.style.gridAutoRows = "120px";
-        }
-        if (mode === "wide") {
-            desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(180px, 1fr))";
-            desktop.style.gridAutoRows = "160px";
-        }
-    });
-
-    // Icon shape
-    document.getElementById("iconShape").addEventListener("change", (e) => {
-        const shape = e.target.value;
-        if (shape === "rounded") currentIconRadius = 14;
-        if (shape === "square") currentIconRadius = 0;
-        if (shape === "pill") currentIconRadius = 40;
-        renderDesktop();
-    });
+    renderDesktop();
+});
 </script>
 
 </body>
