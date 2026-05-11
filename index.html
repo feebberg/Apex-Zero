@@ -879,3 +879,676 @@
 
 </body>
 </html>
+</head>
+<body>
+
+<!-- BACKGROUND WATERMARK (SECRET ADMIN TRIGGER) -->
+<div id="watermark">
+    <svg width="420" height="420" viewBox="0 0 200 200" class="triangleCoreLogo" style="width:420px;height:420px;opacity:0.06;">
+        <circle cx="100" cy="100" r="90" stroke="white" stroke-width="6" fill="none"/>
+        <polygon points="100,30 30,170 170,170" stroke="white" stroke-width="6" fill="none"/>
+        <rect x="70" y="70" width="60" height="60" stroke="white" stroke-width="6" fill="none"/>
+    </svg>
+</div>
+
+<!-- TITLE BAR WITH LOGO -->
+<div id="titleBarContainer">
+    <svg width="36" height="36" viewBox="0 0 200 200" class="triangleCoreLogo">
+        <circle cx="100" cy="100" r="90" stroke="white" stroke-width="6" fill="none"/>
+        <polygon points="100,30 30,170 170,170" stroke="white" stroke-width="6" fill="none"/>
+        <rect x="70" y="70" width="60" height="60" stroke="white" stroke-width="6" fill="none"/>
+    </svg>
+
+    <div id="titleBar">APEX ZERO</div>
+</div>
+
+<!-- SETTINGS BUTTON (PUBLIC) -->
+<div id="settingsBtn">Settings</div>
+
+<!-- SETTINGS PANEL (PUBLIC) -->
+<div id="settingsPanel" style="
+    position: fixed;
+    top: 80px;
+    right: 30px;
+    width: 320px;
+    padding: 20px;
+    background: rgba(0,0,0,0.85);
+    border: 2px solid var(--accent);
+    border-radius: 14px;
+    display: none;
+    z-index: 20;
+">
+
+    <h2 style="margin-top:0;">Settings</h2>
+
+    <!-- Theme Presets -->
+    <label><b>Theme Preset</b></label>
+    <select id="themePreset" style="width:100%;padding:6px;margin-bottom:12px;">
+        <option value="blue">Blue Core</option>
+        <option value="purple">Purple Neon</option>
+        <option value="red">Red Pulse</option>
+        <option value="green">Green Matrix</option>
+        <option value="mono">Monochrome</option>
+    </select>
+
+    <!-- Icon Shape -->
+    <label><b>Icon Shape</b></label>
+    <select id="iconShape" style="width:100%;padding:6px;margin-bottom:12px;">
+        <option value="rounded">Rounded</option>
+        <option value="square">Square</option>
+        <option value="pill">Pill</option>
+    </select>
+
+    <!-- Background Pack -->
+    <label><b>Background Style</b></label>
+    <select id="backgroundStyle" style="width:100%;padding:6px;margin-bottom:12px;">
+        <option value="dark">Dark Core</option>
+        <option value="grid">Grid Matrix</option>
+        <option value="gradient">Neon Gradient</option>
+        <option value="scanlines">Scanlines</option>
+    </select>
+
+    <!-- Icon Font -->
+    <label><b>Icon Font</b></label>
+    <select id="iconFont" style="width:100%;padding:6px;margin-bottom:12px;">
+        <option value="default">Default</option>
+        <option value="thin">Thin</option>
+        <option value="bold">Bold</option>
+        <option value="mono">Monospace</option>
+    </select>
+
+    <!-- Layout Mode -->
+    <label><b>Layout Mode</b></label>
+    <select id="layoutMode" style="width:100%;padding:6px;margin-bottom:12px;">
+        <option value="grid">Grid</option>
+        <option value="compact">Compact Grid</option>
+        <option value="wide">Wide Grid</option>
+    </select>
+
+</div>
+
+<!-- PASSWORD SETUP MODAL (FIRST TIME ONLY) -->
+<div id="passwordSetupModal" style="
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+">
+    <div style="
+        background: #111;
+        padding: 30px;
+        border-radius: 14px;
+        border: 2px solid var(--accent);
+        width: 340px;
+        text-align: center;
+    ">
+        <h2>Create Admin Password</h2>
+        <input id="newAdminPassword" type="password" placeholder="Enter password" 
+            style="width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none;">
+        <button id="saveAdminPassword" style="
+            margin-top:14px;
+            padding:10px 20px;
+            width:100%;
+            background: var(--accent);
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:16px;
+        ">Save Password</button>
+    </div>
+</div>
+
+<!-- ADMIN MODE PASSWORD MODAL -->
+<div id="adminPasswordModal" style="
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+">
+    <div style="
+        background: #111;
+        padding: 30px;
+        border-radius: 14px;
+        border: 2px solid var(--accent);
+        width: 340px;
+        text-align: center;
+    ">
+        <h2>Enter Admin Password</h2>
+        <input id="adminPasswordInput" type="password" placeholder="Password" 
+            style="width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none;">
+        <button id="adminPasswordSubmit" style="
+            margin-top:14px;
+            padding:10px 20px;
+            width:100%;
+            background: var(--accent);
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:16px;
+        ">Unlock</button>
+    </div>
+</div>
+
+<!-- ADMIN MODE PANEL (HIDDEN UNTIL UNLOCKED) -->
+<div id="adminPanel" style="
+    position: fixed;
+    top: 80px;
+    left: 30px;
+    width: 360px;
+    padding: 20px;
+    background: rgba(0,0,0,0.9);
+    border: 2px solid var(--accent);
+    border-radius: 14px;
+    display: none;
+    z-index: 20;
+">
+    <h2 style="margin-top:0;">Admin Mode</h2>
+
+    <div id="adminContent"></div>
+</div>
+<!-- ADMIN MODE CONTENT (POPULATED AFTER UNLOCK) -->
+<script>
+    // ============================
+    // SECRET ADMIN MODE TRIGGERS
+    // ============================
+
+    // Double-click background logo
+    document.getElementById("watermark").addEventListener("dblclick", () => {
+        document.getElementById("adminPasswordModal").style.display = "flex";
+    });
+
+    // Shift + A + Z backup trigger
+    document.addEventListener("keydown", (e) => {
+        if (e.shiftKey && e.key.toLowerCase() === "a") {
+            document.addEventListener("keydown", secondKey);
+        }
+    });
+
+    function secondKey(e) {
+        if (e.key.toLowerCase() === "z") {
+            document.getElementById("adminPasswordModal").style.display = "flex";
+        }
+        document.removeEventListener("keydown", secondKey);
+    }
+
+    // ============================
+    // ADMIN MODE PASSWORD CHECK
+    // ============================
+
+    document.getElementById("adminPasswordSubmit").addEventListener("click", () => {
+        const stored = localStorage.getItem("adminPassword");
+        const entered = document.getElementById("adminPasswordInput").value;
+
+        if (entered === stored) {
+            document.getElementById("adminPasswordModal").style.display = "none";
+            openAdminPanel();
+        } else {
+            alert("Incorrect password.");
+        }
+    });
+
+    // ============================
+    // ADMIN MODE PANEL CONTENT
+    // ============================
+
+    function openAdminPanel() {
+        const adminPanel = document.getElementById("adminPanel");
+        const content = document.getElementById("adminContent");
+
+        adminPanel.style.display = "block";
+
+        content.innerHTML = `
+            <h3>Display Controls</h3>
+
+            <label><b>Grid Spacing</b></label>
+            <input id="gridSpacing" type="range" min="40" max="200" value="100" style="width:100%;">
+
+            <label><b>Icon Corner Radius</b></label>
+            <input id="iconRadius" type="range" min="0" max="40" value="12" style="width:100%;">
+
+            <label><b>Watermark Opacity</b></label>
+            <input id="watermarkOpacity" type="range" min="0" max="100" value="6" style="width:100%;">
+
+            <label><b>Title Size</b></label>
+            <input id="titleSize" type="range" min="20" max="60" value="32" style="width:100%;">
+
+            <hr style="margin:20px 0;">
+
+            <h3>Advanced Controls</h3>
+
+            <label><b>Animation Speed</b></label>
+            <input id="animationSpeed" type="range" min="1" max="20" value="12" style="width:100%;">
+
+            <label><b>Enable FPS Counter</b></label>
+            <button id="toggleFPS" style="width:100%;padding:8px;margin-top:6px;">Toggle FPS</button>
+
+            <label><b>Custom CSS</b></label>
+            <textarea id="customCSS" style="width:100%;height:80px;"></textarea>
+            <button id="applyCSS" style="width:100%;padding:8px;margin-top:6px;">Apply CSS</button>
+
+            <label><b>Custom JS</b></label>
+            <textarea id="customJS" style="width:100%;height:80px;"></textarea>
+            <button id="applyJS" style="width:100%;padding:8px;margin-top:6px;">Run Script</button>
+
+            <hr style="margin:20px 0;">
+
+            <h3>Game Manager</h3>
+            <button id="addGameBtn" style="width:100%;padding:8px;">Add Game</button>
+            <div id="gameList" style="margin-top:10px;"></div>
+
+            <hr style="margin:20px 0;">
+
+            <h3 style="color:var(--danger);cursor:pointer;" id="dangerToggle">▼ Danger Zone</h3>
+
+            <div id="dangerZone" style="display:none;">
+                <button id="resetSystem" style="
+                    width:100%;
+                    padding:10px;
+                    background:var(--danger);
+                    border:none;
+                    border-radius:8px;
+                    color:white;
+                    margin-top:10px;
+                ">Reset System</button>
+
+                <button id="resetPassword" style="
+                    width:100%;
+                    padding:10px;
+                    background:var(--danger);
+                    border:none;
+                    border-radius:8px;
+                    color:white;
+                    margin-top:10px;
+                ">Reset Admin Password</button>
+            </div>
+        `;
+
+        // Danger Zone toggle
+        document.getElementById("dangerToggle").addEventListener("click", () => {
+            const dz = document.getElementById("dangerZone");
+            dz.style.display = dz.style.display === "none" ? "block" : "none";
+        });
+
+        // FPS toggle
+        document.getElementById("toggleFPS").addEventListener("click", () => {
+            const fps = document.getElementById("fpsCounter");
+            fps.style.display = fps.style.display === "none" ? "block" : "none";
+        });
+
+        // Apply custom CSS
+        document.getElementById("applyCSS").addEventListener("click", () => {
+            const css = document.getElementById("customCSS").value;
+            const style = document.createElement("style");
+            style.innerHTML = css;
+            document.body.appendChild(style);
+        });
+
+        // Apply custom JS
+        document.getElementById("applyJS").addEventListener("click", () => {
+            try {
+                eval(document.getElementById("customJS").value);
+            } catch (e) {
+                alert("Error in script.");
+            }
+        });
+
+        // Reset System
+        document.getElementById("resetSystem").addEventListener("click", () => {
+            if (confirm("Reset all settings?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        });
+
+        // Reset Password
+        document.getElementById("resetPassword").addEventListener("click", () => {
+            if (confirm("Reset admin password?")) {
+                localStorage.removeItem("adminPassword");
+                location.reload();
+            }
+        });
+    }
+</script>
+<!-- DESKTOP GRID -->
+<div id="desktop" style="
+    position: fixed;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: calc(100% - 160px);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-auto-rows: 140px;
+    gap: 40px;
+    padding-bottom: 40px;
+    overflow-y: auto;
+    z-index: 5;
+"></div>
+
+<!-- FPS COUNTER -->
+<div id="fpsCounter">FPS: 0</div>
+
+<script>
+    // ============================
+    // DESKTOP + ICON SYSTEM
+    // ============================
+
+    let games = JSON.parse(localStorage.getItem("games")) || [
+        { name: "Game 1", url: "https://example.com" },
+        { name: "Game 2", url: "https://example.com" }
+    ];
+
+    function renderDesktop() {
+        const desktop = document.getElementById("desktop");
+        desktop.innerHTML = "";
+
+        games.forEach((game, index) => {
+            const icon = document.createElement("div");
+            icon.className = "desktopIcon";
+            icon.style = `
+                display:flex;
+                flex-direction:column;
+                justify-content:center;
+                align-items:center;
+                background:rgba(255,255,255,0.05);
+                border:2px solid rgba(255,255,255,0.15);
+                border-radius:${currentIconRadius}px;
+                cursor:pointer;
+                transition:0.2s;
+            `;
+
+            icon.innerHTML = `
+                <div style="font-size:48px;">🎮</div>
+                <div class="iconLabel" style="
+                    margin-top:6px;
+                    font-size:14px;
+                    font-family:${currentIconFont};
+                ">${game.name}</div>
+            `;
+
+            icon.addEventListener("click", () => {
+                window.open(game.url, "_blank");
+            });
+
+            desktop.appendChild(icon);
+        });
+    }
+
+    // Initial values
+    let currentIconRadius = 12;
+    let currentIconFont = "inherit";
+
+    renderDesktop();
+
+    // ============================
+    // PUBLIC SETTINGS LOGIC
+    // ============================
+
+    // Theme presets
+    document.getElementById("themePreset").addEventListener("change", (e) => {
+        const theme = e.target.value;
+
+        if (theme === "blue") {
+            document.body.style.background = "#000814";
+            document.body.style.color = "#ffffff";
+            document.documentElement.style.setProperty("--accent", "#3aa9ff");
+        }
+        if (theme === "purple") {
+            document.body.style.background = "#0a0014";
+            document.documentElement.style.setProperty("--accent", "#b44bff");
+        }
+        if (theme === "red") {
+            document.body.style.background = "#140000";
+            document.documentElement.style.setProperty("--accent", "#ff4b4b");
+        }
+        if (theme === "green") {
+            document.body.style.background = "#001400";
+            document.documentElement.style.setProperty("--accent", "#00ff88");
+        }
+        if (theme === "mono") {
+            document.body.style.background = "#000";
+            document.documentElement.style.setProperty("--accent", "#fff");
+        }
+    });
+
+    // Icon shape
+    document.getElementById("iconShape").addEventListener("change", (e) => {
+        const shape = e.target.value;
+
+        if (shape === "rounded") currentIconRadius = 12;
+        if (shape === "square") currentIconRadius = 0;
+        if (shape === "pill") currentIconRadius = 40;
+
+        renderDesktop();
+    });
+
+    // Background style
+    document.getElementById("backgroundStyle").addEventListener("change", (e) => {
+        const bg = e.target.value;
+
+        if (bg === "dark") {
+            document.body.style.background = "#000";
+        }
+        if (bg === "grid") {
+            document.body.style.background = `
+                repeating-linear-gradient(0deg, #020202 0px, #020202 1px, #000 1px, #000 40px),
+                repeating-linear-gradient(90deg, #020202 0px, #020202 1px, #000 1px, #000 40px)
+            `;
+        }
+        if (bg === "gradient") {
+            document.body.style.background = "linear-gradient(135deg, #001, #113, #001)";
+        }
+        if (bg === "scanlines") {
+            document.body.style.background = `
+                repeating-linear-gradient(0deg, #000 0px, #000 2px, #020202 2px, #020202 4px)
+            `;
+        }
+    });
+
+    // Icon font
+    document.getElementById("iconFont").addEventListener("change", (e) => {
+        const font = e.target.value;
+
+        if (font === "default") currentIconFont = "inherit";
+        if (font === "thin") currentIconFont = "300";
+        if (font === "bold") currentIconFont = "700";
+        if (font === "mono") currentIconFont = "monospace";
+
+        renderDesktop();
+    });
+
+    // Layout mode
+    document.getElementById("layoutMode").addEventListener("change", (e) => {
+        const mode = e.target.value;
+        const desktop = document.getElementById("desktop");
+
+        if (mode === "grid") {
+            desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(120px, 1fr))";
+            desktop.style.gridAutoRows = "140px";
+        }
+        if (mode === "compact") {
+            desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(100px, 1fr))";
+            desktop.style.gridAutoRows = "120px";
+        }
+        if (mode === "wide") {
+            desktop.style.gridTemplateColumns = "repeat(auto-fill, minmax(180px, 1fr))";
+            desktop.style.gridAutoRows = "160px";
+        }
+    });
+
+</script>
+<script>
+    // ============================
+    // PASSWORD SETUP (FIRST TIME)
+    // ============================
+
+    window.addEventListener("load", () => {
+        const stored = localStorage.getItem("adminPassword");
+
+        if (!stored) {
+            document.getElementById("passwordSetupModal").style.display = "flex";
+        }
+    });
+
+    document.getElementById("saveAdminPassword").addEventListener("click", () => {
+        const pw = document.getElementById("newAdminPassword").value;
+
+        if (pw.length < 1) {
+            alert("Password cannot be empty.");
+            return;
+        }
+
+        localStorage.setItem("adminPassword", pw);
+        document.getElementById("passwordSetupModal").style.display = "none";
+    });
+
+    // ============================
+    // SETTINGS PANEL TOGGLE
+    // ============================
+
+    document.getElementById("settingsBtn").addEventListener("click", () => {
+        const panel = document.getElementById("settingsPanel");
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+    });
+
+    // ============================
+    // FPS COUNTER ENGINE
+    // ============================
+
+    let lastFrame = performance.now();
+    let fps = 0;
+
+    function updateFPS() {
+        const now = performance.now();
+        fps = Math.round(1000 / (now - lastFrame));
+        lastFrame = now;
+
+        const fpsCounter = document.getElementById("fpsCounter");
+        if (fpsCounter.style.display !== "none") {
+            fpsCounter.textContent = "FPS: " + fps;
+        }
+
+        requestAnimationFrame(updateFPS);
+    }
+
+    updateFPS();
+
+    // ============================
+    // GAME MANAGER
+    // ============================
+
+    function updateGameList() {
+        const list = document.getElementById("gameList");
+        list.innerHTML = "";
+
+        games.forEach((game, index) => {
+            const row = document.createElement("div");
+            row.style = `
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                padding:6px 0;
+                border-bottom:1px solid rgba(255,255,255,0.1);
+            `;
+
+            row.innerHTML = `
+                <span>${game.name}</span>
+                <button style="
+                    padding:4px 8px;
+                    background:var(--danger);
+                    border:none;
+                    border-radius:6px;
+                    cursor:pointer;
+                ">Remove</button>
+            `;
+
+            row.querySelector("button").addEventListener("click", () => {
+                games.splice(index, 1);
+                localStorage.setItem("games", JSON.stringify(games));
+                renderDesktop();
+                updateGameList();
+            });
+
+            list.appendChild(row);
+        });
+    }
+
+    document.getElementById("addGameBtn").addEventListener("click", () => {
+        const name = prompt("Game name:");
+        const url = prompt("Game URL:");
+
+        if (!name || !url) return;
+
+        games.push({ name, url });
+        localStorage.setItem("games", JSON.stringify(games));
+
+        renderDesktop();
+        updateGameList();
+    });
+
+    // ============================
+    // ADMIN PANEL AUTO-UPDATE
+    // ============================
+
+    function adminAutoUpdate() {
+        const spacing = document.getElementById("gridSpacing");
+        const radius = document.getElementById("iconRadius");
+        const opacity = document.getElementById("watermarkOpacity");
+        const titleSize = document.getElementById("titleSize");
+        const animSpeed = document.getElementById("animationSpeed");
+
+        if (spacing) {
+            spacing.addEventListener("input", () => {
+                document.getElementById("desktop").style.gap = spacing.value + "px";
+            });
+        }
+
+        if (radius) {
+            radius.addEventListener("input", () => {
+                currentIconRadius = radius.value;
+                renderDesktop();
+            });
+        }
+
+        if (opacity) {
+            opacity.addEventListener("input", () => {
+                document.getElementById("watermark").style.opacity = opacity.value / 100;
+            });
+        }
+
+        if (titleSize) {
+            titleSize.addEventListener("input", () => {
+                document.getElementById("titleBar").style.fontSize = titleSize.value + "px";
+            });
+        }
+
+        if (animSpeed) {
+            animSpeed.addEventListener("input", () => {
+                document.body.style.animationDuration = animSpeed.value + "s";
+            });
+        }
+    }
+
+    // Hook admin updates after unlock
+    const observer = new MutationObserver(() => {
+        if (document.getElementById("adminPanel").style.display === "block") {
+            adminAutoUpdate();
+            updateGameList();
+        }
+    });
+
+    observer.observe(document.body, { attributes: true, subtree: true });
+
+</script>
+
+</body>
+</html>
