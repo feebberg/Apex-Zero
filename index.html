@@ -63,10 +63,23 @@
         animation: fadeIn 1s ease forwards;
         animation-delay: 4s;
         padding: 40px;
+        position: relative;
+        z-index: 2;
     }
 
     @keyframes fadeIn {
         to { opacity: 1; }
+    }
+
+    /* Centered Apex Zero watermark logo */
+    #watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.06;
+        z-index: 1;
+        pointer-events: none;
     }
 
     /* Icons */
@@ -78,18 +91,25 @@
         cursor: pointer;
     }
 
-    .icon img {
+    .iconBox {
         width: 80px;
         height: 80px;
-        border-radius: 12px;
+        border-radius: 20px;
         background: white;
-        padding: 10px;
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: 1px;
         transition: 0.2s;
+        box-shadow: 0 0 0px rgba(255,255,255,0);
     }
 
-    .icon img:hover {
-        transform: scale(1.1);
-        background: #dcdcdc;
+    .iconBox:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 18px rgba(255,255,255,0.7);
     }
 
     .icon span {
@@ -97,45 +117,6 @@
         margin-top: 8px;
         font-size: 14px;
         letter-spacing: 1px;
-    }
-
-    /* Window */
-    #window {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        width: 80%;
-        height: 80%;
-        transform: translate(-50%, -50%);
-        background: #0a0a0f;
-        border: 2px solid white;
-        border-radius: 8px;
-        display: none;
-        flex-direction: column;
-        z-index: 5000;
-    }
-
-    #windowHeader {
-        padding: 12px;
-        background: white;
-        color: black;
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    #closeBtn {
-        cursor: pointer;
-        font-size: 20px;
-        padding: 0 10px;
-    }
-
-    #windowFrame {
-        flex: 1;
-        border: none;
-        width: 100%;
-        height: 100%;
     }
 
     /* Footer */
@@ -149,19 +130,25 @@
         opacity: 0;
         animation: fadeIn 1s ease forwards;
         animation-delay: 4.5s;
+        z-index: 3;
     }
 </style>
 
 <script>
-    function openGame(title, file) {
-        document.getElementById("windowTitle").innerText = title;
-        document.getElementById("windowFrame").src = file;
-        document.getElementById("window").style.display = "flex";
-    }
+    /* TRUE FULLSCREEN LAUNCH */
+    function openGameFullscreen(file) {
+        const win = window.open(file, "_blank");
 
-    function closeWindow() {
-        document.getElementById("window").style.display = "none";
-        document.getElementById("windowFrame").src = "";
+        if (!win) return; // popup blocked
+
+        // Try to request fullscreen once the new tab loads
+        win.onload = () => {
+            try {
+                win.document.documentElement.requestFullscreen();
+            } catch (e) {
+                // Some games request fullscreen themselves
+            }
+        };
     }
 </script>
 
@@ -174,49 +161,49 @@
     <div id="loadingBar"><div id="loadingFill"></div></div>
 </div>
 
+<!-- Centered Apex Zero watermark logo -->
+<div id="watermark">
+    <svg width="260" height="260" viewBox="0 0 200 200" fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="90" stroke="white" stroke-width="6"/>
+        <path d="M60 130 L100 40 L140 130 Z" stroke="white" stroke-width="6" fill="none"/>
+        <rect x="85" y="130" width="30" height="30" stroke="white" stroke-width="6" fill="none"/>
+    </svg>
+</div>
+
 <!-- Desktop -->
 <div id="desktop">
 
-    <!-- Icons -->
-    <div class="icon" onclick="openGame('2048 Cupcakes', '2048cupcakes.html')">
-        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+    <div class="icon" onclick="openGameFullscreen('2048cupcakes.html')">
+        <div class="iconBox">2048</div>
         <span>2048 Cupcakes</span>
     </div>
 
-    <div class="icon" onclick="openGame('Agario Lite', 'agariolite.html')">
-        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+    <div class="icon" onclick="openGameFullscreen('agariolite.html')">
+        <div class="iconBox">AG</div>
         <span>Agario Lite</span>
     </div>
 
-    <div class="icon" onclick="openGame('Cookie Clicker', 'cookieclicker (1).htm')">
-        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+    <div class="icon" onclick="openGameFullscreen('cookieclicker (1).htm')">
+        <div class="iconBox">CK</div>
         <span>Cookie Clicker</span>
     </div>
 
-    <div class="icon" onclick="openGame('Minecraft 1.12.2', 'Eaglercraft_1.12.2_WASM_Offline_Download (2).html')">
-        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+    <div class="icon" onclick="openGameFullscreen('Eaglercraft_1.12.2_WASM_Offline_Download (2).html')">
+        <div class="iconBox">MC</div>
         <span>Minecraft 1.12.2</span>
     </div>
 
-    <div class="icon" onclick="openGame('Paper.io 2', 'paperio2.htm')">
-        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+    <div class="icon" onclick="openGameFullscreen('paperio2.htm')">
+        <div class="iconBox">P2</div>
         <span>Paper.io 2</span>
     </div>
 
-    <div class="icon" onclick="openGame('Rooftop Snipers 2', 'rooftopsnipers2.html')">
-        <img src="https://i.imgur.com/8Q1ZQ0T.png">
+    <div class="icon" onclick="openGameFullscreen('rooftopsnipers2.html')">
+        <div class="iconBox">RS2</div>
         <span>Rooftop Snipers 2</span>
     </div>
 
-</div>
-
-<!-- Window -->
-<div id="window">
-    <div id="windowHeader">
-        <span id="windowTitle">Game</span>
-        <span id="closeBtn" onclick="closeWindow()">✕</span>
-    </div>
-    <iframe id="windowFrame"></iframe>
 </div>
 
 <!-- Footer -->
