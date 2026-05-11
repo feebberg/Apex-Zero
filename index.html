@@ -11,6 +11,7 @@
         font-family: 'Segoe UI', sans-serif;
         color: white;
         overflow: hidden;
+        transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* Loading Screen */
@@ -52,12 +53,295 @@
     @keyframes loadBar { to { width: 100%; } }
     @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
+    /* Title Bar */
+    #titleBar {
+        position: fixed;
+        top: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        z-index: 5;
+        opacity: 0;
+        animation: fadeIn 1s ease forwards;
+        animation-delay: 4s;
+    }
+
+    /* Settings Button */
+    #settingsBtn {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        font-size: 20px;
+        padding: 8px 14px;
+        border: 2px solid white;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        opacity: 0;
+        animation: fadeIn 1s ease forwards;
+        animation-delay: 4s;
+        z-index: 5;
+    }
+
+    #settingsBtn:hover {
+        background: white;
+        color: black;
+        transform: scale(1.1);
+    }
+
+    /* Admin Mode Button (subtle, bottom-left) */
+    #adminBtn {
+        position: fixed;
+        bottom: 40px;
+        left: 20px;
+        font-size: 14px;
+        padding: 6px 12px;
+        border: 1px solid #3aa9ff;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+        opacity: 0;
+        animation: fadeIn 1s ease forwards;
+        animation-delay: 4.5s;
+        z-index: 5;
+        color: #3aa9ff;
+    }
+
+    #adminBtn:hover {
+        background: #3aa9ff;
+        color: black;
+        box-shadow: 0 0 12px rgba(58,169,255,0.8);
+        transform: scale(1.05);
+    }
+
+    /* Settings Panel */
+    #settingsPanel {
+        position: fixed;
+        top: -400px;
+        right: 20px;
+        width: 260px;
+        background: rgba(20,20,20,0.95);
+        border: 2px solid white;
+        border-radius: 14px;
+        padding: 20px;
+        z-index: 10;
+        transition: top 0.4s ease;
+    }
+
+    #settingsPanel h2 {
+        margin: 0 0 10px 0;
+        font-size: 22px;
+        letter-spacing: 2px;
+    }
+
+    .settingGroup {
+        margin-bottom: 18px;
+    }
+
+    .settingGroup label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    .settingGroup select {
+        width: 100%;
+        padding: 6px;
+        border-radius: 6px;
+        border: none;
+        font-size: 14px;
+    }
+
+    #closeSettings {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    /* Admin Panel (System Core Blue) */
+    #adminPanel {
+        position: fixed;
+        top: -500px;
+        right: 20px;
+        width: 300px;
+        background: rgba(5,10,20,0.97);
+        border: 2px solid #3aa9ff;
+        border-radius: 14px;
+        padding: 20px;
+        z-index: 11;
+        transition: top 0.4s ease;
+        box-shadow: 0 0 20px rgba(58,169,255,0.6);
+    }
+
+    #adminPanel h2 {
+        margin: 0 0 4px 0;
+        font-size: 22px;
+        letter-spacing: 2px;
+        color: #3aa9ff;
+    }
+
+    #adminSubtitle {
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: #7fc7ff;
+        margin-bottom: 12px;
+    }
+
+    .adminGroup {
+        margin-bottom: 16px;
+        border-top: 1px solid rgba(58,169,255,0.3);
+        padding-top: 10px;
+    }
+
+    .adminGroup label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        letter-spacing: 1px;
+        color: #cde8ff;
+    }
+
+    .adminGroup select,
+    .adminGroup input[type="range"] {
+        width: 100%;
+        font-size: 13px;
+    }
+
+    .adminToggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #cde8ff;
+    }
+
+    #closeAdmin {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+        color: #3aa9ff;
+    }
+
+    #dangerBtn {
+        width: 100%;
+        padding: 6px;
+        border-radius: 8px;
+        border: 1px solid #ff4b4b;
+        background: transparent;
+        color: #ff4b4b;
+        cursor: pointer;
+        font-size: 13px;
+        margin-top: 4px;
+        transition: 0.2s;
+    }
+
+    #dangerBtn:hover {
+        background: #ff4b4b;
+        color: black;
+        box-shadow: 0 0 12px rgba(255,75,75,0.8);
+    }
+
+    /* Password Modal */
+    #passwordModal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+    }
+
+    #passwordBox {
+        background: #050915;
+        border: 2px solid #3aa9ff;
+        border-radius: 12px;
+        padding: 20px 24px;
+        width: 260px;
+        box-shadow: 0 0 20px rgba(58,169,255,0.7);
+        text-align: center;
+    }
+
+    #passwordBox h3 {
+        margin: 0 0 10px 0;
+        font-size: 18px;
+        letter-spacing: 2px;
+        color: #3aa9ff;
+    }
+
+    #passwordBox p {
+        font-size: 12px;
+        color: #9fcfff;
+        margin-bottom: 12px;
+    }
+
+    #adminPasswordInput {
+        width: 100%;
+        padding: 6px;
+        border-radius: 6px;
+        border: none;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    #passwordError {
+        font-size: 11px;
+        color: #ff4b4b;
+        height: 14px;
+        margin-bottom: 6px;
+    }
+
+    #passwordActions {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    #passwordActions button {
+        flex: 1;
+        padding: 6px;
+        border-radius: 8px;
+        border: 1px solid #3aa9ff;
+        background: transparent;
+        color: #3aa9ff;
+        cursor: pointer;
+        font-size: 13px;
+        transition: 0.2s;
+    }
+
+    #passwordActions button:hover {
+        background: #3aa9ff;
+        color: black;
+    }
+
+    .shake {
+        animation: shake 0.25s linear;
+    }
+
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        50% { transform: translateX(4px); }
+        75% { transform: translateX(-4px); }
+        100% { transform: translateX(0); }
+    }
+
     /* Desktop */
     #desktop {
         opacity: 0;
         animation: fadeIn 1s ease forwards;
         animation-delay: 4s;
-        padding-top: 80px;
+        padding-top: 120px;
         position: relative;
         z-index: 2;
         display: flex;
@@ -103,13 +387,40 @@
         font-weight: 700;
         font-size: 26px;
         letter-spacing: 1px;
-        transition: 0.2s;
+        transition: 0.15s ease;
         box-shadow: 0 0 0px rgba(255,255,255,0);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Icon Press Effect */
+    .iconBox:active {
+        transform: scale(0.92);
+        box-shadow: 0 0 25px rgba(255,255,255,0.9);
     }
 
     .iconBox:hover {
         transform: scale(1.08);
         box-shadow: 0 0 18px rgba(255,255,255,0.7);
+    }
+
+    /* Ripple effect (when enabled) */
+    .ripple-enabled .iconBox::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.12);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .ripple-enabled .iconBox:active::after {
+        width: 200%;
+        height: 200%;
+        opacity: 1;
+        transition: width 0.3s ease, height 0.3s ease, opacity 0.4s ease;
     }
 
     .icon span {
@@ -132,6 +443,34 @@
         animation-delay: 4.5s;
         z-index: 3;
     }
+
+    /* FPS Counter (optional) */
+    #fpsCounter {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        font-size: 11px;
+        padding: 4px 6px;
+        border-radius: 6px;
+        background: rgba(0,0,0,0.6);
+        border: 1px solid #3aa9ff;
+        color: #9fcfff;
+        display: none;
+        z-index: 6;
+    }
+
+    /* Animated background (when enabled) */
+    .bg-animated {
+        background: linear-gradient(135deg, #000011, #001133, #000011);
+        background-size: 200% 200%;
+        animation: bgShift 12s ease infinite;
+    }
+
+    @keyframes bgShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 </style>
 
 <script>
@@ -146,15 +485,346 @@
             } catch (e) {}
         };
     }
+
+    /* SETTINGS PANEL */
+    let settingsOpen = false;
+
+    function toggleSettings() {
+        const panel = document.getElementById("settingsPanel");
+        settingsOpen = !settingsOpen;
+        panel.style.top = settingsOpen ? "80px" : "-400px";
+    }
+
+    /* THEME SWITCH */
+    function changeTheme() {
+        const mode = document.getElementById("themeSelect").value;
+        if (mode === "dark") {
+            document.body.style.color = "white";
+        } else {
+            document.body.style.color = "black";
+        }
+        // background itself may be overridden by background style
+    }
+
+    /* ICON SIZE SWITCH */
+    function changeIconSize() {
+        const size = document.getElementById("iconSizeSelect").value;
+        const icons = document.querySelectorAll(".iconBox");
+
+        icons.forEach(icon => {
+            if (size === "small") {
+                icon.style.width = "80px";
+                icon.style.height = "80px";
+                icon.style.fontSize = "20px";
+            } else if (size === "medium") {
+                icon.style.width = "100px";
+                icon.style.height = "100px";
+                icon.style.fontSize = "26px";
+            } else {
+                icon.style.width = "120px";
+                icon.style.height = "120px";
+                icon.style.fontSize = "32px";
+            }
+        });
+    }
+
+    /* BACKGROUND STYLE SWITCH */
+    function changeBackground() {
+        const bg = document.getElementById("backgroundSelect").value;
+
+        if (bg === "solid") {
+            document.body.classList.remove("bg-animated");
+            document.body.style.background = "#000";
+        } else {
+            document.body.classList.add("bg-animated");
+        }
+    }
+
+    /* ADMIN MODE + PASSWORD */
+    let adminPanelOpen = false;
+    let adminPassword = "DaDog10"; // default
+
+    function openAdminMode() {
+        document.getElementById("adminPasswordInput").value = "";
+        document.getElementById("passwordError").textContent = "";
+        document.getElementById("passwordModal").style.display = "flex";
+        document.getElementById("passwordBox").classList.remove("shake");
+        document.getElementById("adminPasswordInput").focus();
+    }
+
+    function closePasswordModal() {
+        document.getElementById("passwordModal").style.display = "none";
+    }
+
+    function submitAdminPassword() {
+        const input = document.getElementById("adminPasswordInput").value;
+        const box = document.getElementById("passwordBox");
+        const error = document.getElementById("passwordError");
+
+        if (input === adminPassword) {
+            error.textContent = "";
+            document.getElementById("passwordModal").style.display = "none";
+            toggleAdminPanel(true);
+        } else {
+            error.textContent = "Incorrect password.";
+            box.classList.remove("shake");
+            void box.offsetWidth; // restart animation
+            box.classList.add("shake");
+        }
+    }
+
+    function toggleAdminPanel(forceOpen) {
+        const panel = document.getElementById("adminPanel");
+        if (typeof forceOpen === "boolean") {
+            adminPanelOpen = forceOpen;
+        } else {
+            adminPanelOpen = !adminPanelOpen;
+        }
+        panel.style.top = adminPanelOpen ? "90px" : "-500px";
+    }
+
+    /* ADMIN: UI CONTROLS */
+    function changeGridSpacing() {
+        const val = document.getElementById("gridSpacingSelect").value;
+        const grid = document.getElementById("iconGrid");
+        if (val === "tight") grid.style.gridGap = "20px";
+        else if (val === "wide") grid.style.gridGap = "60px";
+        else grid.style.gridGap = "40px";
+    }
+
+    function changeCornerRadius() {
+        const val = document.getElementById("cornerRadiusSelect").value;
+        const icons = document.querySelectorAll(".iconBox");
+        icons.forEach(icon => {
+            if (val === "square") icon.style.borderRadius = "8px";
+            else if (val === "pill") icon.style.borderRadius = "40px";
+            else icon.style.borderRadius = "22px";
+        });
+    }
+
+    function changeWatermarkOpacity() {
+        const val = document.getElementById("watermarkRange").value;
+        document.getElementById("watermark").style.opacity = val;
+    }
+
+    function changeTitleSize() {
+        const val = document.getElementById("titleSizeSelect").value;
+        const title = document.getElementById("titleBar");
+        if (val === "small") title.style.fontSize = "24px";
+        else if (val === "large") title.style.fontSize = "40px";
+        else title.style.fontSize = "32px";
+    }
+
+    /* ADMIN: EXPERIMENTAL TOGGLES */
+    let fpsEnabled = false;
+    let lastFrameTime = performance.now();
+    let frameCount = 0;
+
+    function toggleRipple(checkbox) {
+        if (checkbox.checked) {
+            document.body.classList.add("ripple-enabled");
+        } else {
+            document.body.classList.remove("ripple-enabled");
+        }
+    }
+
+    function toggleAnimatedBackground(checkbox) {
+        if (checkbox.checked) {
+            document.body.classList.add("bg-animated");
+        } else {
+            document.body.classList.remove("bg-animated");
+        }
+    }
+
+    function toggleFpsCounter(checkbox) {
+        fpsEnabled = checkbox.checked;
+        const fpsDiv = document.getElementById("fpsCounter");
+        fpsDiv.style.display = fpsEnabled ? "block" : "none";
+    }
+
+    function fpsLoop(timestamp) {
+        if (fpsEnabled) {
+            frameCount++;
+            const delta = timestamp - lastFrameTime;
+            if (delta >= 500) {
+                const fps = Math.round((frameCount / delta) * 1000);
+                document.getElementById("fpsCounter").textContent = "FPS: " + fps;
+                frameCount = 0;
+                lastFrameTime = timestamp;
+            }
+        }
+        requestAnimationFrame(fpsLoop);
+    }
+    requestAnimationFrame(fpsLoop);
+
+    /* ADMIN: DANGER ZONE RESET */
+    function resetSystem() {
+        if (!confirm("Reset all visual settings to default?")) return;
+
+        // Reset theme
+        document.body.style.background = "#000";
+        document.body.style.color = "white";
+        document.body.classList.remove("bg-animated", "ripple-enabled");
+
+        // Reset icon size
+        document.getElementById("iconSizeSelect").value = "medium";
+        changeIconSize();
+
+        // Reset background style
+        document.getElementById("backgroundSelect").value = "solid";
+
+        // Reset grid spacing
+        document.getElementById("gridSpacingSelect").value = "normal";
+        changeGridSpacing();
+
+        // Reset corner radius
+        document.getElementById("cornerRadiusSelect").value = "rounded";
+        changeCornerRadius();
+
+        // Reset watermark opacity
+        document.getElementById("watermarkRange").value = "0.06";
+        changeWatermarkOpacity();
+
+        // Reset title size
+        document.getElementById("titleSizeSelect").value = "medium";
+        changeTitleSize();
+
+        // Disable experimental
+        document.getElementById("rippleToggle").checked = false;
+        document.getElementById("bgAnimToggle").checked = false;
+        document.getElementById("fpsToggle").checked = false;
+        toggleRipple({checked:false});
+        toggleAnimatedBackground({checked:false});
+        toggleFpsCounter({checked:false});
+
+        alert("Apex Zero visual settings reset to default.");
+    }
 </script>
 
 </head>
 <body>
 
+<!-- FPS Counter -->
+<div id="fpsCounter">FPS: 0</div>
+
 <!-- Loading Screen -->
 <div id="loadingScreen">
     <div id="loadingText">APEX ZERO SYSTEMS<br>Initializing Core Modules...</div>
     <div id="loadingBar"><div id="loadingFill"></div></div>
+</div>
+
+<!-- Title -->
+<div id="titleBar">APEX ZERO</div>
+
+<!-- Settings Button -->
+<div id="settingsBtn" onclick="toggleSettings()">SETTINGS</div>
+
+<!-- Admin Mode Button (secret-ish) -->
+<div id="adminBtn" onclick="openAdminMode()">ADMIN MODE</div>
+
+<!-- Settings Panel -->
+<div id="settingsPanel">
+    <div id="closeSettings" onclick="toggleSettings()">✕</div>
+    <h2>SETTINGS</h2>
+
+    <div class="settingGroup">
+        <label>Theme Mode</label>
+        <select id="themeSelect" onchange="changeTheme()">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+        </select>
+    </div>
+
+    <div class="settingGroup">
+        <label>Icon Size</label>
+        <select id="iconSizeSelect" onchange="changeIconSize()">
+            <option value="medium">Medium</option>
+            <option value="small">Small</option>
+            <option value="large">Large</option>
+        </select>
+    </div>
+
+    <div class="settingGroup">
+        <label>Background Style</label>
+        <select id="backgroundSelect" onchange="changeBackground()">
+            <option value="solid">Solid Black</option>
+            <option value="gradient">Gradient</option>
+        </select>
+    </div>
+</div>
+
+<!-- Admin Panel (System Core Blue) -->
+<div id="adminPanel">
+    <div id="closeAdmin" onclick="toggleAdminPanel(false)">✕</div>
+    <h2>ADMIN MODE</h2>
+    <div id="adminSubtitle">SYSTEM CORE CONSOLE</div>
+
+    <div class="adminGroup">
+        <label>Grid Spacing</label>
+        <select id="gridSpacingSelect" onchange="changeGridSpacing()">
+            <option value="normal">Normal</option>
+            <option value="tight">Tight</option>
+            <option value="wide">Wide</option>
+        </select>
+    </div>
+
+    <div class="adminGroup">
+        <label>Icon Corner Radius</label>
+        <select id="cornerRadiusSelect" onchange="changeCornerRadius()">
+            <option value="rounded">Rounded</option>
+            <option value="square">Square</option>
+            <option value="pill">Pill</option>
+        </select>
+    </div>
+
+    <div class="adminGroup">
+        <label>Watermark Opacity</label>
+        <input id="watermarkRange" type="range" min="0.02" max="0.15" step="0.01" value="0.06" oninput="changeWatermarkOpacity()">
+    </div>
+
+    <div class="adminGroup">
+        <label>Title Size</label>
+        <select id="titleSizeSelect" onchange="changeTitleSize()">
+            <option value="medium">Medium</option>
+            <option value="small">Small</option>
+            <option value="large">Large</option>
+        </select>
+    </div>
+
+    <div class="adminGroup">
+        <label>Experimental</label>
+        <div class="adminToggle">
+            <input id="rippleToggle" type="checkbox" onchange="toggleRipple(this)">
+            <span>Icon ripple effect</span>
+        </div>
+        <div class="adminToggle">
+            <input id="bgAnimToggle" type="checkbox" onchange="toggleAnimatedBackground(this)">
+            <span>Animated background</span>
+        </div>
+        <div class="adminToggle">
+            <input id="fpsToggle" type="checkbox" onchange="toggleFpsCounter(this)">
+            <span>FPS counter</span>
+        </div>
+    </div>
+
+    <div class="adminGroup">
+        <label>Danger Zone</label>
+        <button id="dangerBtn" onclick="resetSystem()">Reset visual settings</button>
+    </div>
+</div>
+
+<!-- Password Modal for Admin Mode -->
+<div id="passwordModal">
+    <div id="passwordBox">
+        <h3>ADMIN ACCESS</h3>
+        <p>Enter system password to open Admin Mode.</p>
+        <input id="adminPasswordInput" type="password" placeholder="Password">
+        <div id="passwordError"></div>
+        <div id="passwordActions">
+            <button onclick="closePasswordModal()">Cancel</button>
+            <button onclick="submitAdminPassword()">Enter</button>
+        </div>
+    </div>
 </div>
 
 <!-- Watermark Logo -->
