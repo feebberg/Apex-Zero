@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Apex Zero OS++++</title>
+<title>APEX ZERO</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -428,6 +428,13 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        transform: translateY(12px);
+        opacity: 0;
+        animation: adminIn 0.25s ease forwards;
+    }
+    @keyframes adminIn {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(12px); }
     }
     #adminTitleBar {
         padding: 12px 16px;
@@ -587,6 +594,13 @@
         display: flex;
         flex-direction: column;
         pointer-events: auto;
+        transform: translateY(12px);
+        opacity: 0;
+        animation: winIn 0.22s ease forwards;
+    }
+    @keyframes winIn {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(12px); }
     }
     .windowTitleBar {
         height: 32px;
@@ -691,6 +705,63 @@
         background: rgba(255,255,255,0.16);
     }
 
+    .terminalOutput {
+        background: rgba(0,0,0,0.6);
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.25);
+        padding: 6px;
+        height: 150px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+    .terminalInputRow {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+    .terminalPrompt {
+        font-family: monospace;
+        font-size: 11px;
+        opacity: 0.7;
+    }
+    .terminalInput {
+        flex: 1;
+        padding: 4px 6px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.25);
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        font-size: 11px;
+        outline: none;
+        font-family: monospace;
+    }
+
+    .canvasWrapper {
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.25);
+        overflow: hidden;
+        background: #000;
+    }
+    .canvasToolbar {
+        display: flex;
+        gap: 6px;
+        padding: 6px;
+        border-bottom: 1px solid rgba(255,255,255,0.25);
+        font-size: 11px;
+    }
+    .canvasBtn {
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.08);
+        cursor: pointer;
+    }
+    .canvasBtn:hover {
+        background: rgba(255,255,255,0.16);
+    }
+
     .hidden { display: none !important; }
 
     @media (max-width: 800px) {
@@ -712,7 +783,7 @@
     APEX ZERO
     <div id="topBarRight">
         <span id="profileName">BRYCE</span>
-        <span id="adminHint">CTRL+SHIFT+A</span>
+        <span id="adminHint">SHIFT + Z E R O</span>
         <button id="settingsBtn">SETTINGS</button>
     </div>
 </div>
@@ -763,9 +834,9 @@
 <!-- LAUNCH OVERLAY -->
 <div id="overlay">
     <div id="overlayBox">
-        <div id="overlayTitleBar">LAUNCH GAME</div>
+        <div id="overlayTitleBar">LAUNCH</div>
         <div id="overlayContent">
-            <div id="overlayGameName">Game</div>
+            <div id="overlayGameName">Item</div>
             <div id="overlayGameDesc">Description</div>
             <div id="buttonRow">
                 <button class="glassBtn" id="launchBtn">Launch</button>
@@ -803,8 +874,8 @@
             </div>
 
             <div id="aboutText">
-                APEX ZERO OS++++ — Monochrome Glass Edition.  
-                Games fullscreen, tools in windows, admin on demand.
+                APEX ZERO — Monochrome Glass OS.  
+                Games fullscreen, tools in windows, admin via SHIFT + Z E R O.
             </div>
         </div>
     </div>
@@ -815,7 +886,7 @@
     <div id="adminBox">
         <div id="adminTitleBar">
             <span>ADMIN DASHBOARD</span>
-            <span style="font-size:10px;opacity:0.7;">CTRL+SHIFT+A TO CLOSE</span>
+            <span style="font-size:10px;opacity:0.7;">SHIFT + Z E R O TO CLOSE</span>
         </div>
         <div id="adminTabs">
             <div class="adminTab active" data-tab="system">SYSTEM</div>
@@ -835,6 +906,8 @@
     <div class="dockItem" id="dockNotes">NOTES</div>
     <div class="dockItem" id="dockCalc">CALC</div>
     <div class="dockItem" id="dockTimer">TIMER</div>
+    <div class="dockItem" id="dockTerminal">TERM</div>
+    <div class="dockItem" id="dockCanvas">CANVAS</div>
     <div class="dockItem" id="dockSettings">SETTINGS</div>
 </div>
 
@@ -862,7 +935,9 @@
         // APPS (WINDOWED)
         { id: "notes", name: "Zero Notes", url: "", category: "apps", type: "app", appType: "notes", desc: "Local glass notes." },
         { id: "calculator", name: "Zero Calc", url: "", category: "apps", type: "app", appType: "calc", desc: "Clean calculator." },
-        { id: "timer", name: "Zero Timer", url: "", category: "tools", type: "app", appType: "timer", desc: "Focus timer & countdown." }
+        { id: "timer", name: "Zero Timer", url: "", category: "tools", type: "app", appType: "timer", desc: "Focus timer & countdown." },
+        { id: "terminal", name: "Zero Terminal", url: "", category: "tools", type: "app", appType: "terminal", desc: "Fake command line with real commands." },
+        { id: "canvas", name: "Zero Canvas", url: "", category: "apps", type: "app", appType: "canvas", desc: "Monochrome drawing canvas." }
     ];
 
     // ---------- STATE ----------
@@ -877,6 +952,10 @@
     let adminOpen = false;
     let zCounter = 10;
     let windows = {}; // id -> window element
+
+    // admin shortcut sequence: SHIFT + Z E R O
+    let adminSeq = [];
+    let shiftHeld = false;
 
     // ---------- ELEMENTS ----------
     const grid = document.getElementById("grid");
@@ -908,6 +987,8 @@
     const dockNotes = document.getElementById("dockNotes");
     const dockCalc = document.getElementById("dockCalc");
     const dockTimer = document.getElementById("dockTimer");
+    const dockTerminal = document.getElementById("dockTerminal");
+    const dockCanvas = document.getElementById("dockCanvas");
     const dockSettings = document.getElementById("dockSettings");
     const sideScrollGames = document.getElementById("sideScrollGames");
     const sideScrollRecent = document.getElementById("sideScrollRecent");
@@ -1000,7 +1081,7 @@
         recentList.innerHTML = "";
         const list = getRecent();
         if (list.length === 0) {
-            recentList.textContent = "No games played yet.";
+            recentList.textContent = "No items yet.";
             return;
         }
         list.forEach(id => {
@@ -1115,11 +1196,21 @@
         const app = games.find(g => g.id === "timer");
         if (app) openAppWindow(app);
     };
+    dockTerminal.onclick = () => {
+        const app = games.find(g => g.id === "terminal");
+        if (app) openAppWindow(app);
+    };
+    dockCanvas.onclick = () => {
+        const app = games.find(g => g.id === "canvas");
+        if (app) openAppWindow(app);
+    };
 
     function updateDockRunning() {
         dockNotes.classList.toggle("running", !!windows["notes"]);
         dockCalc.classList.toggle("running", !!windows["calculator"]);
         dockTimer.classList.toggle("running", !!windows["timer"]);
+        dockTerminal.classList.toggle("running", !!windows["terminal"]);
+        dockCanvas.classList.toggle("running", !!windows["canvas"]);
     }
 
     // ---------- FOOTER CLOCK + UPTIME ----------
@@ -1194,6 +1285,8 @@
         if (app.appType === "notes") initNotesApp(content);
         if (app.appType === "calc") initCalcApp(content);
         if (app.appType === "timer") initTimerApp(content);
+        if (app.appType === "terminal") initTerminalApp(content);
+        if (app.appType === "canvas") initCanvasApp(content);
 
         closeBtn.addEventListener("click", () => {
             delete windows[app.id];
@@ -1361,6 +1454,111 @@
         updateDisplay();
     }
 
+    function initTerminalApp(container) {
+        container.innerHTML = `
+            <div>Zero Terminal — local only, fake shell.</div>
+            <div class="terminalOutput" id="termOut"></div>
+            <div class="terminalInputRow">
+                <span class="terminalPrompt">zero&gt;</span>
+                <input class="terminalInput" id="termIn" autocomplete="off">
+            </div>
+        `;
+        const out = container.querySelector("#termOut");
+        const input = container.querySelector("#termIn");
+
+        function print(line) {
+            const div = document.createElement("div");
+            div.textContent = line;
+            out.appendChild(div);
+            out.scrollTop = out.scrollHeight;
+        }
+
+        print("APEX ZERO TERMINAL");
+        print("Type 'help' for commands.");
+
+        input.addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+                const cmd = input.value.trim();
+                input.value = "";
+                if (!cmd) return;
+                print("zero> " + cmd);
+                handleCommand(cmd);
+            }
+        });
+
+        function handleCommand(cmd) {
+            if (cmd === "help") {
+                print("Commands: help, clear, time, uptime, about, echo <text>");
+            } else if (cmd === "clear") {
+                out.innerHTML = "";
+            } else if (cmd === "time") {
+                print("Time: " + new Date().toLocaleTimeString());
+            } else if (cmd === "uptime") {
+                const diff = Date.now() - startTime;
+                const totalSeconds = Math.floor(diff / 1000);
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                print("Uptime: " + minutes + "m " + seconds + "s");
+            } else if (cmd === "about") {
+                print("APEX ZERO — monochrome glass OS.");
+            } else if (cmd.startsWith("echo ")) {
+                print(cmd.slice(5));
+            } else {
+                print("Unknown command. Type 'help'.");
+            }
+        }
+    }
+
+    function initCanvasApp(container) {
+        container.innerHTML = `
+            <div>Zero Canvas — simple monochrome drawing.</div>
+            <div class="canvasWrapper">
+                <div class="canvasToolbar">
+                    <button class="canvasBtn" id="canvasClear">Clear</button>
+                    <button class="canvasBtn" id="canvasThin">Thin</button>
+                    <button class="canvasBtn" id="canvasThick">Thick</button>
+                </div>
+                <canvas id="zeroCanvas" width="320" height="200"></canvas>
+            </div>
+        `;
+        const canvas = container.querySelector("#zeroCanvas");
+        const ctx = canvas.getContext("2d");
+        const clearBtn = container.querySelector("#canvasClear");
+        const thinBtn = container.querySelector("#canvasThin");
+        const thickBtn = container.querySelector("#canvasThick");
+
+        let drawing = false;
+        let lineWidth = 2;
+
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.strokeStyle = "#fff";
+        ctx.lineCap = "round";
+
+        canvas.addEventListener("mousedown", e => {
+            drawing = true;
+            ctx.beginPath();
+            const rect = canvas.getBoundingClientRect();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        });
+        canvas.addEventListener("mousemove", e => {
+            if (!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineWidth = lineWidth;
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+        });
+        document.addEventListener("mouseup", () => drawing = false);
+
+        clearBtn.addEventListener("click", () => {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.strokeStyle = "#fff";
+        });
+        thinBtn.addEventListener("click", () => lineWidth = 2);
+        thickBtn.addEventListener("click", () => lineWidth = 5);
+    }
+
     // ---------- ADMIN DASHBOARD ----------
     function openAdmin() {
         adminOpen = true;
@@ -1385,7 +1583,7 @@
             <div class="adminRow"><div class="adminLabel">Uptime</div><div class="adminValue" id="adminUptime">...</div></div>
             <div class="adminRow"><div class="adminLabel">Launches</div><div class="adminValue">${launchCount}</div></div>
             <div class="adminRow"><div class="adminLabel">Games/Apps</div><div class="adminValue">${games.length}</div></div>
-            <div class="adminRow"><div class="adminLabel">Recently Played</div><div class="adminValue">${recentCount}</div></div>
+            <div class="adminRow"><div class="adminLabel">Recently Used</div><div class="adminValue">${recentCount}</div></div>
             <div class="adminRow"><div class="adminLabel">Profile</div><div class="adminValue">BRYCE</div></div>
             <div class="adminBtnRow">
                 <button class="adminBtn" id="adminClearRecent">Clear Recent</button>
@@ -1478,17 +1676,37 @@
         tab.addEventListener("click", () => renderAdminTab(tab.dataset.tab));
     });
 
-    // ---------- KEYBOARD ----------
+    // ---------- KEYBOARD / ADMIN SEQUENCE ----------
     document.addEventListener("keydown", e => {
         if (overlay.style.display === "flex") {
             if (e.key === "Enter") launchBtn.click();
             if (e.key === "Escape") closeLaunchOverlay();
         }
         if (settingsOverlay.style.display === "flex" && e.key === "Escape") closeSettings();
-        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a") {
-            adminOpen ? closeAdmin() : openAdmin();
-        }
         if (adminOpen && e.key === "Escape") closeAdmin();
+
+        if (e.key === "Shift") {
+            shiftHeld = true;
+            adminSeq = [];
+        } else if (shiftHeld) {
+            const k = e.key.toLowerCase();
+            if (["z","e","r","o"].includes(k)) {
+                adminSeq.push(k);
+                if (adminSeq.join("") === "zero") {
+                    adminOpen ? closeAdmin() : openAdmin();
+                    adminSeq = [];
+                    shiftHeld = false;
+                }
+            } else {
+                adminSeq = [];
+            }
+        }
+    });
+    document.addEventListener("keyup", e => {
+        if (e.key === "Shift") {
+            shiftHeld = false;
+            adminSeq = [];
+        }
     });
 
     // ---------- INIT ----------
