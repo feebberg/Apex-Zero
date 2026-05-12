@@ -2,11 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Apex Zero</title>
+<title>Apex Zero OS++</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-    /* GLOBAL */
+    :root {
+        --glass-bg: rgba(255,255,255,0.08);
+        --glass-bg-strong: rgba(255,255,255,0.12);
+        --glass-border: rgba(255,255,255,0.25);
+        --glass-border-strong: rgba(255,255,255,0.45);
+        --divider: rgba(255,255,255,0.18);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
     body {
         margin: 0;
         background: #000;
@@ -58,29 +69,146 @@
         to { opacity: 0; visibility: hidden; }
     }
 
-    /* TOP BAR */
+    /* LAYOUT */
     #topBar {
-        text-align: center;
-        padding: 22px 0;
-        font-size: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
         font-weight: bold;
         letter-spacing: 4px;
         backdrop-filter: blur(8px);
         background: rgba(255,255,255,0.04);
         border-bottom: 1px solid rgba(255,255,255,0.12);
-        position: sticky;
-        top: 0;
-        z-index: 10;
+        z-index: 20;
     }
 
-    /* SECTION LABEL */
-    #sectionLabel {
-        text-align: left;
+    #topBarRight {
+        position: absolute;
+        right: 16px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    #settingsBtn {
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--glass-border);
+        background: var(--glass-bg);
+        backdrop-filter: blur(6px);
+        cursor: pointer;
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    #settingsBtn:hover {
+        background: var(--glass-bg-strong);
+        border-color: var(--glass-border-strong);
+    }
+
+    #shell {
+        position: absolute;
+        top: 52px;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        display: flex;
+    }
+
+    /* SIDEBAR */
+    #sidebar {
+        width: 200px;
+        border-right: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.03);
+        backdrop-filter: blur(10px);
+        padding: 16px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    #sidebarTitle {
+        font-size: 12px;
+        letter-spacing: 3px;
+        opacity: 0.7;
+    }
+
+    .sideSectionLabel {
+        font-size: 11px;
+        letter-spacing: 2px;
+        opacity: 0.6;
+        margin-bottom: 6px;
+    }
+
+    .sideLink {
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        font-size: 13px;
+        opacity: 0.85;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: 0.2s;
+    }
+
+    .sideLink span {
+        font-size: 11px;
+        opacity: 0.7;
+    }
+
+    .sideLink.active,
+    .sideLink:hover {
+        border-color: var(--glass-border);
+        background: var(--glass-bg);
+    }
+
+    /* MAIN AREA */
+    #mainArea {
+        flex: 1;
+        padding: 18px 22px;
+        overflow: auto;
+    }
+
+    #sectionHeaderRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         max-width: 1100px;
-        margin: 30px auto 10px auto;
-        font-size: 14px;
+        margin: 0 auto 10px auto;
+    }
+
+    #sectionLabel {
+        font-size: 13px;
         letter-spacing: 2px;
         opacity: 0.7;
+    }
+
+    #searchBox {
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--glass-border);
+        background: rgba(255,255,255,0.04);
+        color: #fff;
+        font-size: 12px;
+        min-width: 180px;
+        outline: none;
+        backdrop-filter: blur(6px);
+    }
+
+    #searchBox::placeholder {
+        color: rgba(255,255,255,0.5);
     }
 
     /* GRID */
@@ -88,29 +216,98 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 26px;
-        padding: 20px;
+        padding: 10px 0 24px 0;
         max-width: 1100px;
         margin: auto;
-        padding-bottom: 80px;
     }
 
-    /* SOFT GLASS CARD */
     .icon {
-        padding: 26px;
-        text-align: center;
+        padding: 24px;
+        text-align: left;
         cursor: pointer;
         border-radius: 18px;
         border: 1px solid rgba(255,255,255,0.22);
-        background: rgba(255,255,255,0.08);
+        background: var(--glass-bg);
         backdrop-filter: blur(10px);
         transition: 0.25s;
+        font-size: 14px;
+    }
+
+    .iconTitle {
         font-size: 15px;
+        margin-bottom: 6px;
+    }
+
+    .iconDesc {
+        font-size: 11px;
+        opacity: 0.7;
     }
 
     .icon:hover {
-        background: rgba(255,255,255,0.16);
-        border-color: rgba(255,255,255,0.45);
+        background: var(--glass-bg-strong);
+        border-color: var(--glass-border-strong);
         transform: translateY(-3px);
+    }
+
+    /* RECENTLY PLAYED PANEL */
+    #recentPanel {
+        max-width: 1100px;
+        margin: 0 auto 40px auto;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(10px);
+        padding: 16px 18px;
+    }
+
+    #recentHeaderRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    #recentTitle {
+        font-size: 12px;
+        letter-spacing: 2px;
+        opacity: 0.75;
+    }
+
+    #clearRecentBtn {
+        font-size: 11px;
+        border-radius: 999px;
+        border: 1px solid var(--glass-border);
+        background: rgba(255,255,255,0.04);
+        color: #fff;
+        padding: 4px 10px;
+        cursor: pointer;
+        backdrop-filter: blur(6px);
+    }
+
+    #clearRecentBtn:hover {
+        background: var(--glass-bg-strong);
+        border-color: var(--glass-border-strong);
+    }
+
+    #recentList {
+        font-size: 13px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .recentItem {
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.08);
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .recentItem:hover {
+        background: rgba(255,255,255,0.16);
+        border-color: var(--glass-border-strong);
     }
 
     /* OVERLAY */
@@ -122,6 +319,7 @@
         align-items: center;
         justify-content: center;
         animation: fadeIn 0.25s ease;
+        z-index: 50;
     }
 
     @keyframes fadeIn {
@@ -129,73 +327,209 @@
         to { opacity: 1; }
     }
 
-    /* OVERLAY BOX — SOFT GLASS */
     #overlayBox {
-        width: 360px;
+        width: 380px;
         background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.25);
+        border: 1px solid var(--glass-border);
         backdrop-filter: blur(12px);
-        padding: 0;
         border-radius: 20px;
         overflow: hidden;
     }
 
-    /* TITLE BAR INSIDE OVERLAY */
     #overlayTitleBar {
-        padding: 16px;
-        font-size: 16px;
+        padding: 14px 16px;
+        font-size: 13px;
         letter-spacing: 2px;
-        border-bottom: 1px solid rgba(255,255,255,0.18);
+        border-bottom: 1px solid var(--divider);
         text-align: center;
         background: rgba(255,255,255,0.06);
     }
 
     #overlayContent {
-        padding: 26px;
-        text-align: center;
+        padding: 22px 24px 20px 24px;
+        text-align: left;
     }
 
-    /* BUTTON ROW */
+    #overlayGameName {
+        font-size: 17px;
+        margin-bottom: 6px;
+    }
+
+    #overlayGameDesc {
+        font-size: 12px;
+        opacity: 0.75;
+        margin-bottom: 18px;
+    }
+
     #buttonRow {
         display: flex;
         gap: 12px;
-        margin-top: 20px;
+        margin-top: 6px;
     }
 
     .glassBtn {
         flex: 1;
-        padding: 12px;
+        padding: 10px;
         border-radius: 12px;
         border: 1px solid rgba(255,255,255,0.35);
         background: rgba(255,255,255,0.12);
         backdrop-filter: blur(6px);
         color: #fff;
-        font-size: 14px;
+        font-size: 13px;
         cursor: pointer;
         transition: 0.2s;
     }
 
     .glassBtn:hover {
         background: rgba(255,255,255,0.22);
-        border-color: rgba(255,255,255,0.55);
+        border-color: var(--glass-border-strong);
     }
 
-    /* FOOTER STATUS BAR */
-    #footer {
+    /* SETTINGS MODAL */
+    #settingsOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.65);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 60;
+    }
+
+    #settingsBox {
+        width: 360px;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    #settingsTitleBar {
+        padding: 14px 16px;
+        font-size: 13px;
+        letter-spacing: 2px;
+        border-bottom: 1px solid var(--divider);
         text-align: center;
-        padding: 20px 0;
-        opacity: 0.25;
-        letter-spacing: 4px;
+        background: rgba(255,255,255,0.06);
+    }
+
+    #settingsContent {
+        padding: 18px 20px 16px 20px;
+        font-size: 13px;
+    }
+
+    .settingsRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .settingsLabel {
         font-size: 12px;
+        opacity: 0.85;
+    }
+
+    .settingsToggle {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--glass-border);
+        background: rgba(255,255,255,0.06);
+        cursor: pointer;
+        font-size: 11px;
+    }
+
+    .settingsToggle.active {
+        background: rgba(255,255,255,0.18);
+        border-color: var(--glass-border-strong);
+    }
+
+    #settingsButtons {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    #aboutText {
+        font-size: 11px;
+        opacity: 0.7;
+        margin-top: 10px;
+    }
+
+    /* DOCK */
+    #dock {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(12px);
+        display: flex;
+        gap: 10px;
+        z-index: 30;
+    }
+
+    .dockItem {
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 11px;
+        cursor: pointer;
+        opacity: 0.85;
+    }
+
+    .dockItem:hover {
+        border-color: var(--glass-border);
+        background: rgba(255,255,255,0.12);
+    }
+
+    /* FOOTER */
+    #footer {
         position: fixed;
         bottom: 0;
-        width: 100%;
+        left: 0;
+        right: 0;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        font-size: 11px;
+        opacity: 0.7;
+        letter-spacing: 2px;
         backdrop-filter: blur(6px);
         background: rgba(255,255,255,0.04);
         border-top: 1px solid rgba(255,255,255,0.12);
+        z-index: 25;
+    }
+
+    #footerLeft {
+        text-transform: uppercase;
+    }
+
+    #footerRight {
+        display: flex;
+        gap: 16px;
+        font-size: 10px;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    @media (max-width: 800px) {
+        #sidebar {
+            display: none;
+        }
+        #shell {
+            left: 0;
+        }
     }
 </style>
-
 </head>
 <body>
 
@@ -205,26 +539,65 @@
     <div id="loadingBar"><div id="loadingFill"></div></div>
 </div>
 
-<div id="topBar">APEX ZERO</div>
-
-<div id="sectionLabel">GAMES</div>
-
-<div id="grid">
-    <div class="icon" data-url="2048cupcakes.html">2048 Cupcakes</div>
-    <div class="icon" data-url="agariolite.html">Agario Lite</div>
-    <div class="icon" data-url="cookieclicker (1).htm">Cookie Clicker</div>
-    <div class="icon" data-url="Eaglercraft_1.12.2_WASM_Offline_Download (2).html">Minecraft 1.12.2</div>
-    <div class="icon" data-url="paperio2.htm">Paper.io 2</div>
-    <div class="icon" data-url="rooftopsnipers2.html">Rooftop Snipers 2</div>
+<!-- TOP BAR -->
+<div id="topBar">
+    APEX ZERO
+    <div id="topBarRight">
+        <span id="profileName">BRYCE</span>
+        <button id="settingsBtn">SETTINGS</button>
+    </div>
 </div>
 
-<!-- OVERLAY -->
+<!-- SHELL -->
+<div id="shell">
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+        <div id="sidebarTitle">SYSTEM</div>
+
+        <div>
+            <div class="sideSectionLabel">SECTIONS</div>
+            <div class="sideLink active" data-category="all">All <span>ALL</span></div>
+            <div class="sideLink" data-category="games">Games <span>G</span></div>
+            <div class="sideLink" data-category="apps">Apps <span>A</span></div>
+            <div class="sideLink" data-category="tools">Tools <span>T</span></div>
+        </div>
+
+        <div>
+            <div class="sideSectionLabel">PANELS</div>
+            <div class="sideLink" id="sideScrollGames">Go to Games</div>
+            <div class="sideLink" id="sideScrollRecent">Go to Recent</div>
+        </div>
+    </div>
+
+    <!-- MAIN AREA -->
+    <div id="mainArea">
+        <!-- SECTION HEADER -->
+        <div id="sectionHeaderRow">
+            <div id="sectionLabel">GAMES & APPS</div>
+            <input id="searchBox" type="text" placeholder="Search…">
+        </div>
+
+        <!-- GRID -->
+        <div id="grid"></div>
+
+        <!-- RECENTLY PLAYED PANEL -->
+        <div id="recentPanel">
+            <div id="recentHeaderRow">
+                <div id="recentTitle">RECENTLY PLAYED</div>
+                <button id="clearRecentBtn">CLEAR</button>
+            </div>
+            <div id="recentList"></div>
+        </div>
+    </div>
+</div>
+
+<!-- OVERLAY (LAUNCH) -->
 <div id="overlay">
     <div id="overlayBox">
-        <div id="overlayTitleBar" id="gameTitle">LAUNCH GAME</div>
+        <div id="overlayTitleBar">LAUNCH GAME</div>
         <div id="overlayContent">
-            <div id="gameName" style="font-size:18px; letter-spacing:1px; margin-bottom:20px;">Game</div>
-
+            <div id="overlayGameName">Game</div>
+            <div id="overlayGameDesc">Description</div>
             <div id="buttonRow">
                 <button class="glassBtn" id="launchBtn">Launch</button>
                 <button class="glassBtn" id="cancelBtn">Cancel</button>
@@ -233,32 +606,409 @@
     </div>
 </div>
 
-<div id="footer">SYSTEM READY</div>
+<!-- SETTINGS OVERLAY -->
+<div id="settingsOverlay">
+    <div id="settingsBox">
+        <div id="settingsTitleBar">SETTINGS</div>
+        <div id="settingsContent">
+            <div class="settingsRow">
+                <div class="settingsLabel">Footer Status Bar</div>
+                <button class="settingsToggle" id="toggleFooterBtn">ON</button>
+            </div>
+            <div class="settingsRow">
+                <div class="settingsLabel">Hover Lift on Cards</div>
+                <button class="settingsToggle" id="toggleHoverBtn">ON</button>
+            </div>
+            <div class="settingsRow">
+                <div class="settingsLabel">Clear Recently Played</div>
+                <button class="settingsToggle" id="clearRecentSettingsBtn">CLEAR</button>
+            </div>
+
+            <div id="settingsButtons">
+                <button class="glassBtn" id="closeSettingsBtn">Close</button>
+                <button class="glassBtn" id="resetLayoutBtn">Reset UI</button>
+            </div>
+
+            <div id="aboutText">
+                APEX ZERO OS++ — Monochrome Glass Edition.  
+                Minimal, modern, and built for clean launching.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DOCK -->
+<div id="dock">
+    <div class="dockItem" id="dockHome">HOME</div>
+    <div class="dockItem" id="dockGames">GAMES</div>
+    <div class="dockItem" id="dockRecent">RECENT</div>
+    <div class="dockItem" id="dockSettings">SETTINGS</div>
+</div>
+
+<!-- FOOTER -->
+<div id="footer">
+    <div id="footerLeft">SYSTEM READY</div>
+    <div id="footerRight">
+        <span id="footerClock">--:--</span>
+        <span id="footerUptime">UPTIME 0:00</span>
+        <span id="footerLaunches">LAUNCHES 0</span>
+    </div>
+</div>
 
 <script>
+    // ---------- DATA ----------
+    const games = [
+        {
+            id: "2048cupcakes",
+            name: "2048 Cupcakes",
+            url: "2048cupcakes.html",
+            category: "games",
+            desc: "Classic 2048 with cupcakes."
+        },
+        {
+            id: "agariolite",
+            name: "Agario Lite",
+            url: "agariolite.html",
+            category: "games",
+            desc: "Lightweight agar-style multiplayer."
+        },
+        {
+            id: "cookieclicker",
+            name: "Cookie Clicker",
+            url: "cookieclicker (1).htm",
+            category: "games",
+            desc: "Endless cookie clicking madness."
+        },
+        {
+            id: "mc1122",
+            name: "Minecraft 1.12.2",
+            url: "Eaglercraft_1.12.2_WASM_Offline_Download (2).html",
+            category: "games",
+            desc: "Sandbox survival and creativity."
+        },
+        {
+            id: "paperio2",
+            name: "Paper.io 2",
+            url: "paperio2.htm",
+            category: "games",
+            desc: "Capture territory with smooth lines."
+        },
+        {
+            id: "rooftopsnipers2",
+            name: "Rooftop Snipers 2",
+            url: "rooftopsnipers2.html",
+            category: "games",
+            desc: "Chaotic rooftop duels."
+        },
+        {
+            id: "notes",
+            name: "Minimal Notes",
+            url: "#",
+            category: "apps",
+            desc: "Placeholder app slot."
+        },
+        {
+            id: "timer",
+            name: "Focus Timer",
+            url: "#",
+            category: "tools",
+            desc: "Placeholder tool slot."
+        }
+    ];
+
+    // ---------- STATE ----------
+    let currentCategory = "all";
+    let searchQuery = "";
+    let pendingGame = null;
+    let hoverEnabled = true;
+    let footerEnabled = true;
+    let launchCount = 0;
+    let startTime = Date.now();
+
+    // ---------- ELEMENTS ----------
+    const grid = document.getElementById("grid");
+    const searchBox = document.getElementById("searchBox");
+    const sideLinks = document.querySelectorAll(".sideLink[data-category]");
     const overlay = document.getElementById("overlay");
-    const gameName = document.getElementById("gameName");
+    const overlayGameName = document.getElementById("overlayGameName");
+    const overlayGameDesc = document.getElementById("overlayGameDesc");
     const launchBtn = document.getElementById("launchBtn");
     const cancelBtn = document.getElementById("cancelBtn");
+    const recentList = document.getElementById("recentList");
+    const clearRecentBtn = document.getElementById("clearRecentBtn");
+    const footer = document.getElementById("footer");
+    const footerClock = document.getElementById("footerClock");
+    const footerUptime = document.getElementById("footerUptime");
+    const footerLaunches = document.getElementById("footerLaunches");
+    const settingsOverlay = document.getElementById("settingsOverlay");
+    const settingsBtn = document.getElementById("settingsBtn");
+    const closeSettingsBtn = document.getElementById("closeSettingsBtn");
+    const toggleFooterBtn = document.getElementById("toggleFooterBtn");
+    const toggleHoverBtn = document.getElementById("toggleHoverBtn");
+    const clearRecentSettingsBtn = document.getElementById("clearRecentSettingsBtn");
+    const resetLayoutBtn = document.getElementById("resetLayoutBtn");
+    const dockHome = document.getElementById("dockHome");
+    const dockGames = document.getElementById("dockGames");
+    const dockRecent = document.getElementById("dockRecent");
+    const dockSettings = document.getElementById("dockSettings");
+    const sideScrollGames = document.getElementById("sideScrollGames");
+    const sideScrollRecent = document.getElementById("sideScrollRecent");
 
-    let pendingURL = null;
+    // ---------- RENDER GRID ----------
+    function renderGrid() {
+        grid.innerHTML = "";
+        const filtered = games.filter(g => {
+            if (currentCategory !== "all" && g.category !== currentCategory) return false;
+            if (searchQuery && !g.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+            return true;
+        });
 
-    document.querySelectorAll(".icon").forEach(icon => {
-        icon.addEventListener("click", () => {
-            pendingURL = icon.dataset.url;
-            gameName.textContent = icon.textContent;
-            overlay.style.display = "flex";
+        filtered.forEach(g => {
+            const card = document.createElement("div");
+            card.className = "icon";
+            card.dataset.id = g.id;
+
+            const title = document.createElement("div");
+            title.className = "iconTitle";
+            title.textContent = g.name;
+
+            const desc = document.createElement("div");
+            desc.className = "iconDesc";
+            desc.textContent = g.desc;
+
+            card.appendChild(title);
+            card.appendChild(desc);
+
+            card.addEventListener("click", () => openLaunchOverlay(g));
+
+            grid.appendChild(card);
+        });
+
+        applyHoverState();
+    }
+
+    // ---------- OVERLAY ----------
+    function openLaunchOverlay(game) {
+        pendingGame = game;
+        overlayGameName.textContent = game.name;
+        overlayGameDesc.textContent = game.desc;
+        overlay.style.display = "flex";
+    }
+
+    function closeLaunchOverlay() {
+        overlay.style.display = "none";
+        pendingGame = null;
+    }
+
+    launchBtn.onclick = () => {
+        if (!pendingGame) return;
+        if (pendingGame.url && pendingGame.url !== "#") {
+            window.open(pendingGame.url, "_blank");
+        }
+        addRecent(pendingGame);
+        launchCount++;
+        updateFooterLaunches();
+        closeLaunchOverlay();
+    };
+
+    cancelBtn.onclick = closeLaunchOverlay;
+
+    document.addEventListener("keydown", e => {
+        if (overlay.style.display === "flex") {
+            if (e.key === "Enter") launchBtn.click();
+            if (e.key === "Escape") closeLaunchOverlay();
+        }
+        if (settingsOverlay.style.display === "flex" && e.key === "Escape") {
+            closeSettings();
+        }
+    });
+
+    // ---------- RECENTLY PLAYED ----------
+    function getRecent() {
+        try {
+            const raw = localStorage.getItem("apex_recent");
+            if (!raw) return [];
+            return JSON.parse(raw);
+        } catch {
+            return [];
+        }
+    }
+
+    function saveRecent(list) {
+        localStorage.setItem("apex_recent", JSON.stringify(list));
+    }
+
+    function addRecent(game) {
+        let list = getRecent();
+        list = list.filter(id => id !== game.id);
+        list.unshift(game.id);
+        if (list.length > 5) list = list.slice(0, 5);
+        saveRecent(list);
+        renderRecent();
+    }
+
+    function renderRecent() {
+        recentList.innerHTML = "";
+        const list = getRecent();
+        if (list.length === 0) {
+            recentList.textContent = "No games played yet.";
+            return;
+        }
+        list.forEach(id => {
+            const g = games.find(x => x.id === id);
+            if (!g) return;
+            const item = document.createElement("div");
+            item.className = "recentItem";
+            item.textContent = g.name;
+            item.addEventListener("click", () => openLaunchOverlay(g));
+            recentList.appendChild(item);
+        });
+    }
+
+    clearRecentBtn.onclick = () => {
+        saveRecent([]);
+        renderRecent();
+    };
+
+    clearRecentSettingsBtn.onclick = () => {
+        saveRecent([]);
+        renderRecent();
+    };
+
+    // ---------- CATEGORY + SEARCH ----------
+    sideLinks.forEach(link => {
+        link.addEventListener("click", () => {
+            sideLinks.forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+            currentCategory = link.dataset.category;
+            renderGrid();
         });
     });
 
-    launchBtn.onclick = () => {
-        if (pendingURL) window.open(pendingURL, "_blank");
-        overlay.style.display = "none";
+    searchBox.addEventListener("input", () => {
+        searchQuery = searchBox.value.trim();
+        renderGrid();
+    });
+
+    // ---------- SETTINGS ----------
+    function openSettings() {
+        settingsOverlay.style.display = "flex";
+    }
+
+    function closeSettings() {
+        settingsOverlay.style.display = "none";
+    }
+
+    settingsBtn.onclick = openSettings;
+    closeSettingsBtn.onclick = closeSettings;
+
+    toggleFooterBtn.onclick = () => {
+        footerEnabled = !footerEnabled;
+        updateFooterVisibility();
+        updateSettingsToggles();
+        localStorage.setItem("apex_footer", footerEnabled ? "1" : "0");
     };
 
-    cancelBtn.onclick = () => {
-        overlay.style.display = "none";
+    toggleHoverBtn.onclick = () => {
+        hoverEnabled = !hoverEnabled;
+        applyHoverState();
+        updateSettingsToggles();
+        localStorage.setItem("apex_hover", hoverEnabled ? "1" : "0");
     };
+
+    resetLayoutBtn.onclick = () => {
+        footerEnabled = true;
+        hoverEnabled = true;
+        localStorage.removeItem("apex_footer");
+        localStorage.removeItem("apex_hover");
+        updateFooterVisibility();
+        applyHoverState();
+        updateSettingsToggles();
+    };
+
+    function updateSettingsToggles() {
+        toggleFooterBtn.textContent = footerEnabled ? "ON" : "OFF";
+        toggleHoverBtn.textContent = hoverEnabled ? "ON" : "OFF";
+        toggleFooterBtn.classList.toggle("active", footerEnabled);
+        toggleHoverBtn.classList.toggle("active", hoverEnabled);
+    }
+
+    function updateFooterVisibility() {
+        footer.classList.toggle("hidden", !footerEnabled);
+    }
+
+    function applyHoverState() {
+        document.querySelectorAll(".icon").forEach(card => {
+            card.style.transition = hoverEnabled ? "0.25s" : "0s";
+            card.style.transform = "none";
+        });
+    }
+
+    // ---------- DOCK + SIDEBAR NAV ----------
+    function scrollToGames() {
+        document.getElementById("mainArea").scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function scrollToRecent() {
+        const main = document.getElementById("mainArea");
+        const recentPanel = document.getElementById("recentPanel");
+        const offset = recentPanel.offsetTop - 40;
+        main.scrollTo({ top: offset, behavior: "smooth" });
+    }
+
+    dockHome.onclick = scrollToGames;
+    dockGames.onclick = scrollToGames;
+    dockRecent.onclick = scrollToRecent;
+    dockSettings.onclick = openSettings;
+
+    sideScrollGames.onclick = scrollToGames;
+    sideScrollRecent.onclick = scrollToRecent;
+
+    // ---------- FOOTER CLOCK + UPTIME ----------
+    function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, "0");
+        const m = String(now.getMinutes()).padStart(2, "0");
+        footerClock.textContent = `${h}:${m}`;
+    }
+
+    function updateUptime() {
+        const diff = Date.now() - startTime;
+        const totalSeconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        footerUptime.textContent = `UPTIME ${minutes}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function updateFooterLaunches() {
+        footerLaunches.textContent = `LAUNCHES ${launchCount}`;
+    }
+
+    setInterval(() => {
+        updateClock();
+        updateUptime();
+    }, 1000);
+
+    // ---------- INIT ----------
+    function loadSettings() {
+        const f = localStorage.getItem("apex_footer");
+        const h = localStorage.getItem("apex_hover");
+        if (f !== null) footerEnabled = f === "1";
+        if (h !== null) hoverEnabled = h === "1";
+        updateFooterVisibility();
+        updateSettingsToggles();
+    }
+
+    function init() {
+        loadSettings();
+        renderGrid();
+        renderRecent();
+        updateClock();
+        updateUptime();
+        updateFooterLaunches();
+    }
+
+    init();
 </script>
 
 </body>
