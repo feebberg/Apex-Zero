@@ -5,1165 +5,128 @@
 <title>Apex Zero</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- CSS WILL BE INSERTED IN PART 2 -->
 <style>
-/* -----------------------------------------------------------
-   ROOT THEME VARIABLES
------------------------------------------------------------ */
-:root {
-    --bg: #050712;
-    --bg-deep: #02030a;
-    --accent: #5f8bff;
-    --accent-soft: rgba(95, 139, 255, 0.35);
-    --text: #f7f8ff;
-    --muted: #9aa0c0;
-    --danger: #ff4b6b;
-    --border-soft: rgba(255, 255, 255, 0.16);
-    --border-faint: rgba(255, 255, 255, 0.08);
-    --white-soft: rgba(255, 255, 255, 0.7);
-}
-
-/* -----------------------------------------------------------
-   GLOBAL RESET
------------------------------------------------------------ */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-}
-
-body {
-    height: 100vh;
-    overflow: hidden;
-    color: var(--text);
-    background: radial-gradient(circle at top, #151b3a 0, #050712 45%, #02030a 100%);
-}
-
-/* -----------------------------------------------------------
-   SPLASH SCREEN
------------------------------------------------------------ */
-#splash {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at top, #1f2648 0, #050712 55%, #02030a 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    z-index: 999;
-    animation: splashFadeOut 0.8s ease forwards;
-    animation-delay: 2.4s;
-}
-
-#splashLogo {
-    width: 150px;
-    height: 150px;
-    border-radius: 32px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(5, 7, 18, 0.98));
-    box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.12),
-        0 0 40px var(--accent-soft),
-        0 0 120px rgba(0, 0, 0, 0.9);
-}
-
-#splashLogo::before {
-    content: "";
-    position: absolute;
-    inset: -40%;
-    background: conic-gradient(
-        from 0deg,
-        rgba(95, 139, 255, 0.0),
-        rgba(95, 139, 255, 0.7),
-        rgba(95, 139, 255, 0.0)
-    );
-    opacity: 0.6;
-    mix-blend-mode: screen;
-    animation: spinGlow 4s linear infinite;
-}
-
-#splashGlyph {
-    font-size: 44px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
-    color: var(--white-soft);
-}
-
-#splashTitle {
-    font-size: 22px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--white-soft);
-}
-
-#splashSubtitle {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-}
-
-#splashProgress {
-    margin-top: 18px;
-    width: 260px;
-    height: 3px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-}
-
-#splashProgressBar {
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(90deg, rgba(95, 139, 255, 0.1), rgba(95, 139, 255, 0.9));
-    animation: splashProgress 1.8s ease-in-out infinite;
-}
-
-@keyframes splashProgress {
-    0% { transform: translateX(-60%); }
-    50% { transform: translateX(40%); }
-    100% { transform: translateX(120%); }
-}
-
-@keyframes splashFadeOut {
-    to { opacity: 0; visibility: hidden; }
-}
-
-@keyframes spinGlow {
-    to { transform: rotate(360deg); }
-}
-
-/* -----------------------------------------------------------
-   TOP BAR
------------------------------------------------------------ */
-#topBar {
-    position: absolute;
-    top: 16px;
-    left: 0;
-    right: 0;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#topBarInner {
-    width: 100%;
-    max-width: 1280px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-/* README BUTTON */
-#readmeLink {
-    position: absolute;
-    left: 20px;
-    opacity: 0;
-    animation: fadeIn 0.7s ease forwards;
-    animation-delay: 0.9s;
-}
-
-#readmeLink a {
-    color: var(--text);
-    text-decoration: none;
-    font-size: 12px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(5, 7, 18, 0.98));
-    box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.08),
-        0 0 18px var(--accent-soft);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    transition: 0.18s ease;
-}
-
-#readmeLink a:hover {
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 7, 18, 0.98));
-    transform: translateY(-1px);
-}
-
-/* TITLE BAR */
-#titleBar {
-    padding: 6px 16px;
-    border-radius: 999px;
-    border: 1px solid var(--border-soft);
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 7, 18, 0.98));
-    box-shadow:
-        0 0 0 1px var(--border-faint),
-        0 0 24px rgba(0, 0, 0, 0.9);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#titleGlyph {
-    width: 24px;
-    height: 24px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--white-soft);
-}
-
-#titleText {
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-/* SETTINGS BUTTON */
-#settingsButton {
-    position: absolute;
-    right: 20px;
-    opacity: 0;
-    animation: fadeIn 0.7s ease forwards;
-    animation-delay: 0.9s;
-}
-
-#settingsButton button {
-    font-size: 12px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(5, 7, 18, 0.98));
-    color: var(--text);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.18s ease;
-}
-
-#settingsButton button:hover {
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 7, 18, 0.98));
-    transform: translateY(-1px);
-}
-
-@keyframes fadeIn {
-    to { opacity: 1; }
-}
-
-/* -----------------------------------------------------------
-   MAIN LAYOUT
------------------------------------------------------------ */
-#desktop {
-    width: 100%;
-    height: 100%;
-    padding: 64px 24px 24px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-#mainLayout {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    gap: 24px;
-}
-
-/* -----------------------------------------------------------
-   DESKTOP GRID
------------------------------------------------------------ */
-#desktopGrid {
-    border-radius: 24px;
-    border: 1px solid var(--border-soft);
-    background:
-        radial-gradient(circle at top left, rgba(95, 139, 255, 0.22), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.9), #050712 70%);
-    box-shadow:
-        0 0 0 1px var(--border-faint),
-        0 24px 80px rgba(0, 0, 0, 0.95);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: relative;
-}
-
-#desktopIcons {
-    margin-top: 8px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 18px;
-}
-
-.iconCard {
-    border-radius: 18px;
-    padding: 12px 10px 10px 10px;
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.10), rgba(5, 7, 18, 0.98));
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.08),
-        0 10px 30px rgba(0, 0, 0, 0.9),
-        0 0 20px rgba(95, 139, 255, 0.25);
-    cursor: pointer;
-    transition: 0.16s ease;
-}
-
-.iconCard:hover {
-    transform: translateY(-3px);
-    box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.16),
-        0 18px 40px rgba(0, 0, 0, 0.98),
-        0 0 26px rgba(95, 139, 255, 0.45);
-}
-
-.iconGlyph {
-    width: 44px;
-    height: 44px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    margin-bottom: 6px;
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(5, 7, 18, 0.98));
-    color: var(--white-soft);
-}
-
-.iconTitle {
-    font-size: 12px;
-    color: var(--text);
-}
-
-.iconMeta {
-    font-size: 10px;
-    color: var(--muted);
-}
-
-/* -----------------------------------------------------------
-   RIGHT COLUMN PANELS
------------------------------------------------------------ */
-.panel {
-    border-radius: 20px;
-    border: 1px solid var(--border-soft);
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(5, 7, 18, 0.98));
-    box-shadow:
-        0 0 0 1px var(--border-faint),
-        0 18px 60px rgba(0, 0, 0, 0.95);
-    padding: 14px;
-}
-
-.panelTitle {
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-.recentItem {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 8px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.03);
-    cursor: pointer;
-    transition: 0.15s ease;
-}
-
-.recentItem:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-/* -----------------------------------------------------------
-   NEW GLASS-PANEL OVERLAY
------------------------------------------------------------ */
-#launchOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.65);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 900;
-}
-
-#launchPanel {
-    width: 360px;
-    max-width: 90vw;
-    padding: 20px;
-    border-radius: 22px;
-    border: 1px solid rgba(255,255,255,0.22);
-    background: radial-gradient(circle at top, rgba(255,255,255,0.10), rgba(5,7,18,0.98));
-    box-shadow:
-        0 0 0 1px rgba(255,255,255,0.08),
-        0 24px 80px rgba(0,0,0,0.98),
-        0 0 40px rgba(95,139,255,0.35);
-    transform: scale(0.95);
-    opacity: 0;
-    animation: overlayIn 0.25s ease forwards;
-}
-
-@keyframes overlayIn {
-    to {
-        opacity: 1;
-        transform: scale(1);
+    body {
+        margin: 0;
+        background: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
     }
-}
 
-#launchTitle {
-    font-size: 14px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--white-soft);
-    margin-bottom: 16px;
-    text-align: center;
-}
-
-/* GLASS BUTTONS */
-.glassButton {
-    width: 100%;
-    padding: 10px 0;
-    margin-top: 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.35);
-    background: rgba(255,255,255,0.06);
-    color: var(--text);
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.18s ease;
-    box-shadow:
-        0 0 0 1px rgba(255,255,255,0.08),
-        0 0 18px var(--accent-soft);
-}
-
-.glassButton:hover {
-    background: rgba(255,255,255,0.12);
-    box-shadow:
-        0 0 0 1px rgba(255,255,255,0.16),
-        0 0 26px var(--accent-soft);
-}
-
-/* -----------------------------------------------------------
-   SETTINGS + ADMIN MODALS
------------------------------------------------------------ */
-#settingsModal,
-#adminModal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 900;
-}
-
-.modalInner {
-    width: 380px;
-    max-width: 90vw;
-    border-radius: 20px;
-    border: 1px solid var(--border-soft);
-    background: radial-gradient(circle at top, rgba(255,255,255,0.10), rgba(5,7,18,0.98));
-    box-shadow:
-        0 0 0 1px var(--border-faint),
-        0 24px 80px rgba(0,0,0,0.98);
-    padding: 16px;
-}
-
-.modalTitle {
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-.modalClose {
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font-size: 14px;
-    cursor: pointer;
-}
-
-/* -----------------------------------------------------------
-   WATERMARK
------------------------------------------------------------ */
-#watermark {
-    position: absolute;
-    bottom: 10px;
-    right: 18px;
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.22);
-}
-
-/* -----------------------------------------------------------
-   RESPONSIVE
------------------------------------------------------------ */
-@media (max-width: 900px) {
-    #mainLayout {
-        grid-template-columns: 1fr;
+    /* Top Title */
+    #title {
+        text-align: center;
+        padding: 20px 0;
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 4px;
     }
-}
 
+    /* Icon Grid */
+    #grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .icon {
+        border: 2px solid #fff;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.15s;
+        font-size: 14px;
+    }
+
+    .icon:hover {
+        background: #fff;
+        color: #000;
+    }
+
+    /* Overlay */
+    #overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #overlayBox {
+        background: #fff;
+        color: #000;
+        padding: 30px;
+        width: 300px;
+        text-align: center;
+    }
+
+    #overlayBox button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 2px solid #000;
+        background: #fff;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    #overlayBox button:hover {
+        background: #000;
+        color: #fff;
+    }
 </style>
 
 </head>
 <body>
 
-<!-- ---------------------------------------------------------
-     SPLASH SCREEN
----------------------------------------------------------- -->
-<div id="splash">
-    <div id="splashLogo">
-        <div id="splashGlyph">AZ</div>
-    </div>
-    <div id="splashTitle">APEX ZERO</div>
-    <div id="splashSubtitle">BOOTING GAME SHELL</div>
-    <div id="splashProgress">
-        <div id="splashProgressBar"></div>
+<div id="title">APEX ZERO</div>
+
+<div id="grid">
+    <div class="icon" data-url="2048cupcakes.html">2048 Cupcakes</div>
+    <div class="icon" data-url="agariolite.html">Agario Lite</div>
+    <div class="icon" data-url="cookieclicker (1).htm">Cookie Clicker</div>
+    <div class="icon" data-url="Eaglercraft_1.12.2_WASM_Offline_Download (2).html">Minecraft 1.12.2</div>
+    <div class="icon" data-url="paperio2.htm">Paper.io 2</div>
+    <div class="icon" data-url="rooftopsnipers2.html">Rooftop Snipers 2</div>
+</div>
+
+<!-- Overlay -->
+<div id="overlay">
+    <div id="overlayBox">
+        <div id="gameTitle">Game</div>
+        <button id="launchBtn">Launch</button>
+        <button id="cancelBtn">Cancel</button>
     </div>
 </div>
 
-<!-- ---------------------------------------------------------
-     NEW GLASS-PANEL LAUNCH OVERLAY
----------------------------------------------------------- -->
-<div id="launchOverlay">
-    <div id="launchPanel">
-        <div id="launchTitle">GAME TITLE</div>
-
-        <button id="launchConfirm" class="glassButton">Launch Game</button>
-        <button id="launchCancel" class="glassButton">Cancel</button>
-    </div>
-</div>
-
-<!-- ---------------------------------------------------------
-     SETTINGS MODAL
----------------------------------------------------------- -->
-<div id="settingsModal">
-    <div class="modalInner">
-        <div class="modalHeader">
-            <div class="modalTitle">Settings</div>
-            <button class="modalClose" data-close="settings">✕</button>
-        </div>
-
-        <div class="modalSectionTitle">Theme</div>
-        <div class="chipRow" id="themeChips">
-            <div class="chip active" data-theme="blue">Blue</div>
-            <div class="chip" data-theme="purple">Purple</div>
-            <div class="chip" data-theme="red">Red</div>
-            <div class="chip" data-theme="green">Green</div>
-            <div class="chip" data-theme="mono">Mono</div>
-        </div>
-
-        <div class="modalSectionTitle">Background</div>
-        <div class="chipRow" id="bgChips">
-            <div class="chip active" data-bg="grid">Grid</div>
-            <div class="chip" data-bg="gradient">Gradient</div>
-            <div class="chip" data-bg="scanlines">Scanlines</div>
-            <div class="chip" data-bg="dark">Dark</div>
-        </div>
-
-        <div class="dangerZone">
-            <div class="modalSectionTitle">Danger Zone</div>
-            <button class="dangerButton" id="resetSystem">Reset System</button>
-            <button class="dangerButton" id="resetPassword">Reset Password</button>
-        </div>
-    </div>
-</div>
-
-<!-- ---------------------------------------------------------
-     ADMIN MODAL
----------------------------------------------------------- -->
-<div id="adminModal">
-    <div class="modalInner">
-        <div class="modalHeader">
-            <div class="modalTitle">Admin Panel</div>
-            <button class="modalClose" data-close="admin">✕</button>
-        </div>
-
-        <div id="adminAuthSection">
-            <div class="modalSectionTitle">Admin Access</div>
-            <div id="adminAuthBody" style="font-size: 11px; color: var(--muted); margin-top: 4px;">
-                <!-- Filled by JS -->
-            </div>
-            <div class="field">
-                <label for="adminPasswordInput">Password</label>
-                <input type="password" id="adminPasswordInput" autocomplete="off">
-            </div>
-            <button class="primaryButton" id="adminAuthButton">Continue</button>
-        </div>
-
-        <div id="adminMainSection" style="display:none;">
-            <div class="modalSectionTitle">Games</div>
-            <div class="field">
-                <label for="gameNameInput">Game Name</label>
-                <input type="text" id="gameNameInput" placeholder="Minecraft 1.12.2">
-            </div>
-            <div class="field">
-                <label for="gameUrlInput">Game File / URL</label>
-                <input type="text" id="gameUrlInput" placeholder="Eaglercraft_1.12.2.html">
-            </div>
-            <button class="primaryButton" id="addGameButton">Add Game</button>
-
-            <div class="modalSectionTitle" style="margin-top:10px;">Existing Games</div>
-            <div id="adminGameList" style="font-size:11px; color:var(--muted); margin-top:4px;">
-                <!-- Filled by JS -->
-            </div>
-
-            <div class="dangerZone">
-                <div class="modalSectionTitle">Danger Zone</div>
-                <button class="dangerButton" id="adminResetSystem">Reset System</button>
-                <button class="dangerButton" id="adminResetPassword">Reset Password</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ---------------------------------------------------------
-     TOP BAR + DESKTOP
----------------------------------------------------------- -->
-<div id="desktop">
-    <div id="topBar">
-        <div id="topBarInner">
-
-            <div id="readmeLink">
-                <a href="https://github.com/feebberg/Apex-Zero/blob/main/README.md" target="_blank">
-                    README
-                </a>
-            </div>
-
-            <div id="titleBar">
-                <div id="titleGlyph">AZ</div>
-                <div id="titleText">APEX ZERO — GAME HUB</div>
-            </div>
-
-            <div id="settingsButton">
-                <button id="openSettings">Settings</button>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="mainLayout">
-
-        <!-- DESKTOP GRID -->
-        <div id="desktopGrid">
-            <div id="desktopHeader">
-                <div id="desktopHeaderTitle">Desktop</div>
-                <div id="desktopHeaderActions">System Ready</div>
-            </div>
-
-            <div id="desktopIcons">
-                <!-- Filled by JS -->
-            </div>
-
-            <div id="watermark">APEX ZERO</div>
-        </div>
-
-        <!-- RIGHT COLUMN -->
-        <div id="rightColumn">
-
-            <div class="panel">
-                <div class="panelHeader">
-                    <div class="panelTitle">Recently Played</div>
-                </div>
-                <div class="panelBody">
-                    <div id="recentList"></div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panelHeader">
-                    <div class="panelTitle">System</div>
-                </div>
-                <div class="panelBody" style="font-size: 11px; color: var(--muted);">
-                    Apex Zero is a local, client‑side game hub.<br>
-                    Use the Admin Panel to add or remove games.
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-</div>
-
-<!-- ---------------------------------------------------------
-     JAVASCRIPT WILL BE INSERTED IN PART 3
----------------------------------------------------------- -->
 <script>
-/* ---------------------------------------------------------
-   STORAGE KEYS
---------------------------------------------------------- */
-const STORAGE_KEYS = {
-    GAMES: "apexZero_games",
-    RECENT: "apexZero_recent",
-    THEME: "apexZero_theme",
-    BG: "apexZero_bg",
-    ADMIN_PASSWORD: "apexZero_adminPassword"
-};
+    const overlay = document.getElementById("overlay");
+    const gameTitle = document.getElementById("gameTitle");
+    const launchBtn = document.getElementById("launchBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
 
-/* ---------------------------------------------------------
-   DEFAULT GAMES (your exact list)
---------------------------------------------------------- */
-const defaultGames = [
-    { name: "2048 Cupcakes", url: "2048cupcakes.html", glyph: "2" },
-    { name: "Agario Lite", url: "agariolite.html", glyph: "A" },
-    { name: "Cookie Clicker", url: "cookieclicker (1).htm", glyph: "C" },
-    { name: "Minecraft 1.12.2", url: "Eaglercraft_1.12.2_WASM_Offline_Download (2).html", glyph: "M" },
-    { name: "Paper.io 2", url: "paperio2.htm", glyph: "P" },
-    { name: "Rooftop Snipers 2", url: "rooftopsnipers2.html", glyph: "R" }
-];
+    let pendingURL = null;
 
-let games = [];
-let recent = [];
-let adminUnlocked = false;
-
-let pendingLaunchGame = null;
-
-/* ---------------------------------------------------------
-   LOAD STATE
---------------------------------------------------------- */
-function loadState() {
-    const storedGames = localStorage.getItem(STORAGE_KEYS.GAMES);
-    const storedRecent = localStorage.getItem(STORAGE_KEYS.RECENT);
-    const storedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
-    const storedBg = localStorage.getItem(STORAGE_KEYS.BG);
-
-    games = storedGames ? JSON.parse(storedGames) : defaultGames.slice();
-    recent = storedRecent ? JSON.parse(storedRecent) : [];
-
-    if (storedTheme) applyTheme(storedTheme, false);
-    if (storedBg) applyBackground(storedBg, false);
-}
-
-/* ---------------------------------------------------------
-   SAVE HELPERS
---------------------------------------------------------- */
-function saveGames() {
-    localStorage.setItem(STORAGE_KEYS.GAMES, JSON.stringify(games));
-}
-
-function saveRecent() {
-    localStorage.setItem(STORAGE_KEYS.RECENT, JSON.stringify(recent));
-}
-
-/* ---------------------------------------------------------
-   RENDER DESKTOP ICONS
---------------------------------------------------------- */
-function renderDesktop() {
-    const container = document.getElementById("desktopIcons");
-    container.innerHTML = "";
-
-    if (!games.length) {
-        const empty = document.createElement("div");
-        empty.style.fontSize = "11px";
-        empty.style.color = "var(--muted)";
-        empty.textContent = "No games configured. Open Admin to add some.";
-        container.appendChild(empty);
-        return;
-    }
-
-    games.forEach((game, index) => {
-        const card = document.createElement("div");
-        card.className = "iconCard";
-        card.dataset.index = index;
-
-        const glyph = document.createElement("div");
-        glyph.className = "iconGlyph";
-        glyph.textContent = (game.glyph || game.name[0]).toUpperCase();
-
-        const title = document.createElement("div");
-        title.className = "iconTitle";
-        title.textContent = game.name;
-
-        const meta = document.createElement("div");
-        meta.className = "iconMeta";
-        meta.textContent = "Game";
-
-        card.appendChild(glyph);
-        card.appendChild(title);
-        card.appendChild(meta);
-
-        card.addEventListener("click", () => openLaunchOverlay(game));
-
-        container.appendChild(card);
-    });
-}
-
-/* ---------------------------------------------------------
-   RENDER RECENTLY PLAYED
---------------------------------------------------------- */
-function renderRecent() {
-    const container = document.getElementById("recentList");
-    container.innerHTML = "";
-
-    if (!recent.length) {
-        const empty = document.createElement("div");
-        empty.style.fontSize = "11px";
-        empty.style.color = "var(--muted)";
-        empty.textContent = "No games played yet.";
-        container.appendChild(empty);
-        return;
-    }
-
-    recent.slice(0, 6).forEach(item => {
-        const row = document.createElement("div");
-        row.className = "recentItem";
-
-        const name = document.createElement("div");
-        name.textContent = item.name;
-
-        const time = document.createElement("div");
-        time.style.color = "var(--muted)";
-        time.style.fontSize = "10px";
-        time.textContent = item.time;
-
-        row.appendChild(name);
-        row.appendChild(time);
-
-        row.addEventListener("click", () => {
-            const game = games.find(g => g.name === item.name);
-            if (game) openLaunchOverlay(game);
+    document.querySelectorAll(".icon").forEach(icon => {
+        icon.addEventListener("click", () => {
+            pendingURL = icon.dataset.url;
+            gameTitle.textContent = icon.textContent;
+            overlay.style.display = "flex";
         });
-
-        container.appendChild(row);
-    });
-}
-
-/* ---------------------------------------------------------
-   NEW GLASS-PANEL OVERLAY LOGIC
---------------------------------------------------------- */
-function openLaunchOverlay(game) {
-    pendingLaunchGame = game;
-
-    document.getElementById("launchTitle").textContent = game.name.toUpperCase();
-    document.getElementById("launchOverlay").style.display = "flex";
-}
-
-function closeLaunchOverlay() {
-    document.getElementById("launchOverlay").style.display = "none";
-    pendingLaunchGame = null;
-}
-
-document.getElementById("launchCancel").addEventListener("click", closeLaunchOverlay);
-
-/* ---------------------------------------------------------
-   NEW-TAB LAUNCHING
---------------------------------------------------------- */
-document.getElementById("launchConfirm").addEventListener("click", () => {
-    if (!pendingLaunchGame) return;
-
-    // Open in new tab
-    window.open(pendingLaunchGame.url, "_blank");
-
-    // Log to Recently Played
-    const now = new Date();
-    const timeString = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-    recent.unshift({ name: pendingLaunchGame.name, time: timeString });
-    recent = recent.slice(0, 12);
-    saveRecent();
-    renderRecent();
-
-    closeLaunchOverlay();
-});
-
-/* ---------------------------------------------------------
-   SETTINGS: THEME + BACKGROUND
---------------------------------------------------------- */
-function applyTheme(theme, persist = true) {
-    const root = document.documentElement;
-
-    switch (theme) {
-        case "purple":
-            root.style.setProperty("--accent", "#c27bff");
-            root.style.setProperty("--accent-soft", "rgba(194, 123, 255, 0.35)");
-            break;
-        case "red":
-            root.style.setProperty("--accent", "#ff4b6b");
-            root.style.setProperty("--accent-soft", "rgba(255, 75, 107, 0.35)");
-            break;
-        case "green":
-            root.style.setProperty("--accent", "#4bffb0");
-            root.style.setProperty("--accent-soft", "rgba(75, 255, 176, 0.35)");
-            break;
-        case "mono":
-            root.style.setProperty("--accent", "#ffffff");
-            root.style.setProperty("--accent-soft", "rgba(255, 255, 255, 0.25)");
-            break;
-        default:
-            root.style.setProperty("--accent", "#5f8bff");
-            root.style.setProperty("--accent-soft", "rgba(95, 139, 255, 0.35)");
-    }
-
-    if (persist) localStorage.setItem(STORAGE_KEYS.THEME, theme);
-
-    document.querySelectorAll("#themeChips .chip").forEach(chip => {
-        chip.classList.toggle("active", chip.dataset.theme === theme);
-    });
-}
-
-function applyBackground(bg, persist = true) {
-    const body = document.body;
-
-    switch (bg) {
-        case "gradient":
-            body.style.background =
-                "radial-gradient(circle at top, #262a40 0, #050712 55%, #02030a 100%)";
-            break;
-        case "scanlines":
-            body.style.background = "#050712";
-            body.style.backgroundImage =
-                "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)";
-            body.style.backgroundSize = "100% 3px";
-            break;
-        case "dark":
-            body.style.background = "#02030a";
-            break;
-        default:
-            body.style.background =
-                "radial-gradient(circle at top, #151b3a 0, #050712 45%, #02030a 100%)";
-    }
-
-    if (persist) localStorage.setItem(STORAGE_KEYS.BG, bg);
-
-    document.querySelectorAll("#bgChips .chip").forEach(chip => {
-        chip.classList.toggle("active", chip.dataset.bg === bg);
-    });
-}
-
-/* ---------------------------------------------------------
-   SETTINGS MODAL
---------------------------------------------------------- */
-function openSettingsModal() {
-    document.getElementById("settingsModal").style.display = "flex";
-}
-
-function closeSettingsModal() {
-    document.getElementById("settingsModal").style.display = "none";
-}
-
-document.getElementById("openSettings").addEventListener("click", openSettingsModal);
-
-document.querySelectorAll(".modalClose").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const target = btn.dataset.close;
-        if (target === "settings") closeSettingsModal();
-        if (target === "admin") closeAdminModal();
-    });
-});
-
-/* ---------------------------------------------------------
-   ADMIN PANEL
---------------------------------------------------------- */
-function openAdminModal() {
-    document.getElementById("adminModal").style.display = "flex";
-    refreshAdminAuthView();
-    renderAdminGameList();
-}
-
-function closeAdminModal() {
-    document.getElementById("adminModal").style.display = "none";
-    document.getElementById("adminPasswordInput").value = "";
-}
-
-function hasAdminPassword() {
-    return !!localStorage.getItem(STORAGE_KEYS.ADMIN_PASSWORD);
-}
-
-function refreshAdminAuthView() {
-    const authBody = document.getElementById("adminAuthBody");
-    const button = document.getElementById("adminAuthButton");
-    const hasPass = hasAdminPassword();
-
-    if (!hasPass) {
-        authBody.textContent = "Create an admin password to manage games and use the Danger Zone.";
-        button.textContent = "Create Password";
-    } else {
-        authBody.textContent = "Enter your admin password to access game management.";
-        button.textContent = "Unlock Admin";
-    }
-}
-
-function handleAdminAuth() {
-    const input = document.getElementById("adminPasswordInput");
-    const value = input.value.trim();
-    if (!value) return;
-
-    if (!hasAdminPassword()) {
-        localStorage.setItem(STORAGE_KEYS.ADMIN_PASSWORD, value);
-        adminUnlocked = true;
-        input.value = "";
-        showAdminMain();
-    } else {
-        const stored = localStorage.getItem(STORAGE_KEYS.ADMIN_PASSWORD);
-        if (value === stored) {
-            adminUnlocked = true;
-            input.value = "";
-            showAdminMain();
-        } else {
-            alert("Incorrect password.");
-        }
-    }
-}
-
-function showAdminMain() {
-    document.getElementById("adminAuthSection").style.display = "none";
-    document.getElementById("adminMainSection").style.display = "block";
-    renderAdminGameList();
-}
-
-function renderAdminGameList() {
-    const container = document.getElementById("adminGameList");
-    container.innerHTML = "";
-
-    if (!games.length) {
-        container.textContent = "No games configured.";
-        return;
-    }
-
-    games.forEach((game, index) => {
-        const row = document.createElement("div");
-        row.style.display = "flex";
-        row.style.justifyContent = "space-between";
-        row.style.marginBottom = "4px";
-
-        const name = document.createElement("div");
-        name.textContent = game.name;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.textContent = "Remove";
-        removeBtn.style.fontSize = "10px";
-        removeBtn.style.padding = "2px 6px";
-        removeBtn.style.borderRadius = "999px";
-        removeBtn.style.border = "1px solid rgba(255,255,255,0.22)";
-        removeBtn.style.background = "rgba(40,0,10,0.95)";
-        removeBtn.style.color = "var(--danger)";
-        removeBtn.style.cursor = "pointer";
-
-        removeBtn.addEventListener("click", () => {
-            games.splice(index, 1);
-            saveGames();
-            renderDesktop();
-            renderAdminGameList();
-        });
-
-        row.appendChild(name);
-        row.appendChild(removeBtn);
-        container.appendChild(row);
-    });
-}
-
-document.getElementById("adminAuthButton").addEventListener("click", handleAdminAuth);
-
-document.getElementById("addGameButton").addEventListener("click", () => {
-    const nameInput = document.getElementById("gameNameInput");
-    const urlInput = document.getElementById("gameUrlInput");
-
-    const name = nameInput.value.trim();
-    const url = urlInput.value.trim();
-
-    if (!name || !url) return;
-
-    games.push({ name, url, glyph: name[0] });
-    saveGames();
-    renderDesktop();
-    renderAdminGameList();
-
-    nameInput.value = "";
-    urlInput.value = "";
-});
-
-/* ---------------------------------------------------------
-   DANGER ZONE
---------------------------------------------------------- */
-function resetSystem() {
-    if (!confirm("Reset system? This clears games, recent list, and settings.")) return;
-
-    localStorage.removeItem(STORAGE_KEYS.GAMES);
-    localStorage.removeItem(STORAGE_KEYS.RECENT);
-    localStorage.removeItem(STORAGE_KEYS.THEME);
-    localStorage.removeItem(STORAGE_KEYS.BG);
-    localStorage.removeItem(STORAGE_KEYS.ADMIN_PASSWORD);
-
-    location.reload();
-}
-
-function resetPassword() {
-    if (!confirm("Reset admin password?")) return;
-
-    localStorage.removeItem(STORAGE_KEYS.ADMIN_PASSWORD);
-    adminUnlocked = false;
-
-    document.getElementById("adminAuthSection").style.display = "block";
-    document.getElementById("adminMainSection").style.display = "none";
-
-    refreshAdminAuthView();
-}
-
-document.getElementById("resetSystem").addEventListener("click", resetSystem);
-document.getElementById("resetPassword").addEventListener("click", resetPassword);
-document.getElementById("adminResetSystem").addEventListener("click", resetSystem);
-document.getElementById("adminResetPassword").addEventListener("click", resetPassword);
-
-/* ---------------------------------------------------------
-   SECRET ADMIN SHORTCUT — SHIFT + A THEN Z
---------------------------------------------------------- */
-let adminSequence = [];
-
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Shift") return;
-
-    adminSequence.push(e.key.toLowerCase());
-    if (adminSequence.length > 2) adminSequence.shift();
-
-    if (adminSequence.join("") === "az" && e.shiftKey) {
-        openAdminModal();
-        adminSequence = [];
-    }
-});
-
-/* ---------------------------------------------------------
-   INITIALIZE SYSTEM
---------------------------------------------------------- */
-window.addEventListener("DOMContentLoaded", () => {
-    loadState();
-    renderDesktop();
-    renderRecent();
-
-    document.getElementById("settingsModal").addEventListener("click", (e) => {
-        if (e.target.id === "settingsModal") closeSettingsModal();
     });
 
-    document.getElementById("adminModal").addEventListener("click", (e) => {
-        if (e.target.id === "adminModal") closeAdminModal();
-    });
+    launchBtn.onclick = () => {
+        if (pendingURL) window.open(pendingURL, "_blank");
+        overlay.style.display = "none";
+    };
 
-    document.querySelectorAll("#themeChips .chip").forEach(chip => {
-        chip.addEventListener("click", () => applyTheme(chip.dataset.theme));
-    });
-
-    document.querySelectorAll("#bgChips .chip").forEach(chip => {
-        chip.addEventListener("click", () => applyBackground(chip.dataset.bg));
-    });
-
-    refreshAdminAuthView();
-});
-
+    cancelBtn.onclick = () => {
+        overlay.style.display = "none";
+    };
 </script>
 
 </body>
