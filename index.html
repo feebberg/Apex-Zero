@@ -194,14 +194,32 @@
         color: rgba(255,255,255,0.5);
     }
 
+    /* GRID CONTAINER */
+    #gridContainer {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 10px 0 24px 0;
+    }
+
+    /* CATEGORY SECTION */
+    .categorySection {
+        margin-bottom: 32px;
+    }
+    .categoryHeader {
+        font-size: 12px;
+        letter-spacing: 3px;
+        opacity: 0.6;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+        text-transform: uppercase;
+    }
+
     /* GRID */
-    #grid {
+    .categoryGrid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 26px;
-        padding: 10px 0 24px 0;
-        max-width: 1100px;
-        margin: auto;
     }
     .icon {
         padding: 24px;
@@ -857,7 +875,7 @@
             <input id="searchBox" type="text" placeholder="Search…">
         </div>
 
-        <div id="grid"></div>
+        <div id="gridContainer"></div>
 
         <div id="recentPanel">
             <div id="recentHeaderRow">
@@ -998,799 +1016,602 @@
     let startTime = Date.now();
     let adminOpen = false;
     let zCounter = 10;
-    let windows = {}; // id -> window element
+    let recentlyPlayed = JSON.parse(localStorage.getItem("recentlyPlayed")) || [];
+    let windowPositions = {};
 
-    // admin shortcut sequence: SHIFT + Z E R O
-    let adminSeq = [];
-    let shiftHeld = false;
-
-    // ---------- ELEMENTS ----------
-    const grid = document.getElementById("grid");
-    const searchBox = document.getElementById("searchBox");
-    const sideLinks = document.querySelectorAll(".sideLink[data-category]");
-    const overlay = document.getElementById("overlay");
-    const overlayGameName = document.getElementById("overlayGameName");
-    const overlayGameDesc = document.getElementById("overlayGameDesc");
-    const launchBtn = document.getElementById("launchBtn");
-    const cancelBtn = document.getElementById("cancelBtn");
-    const recentList = document.getElementById("recentList");
-    const clearRecentBtn = document.getElementById("clearRecentBtn");
-    const footer = document.getElementById("footer");
-    const footerClock = document.getElementById("footerClock");
-    const footerUptime = document.getElementById("footerUptime");
-    const footerLaunches = document.getElementById("footerLaunches");
-    const settingsOverlay = document.getElementById("settingsOverlay");
-    const settingsBtn = document.getElementById("settingsBtn");
-    const closeSettingsBtn = document.getElementById("closeSettingsBtn");
-    const toggleFooterBtn = document.getElementById("toggleFooterBtn");
-    const toggleHoverBtn = document.getElementById("toggleHoverBtn");
-    const toggleDockBtn = document.getElementById("toggleDockBtn");
-    const clearRecentSettingsBtn = document.getElementById("clearRecentSettingsBtn");
-    const resetLayoutBtn = document.getElementById("resetLayoutBtn");
-    const dock = document.getElementById("dock");
-    const dockHome = document.getElementById("dockHome");
-    const dockGames = document.getElementById("dockGames");
-    const dockRecent = document.getElementById("dockRecent");
-    const dockNotes = document.getElementById("dockNotes");
-    const dockCalc = document.getElementById("dockCalc");
-    const dockTimer = document.getElementById("dockTimer");
-    const dockTerminal = document.getElementById("dockTerminal");
-    const dockCanvas = document.getElementById("dockCanvas");
-    const dockSettings = document.getElementById("dockSettings");
-    const sideScrollGames = document.getElementById("sideScrollGames");
-    const sideScrollRecent = document.getElementById("sideScrollRecent");
-    const mainArea = document.getElementById("mainArea");
-    const windowLayer = document.getElementById("windowLayer");
-
-    const adminOverlay = document.getElementById("adminOverlay");
-    const adminTabs = document.querySelectorAll(".adminTab");
-    const adminContent = document.getElementById("adminContent");
-
-    const notifCenter = document.getElementById("notifCenter");
-    const notifList = document.getElementById("notifList");
-    const notifBtn = document.getElementById("notifBtn");
-    let notifOpen = false;
-
-    // ---------- NOTIFICATION CENTER ----------
-    function pushNotif(text) {
-        const item = document.createElement("div");
-        item.className = "notifItem";
-        item.textContent = text;
-        notifList.prepend(item);
-    }
-
-    function toggleNotif() {
-        notifOpen = !notifOpen;
-        notifCenter.style.display = notifOpen ? "flex" : "none";
-    }
-    notifBtn.onclick = toggleNotif;
-
-    // ---------- GRID ----------
+    // ---------- RENDER ----------
     function renderGrid() {
-        grid.innerHTML = "";
-        const filtered = games.filter(g => {
-            if (currentCategory !== "all" && g.category !== currentCategory) return false;
-            if (searchQuery && !g.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-            return true;
+        let filtered = games.filter(g => {
+            let matchCat = currentCategory === "all" || g.category === currentCategory;
+            let matchSearch = g.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            g.desc.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchCat && matchSearch;
         });
 
-        filtered.forEach(g => {
-            const card = document.createElement("div");
-            card.className = "icon";
-            card.dataset.id = g.id;
+        const container = document.getElementById("gridContainer");
+        container.innerHTML = "";
 
-            const title = document.createElement("div");
-            title.className = "iconTitle";
-            title.textContent = g.name;
+        // Group games by type
+        const grouped = {
+            games: filtered.filter(g => g.type === "game"),
+            apps: filtered.filter(g => g.type === "app")
+        };
 
-            const desc = document.createElement("div");
-            desc.className = "iconDesc";
-            desc.textContent = g.desc;
-
-            card.appendChild(title);
-            card.appendChild(desc);
-
-            card.addEventListener("click", () => {
-                if (g.type === "game") openLaunchOverlay(g);
-                else openAppWindow(g);
+        // Render games section
+        if (grouped.games.length > 0) {
+            const gamesSection = document.createElement("div");
+            gamesSection.className = "categorySection";
+            gamesSection.innerHTML = `<div class="categoryHeader">GAMES</div><div class="categoryGrid"></div>`;
+            
+            const gamesGrid = gamesSection.querySelector(".categoryGrid");
+            grouped.games.forEach(g => {
+                gamesGrid.appendChild(createIcon(g));
             });
+            
+            container.appendChild(gamesSection);
+        }
 
-            grid.appendChild(card);
-        });
-
-        applyHoverState();
+        // Render apps section
+        if (grouped.apps.length > 0) {
+            const appsSection = document.createElement("div");
+            appsSection.className = "categorySection";
+            appsSection.innerHTML = `<div class="categoryHeader">APPS & TOOLS</div><div class="categoryGrid"></div>`;
+            
+            const appsGrid = appsSection.querySelector(".categoryGrid");
+            grouped.apps.forEach(g => {
+                appsGrid.appendChild(createIcon(g));
+            });
+            
+            container.appendChild(appsSection);
+        }
     }
 
-    // ---------- GAME OVERLAY ----------
-    function openLaunchOverlay(game) {
+    function createIcon(game) {
+        const icon = document.createElement("div");
+        icon.className = "icon";
+        icon.innerHTML = `<div class="iconTitle">${game.name}</div><div class="iconDesc">${game.desc}</div>`;
+        icon.addEventListener("click", () => launchGame(game));
+        return icon;
+    }
+
+    function launchGame(game) {
         pendingGame = game;
-        overlayGameName.textContent = game.name;
-        overlayGameDesc.textContent = game.desc;
-        overlay.style.display = "flex";
+        document.getElementById("overlayGameName").textContent = game.name;
+        document.getElementById("overlayGameDesc").textContent = game.desc;
+        document.getElementById("overlay").style.display = "flex";
     }
-    function closeLaunchOverlay() {
-        overlay.style.display = "none";
+
+    function confirmLaunch() {
+        if (!pendingGame) return;
+        
+        launchCount++;
+        addToRecent(pendingGame);
+        updateFooter();
+
+        if (pendingGame.type === "game") {
+            window.open(pendingGame.url, "_blank");
+        } else if (pendingGame.type === "app") {
+            openApp(pendingGame);
+        }
+
+        document.getElementById("overlay").style.display = "none";
         pendingGame = null;
     }
-    launchBtn.onclick = () => {
-        if (!pendingGame) return;
-        if (pendingGame.url && pendingGame.url !== "#") {
-            window.open(pendingGame.url, "_blank");
-        }
-        addRecent(pendingGame);
-        launchCount++;
-        updateFooterLaunches();
-        pushNotif("Launched " + pendingGame.name);
-        closeLaunchOverlay();
-    };
-    cancelBtn.onclick = closeLaunchOverlay;
 
-    // ---------- RECENT ----------
-    function getRecent() {
-        try {
-            const raw = localStorage.getItem("apex_recent");
-            if (!raw) return [];
-            return JSON.parse(raw);
-        } catch { return []; }
-    }
-    function saveRecent(list) {
-        localStorage.setItem("apex_recent", JSON.stringify(list));
-    }
-    function addRecent(game) {
-        let list = getRecent();
-        list = list.filter(id => id !== game.id);
-        list.unshift(game.id);
-        if (list.length > 5) list = list.slice(0, 5);
-        saveRecent(list);
+    function addToRecent(game) {
+        recentlyPlayed = recentlyPlayed.filter(g => g.id !== game.id);
+        recentlyPlayed.unshift(game);
+        if (recentlyPlayed.length > 10) recentlyPlayed.pop();
+        localStorage.setItem("recentlyPlayed", JSON.stringify(recentlyPlayed));
         renderRecent();
     }
+
     function renderRecent() {
-        recentList.innerHTML = "";
-        const list = getRecent();
-        if (list.length === 0) {
-            recentList.textContent = "No items yet.";
+        const list = document.getElementById("recentList");
+        list.innerHTML = "";
+        if (recentlyPlayed.length === 0) {
+            list.innerHTML = "<span style='opacity:0.5;'>No recent items</span>";
             return;
         }
-        list.forEach(id => {
-            const g = games.find(x => x.id === id);
-            if (!g) return;
+        recentlyPlayed.forEach(g => {
             const item = document.createElement("div");
             item.className = "recentItem";
             item.textContent = g.name;
             item.addEventListener("click", () => {
-                if (g.type === "game") openLaunchOverlay(g);
-                else openAppWindow(g);
+                pendingGame = g;
+                confirmLaunch();
             });
-            recentList.appendChild(item);
-        });
-    }
-    clearRecentBtn.onclick = () => { saveRecent([]); renderRecent(); };
-    clearRecentSettingsBtn.onclick = () => { saveRecent([]); renderRecent(); };
-
-    // ---------- CATEGORY + SEARCH ----------
-    sideLinks.forEach(link => {
-        link.addEventListener("click", () => {
-            sideLinks.forEach(l => l.classList.remove("active"));
-            link.classList.add("active");
-            currentCategory = link.dataset.category;
-            renderGrid();
-        });
-    });
-    searchBox.addEventListener("input", () => {
-        searchQuery = searchBox.value.trim();
-        renderGrid();
-    });
-
-    // ---------- SETTINGS ----------
-    function openSettings() { settingsOverlay.style.display = "flex"; }
-    function closeSettings() { settingsOverlay.style.display = "none"; }
-    settingsBtn.onclick = openSettings;
-    closeSettingsBtn.onclick = closeSettings;
-
-    toggleFooterBtn.onclick = () => {
-        footerEnabled = !footerEnabled;
-        updateFooterVisibility();
-        updateSettingsToggles();
-        localStorage.setItem("apex_footer", footerEnabled ? "1" : "0");
-    };
-    toggleHoverBtn.onclick = () => {
-        hoverEnabled = !hoverEnabled;
-        applyHoverState();
-        updateSettingsToggles();
-        localStorage.setItem("apex_hover", hoverEnabled ? "1" : "0");
-    };
-    toggleDockBtn.onclick = () => {
-        dockEnabled = !dockEnabled;
-        updateDockVisibility();
-        updateSettingsToggles();
-        localStorage.setItem("apex_dock", dockEnabled ? "1" : "0");
-    };
-    resetLayoutBtn.onclick = () => {
-        footerEnabled = true;
-        hoverEnabled = true;
-        dockEnabled = true;
-        localStorage.removeItem("apex_footer");
-        localStorage.removeItem("apex_hover");
-        localStorage.removeItem("apex_dock");
-        updateFooterVisibility();
-        updateDockVisibility();
-        applyHoverState();
-        updateSettingsToggles();
-    };
-    function updateSettingsToggles() {
-        toggleFooterBtn.textContent = footerEnabled ? "ON" : "OFF";
-        toggleHoverBtn.textContent = hoverEnabled ? "ON" : "OFF";
-        toggleDockBtn.textContent = dockEnabled ? "ON" : "OFF";
-        toggleFooterBtn.classList.toggle("active", footerEnabled);
-        toggleHoverBtn.classList.toggle("active", hoverEnabled);
-        toggleDockBtn.classList.toggle("active", dockEnabled);
-    }
-    function updateFooterVisibility() {
-        footer.classList.toggle("hidden", !footerEnabled);
-    }
-    function updateDockVisibility() {
-        dock.classList.toggle("hidden", !dockEnabled);
-    }
-    function applyHoverState() {
-        document.querySelectorAll(".icon").forEach(card => {
-            card.style.transition = hoverEnabled ? "0.25s" : "0s";
-            card.style.transform = "none";
+            list.appendChild(item);
         });
     }
 
-    // ---------- DOCK + NAV ----------
-    function scrollToGames() { mainArea.scrollTo({ top: 0, behavior: "smooth" }); }
-    function scrollToRecent() {
-        const offset = document.getElementById("recentPanel").offsetTop - 40;
-        mainArea.scrollTo({ top: offset, behavior: "smooth" });
-    }
-    dockHome.onclick = scrollToGames;
-    dockGames.onclick = scrollToGames;
-    dockRecent.onclick = scrollToRecent;
-    dockSettings.onclick = openSettings;
-    sideScrollGames.onclick = scrollToGames;
-    sideScrollRecent.onclick = scrollToRecent;
-
-    dockNotes.onclick = () => {
-        const app = games.find(g => g.id === "notes");
-        if (app) openAppWindow(app);
-    };
-    dockCalc.onclick = () => {
-        const app = games.find(g => g.id === "calculator");
-        if (app) openAppWindow(app);
-    };
-    dockTimer.onclick = () => {
-        const app = games.find(g => g.id === "timer");
-        if (app) openAppWindow(app);
-    };
-    dockTerminal.onclick = () => {
-        const app = games.find(g => g.id === "terminal");
-        if (app) openAppWindow(app);
-    };
-    dockCanvas.onclick = () => {
-        const app = games.find(g => g.id === "canvas");
-        if (app) openAppWindow(app);
-    };
-
-    function updateDockRunning() {
-        dockNotes.classList.toggle("running", !!windows["notes"]);
-        dockCalc.classList.toggle("running", !!windows["calculator"]);
-        dockTimer.classList.toggle("running", !!windows["timer"]);
-        dockTerminal.classList.toggle("running", !!windows["terminal"]);
-        dockCanvas.classList.toggle("running", !!windows["canvas"]);
-    }
-
-    // ---------- FOOTER CLOCK + UPTIME ----------
-    function updateClock() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, "0");
-        const m = String(now.getMinutes()).padStart(2, "0");
-        footerClock.textContent = `${h}:${m}`;
-    }
-    function updateUptime() {
-        const diff = Date.now() - startTime;
-        const totalSeconds = Math.floor(diff / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        footerUptime.textContent = `UPTIME ${minutes}:${String(seconds).padStart(2, "0")}`;
-    }
-    function updateFooterLaunches() {
-        footerLaunches.textContent = `LAUNCHES ${launchCount}`;
-    }
-    setInterval(() => { updateClock(); updateUptime(); }, 1000);
-
-    // ---------- SETTINGS LOAD ----------
-    function loadSettings() {
-        const f = localStorage.getItem("apex_footer");
-        const h = localStorage.getItem("apex_hover");
-        const d = localStorage.getItem("apex_dock");
-        if (f !== null) footerEnabled = f === "1";
-        if (h !== null) hoverEnabled = h === "1";
-        if (d !== null) dockEnabled = d === "1";
-        updateFooterVisibility();
-        updateDockVisibility();
-        updateSettingsToggles();
-    }
-
-    // ---------- WINDOW MANAGER ----------
-    function openAppWindow(app) {
-        if (windows[app.id]) {
-            focusWindow(windows[app.id]);
+    function openApp(app) {
+        const id = app.id;
+        if (document.getElementById("win-" + id)) {
+            document.getElementById("win-" + id).style.zIndex = zCounter++;
             return;
         }
+
+        const winLayer = document.getElementById("windowLayer");
         const win = document.createElement("div");
+        win.id = "win-" + id;
         win.className = "window";
-        win.style.left = "220px";
-        win.style.top = "80px";
-        win.style.zIndex = ++zCounter;
-
-        const titleBar = document.createElement("div");
-        titleBar.className = "windowTitleBar";
-        const title = document.createElement("div");
-        title.className = "windowTitle";
-        title.textContent = app.name;
-        const controls = document.createElement("div");
-        controls.className = "windowControls";
-        const closeBtn = document.createElement("div");
-        closeBtn.className = "windowBtn";
-        controls.appendChild(closeBtn);
-        titleBar.appendChild(title);
-        titleBar.appendChild(controls);
-
-        const content = document.createElement("div");
-        content.className = "windowContent";
-
-        win.appendChild(titleBar);
-        win.appendChild(content);
-        windowLayer.appendChild(win);
-        windows[app.id] = win;
-        updateDockRunning();
-        focusWindow(win);
-
-        makeWindowDraggable(win, titleBar);
-
-        if (app.appType === "notes") initNotesApp(content);
-        if (app.appType === "calc") initCalcApp(content);
-        if (app.appType === "timer") initTimerApp(content);
-        if (app.appType === "terminal") initTerminalApp(content);
-        if (app.appType === "canvas") initCanvasApp(content);
-
-        pushNotif(app.name + " opened");
-
-        closeBtn.addEventListener("click", () => {
-            delete windows[app.id];
-            win.remove();
-            updateDockRunning();
-            pushNotif(app.name + " closed");
-        });
-    }
-
-    function focusWindow(win) {
-        zCounter++;
-        win.style.zIndex = zCounter;
-    }
-
-    function makeWindowDraggable(win, handle) {
-        let offsetX = 0, offsetY = 0, dragging = false;
-        handle.addEventListener("mousedown", e => {
-            dragging = true;
-            focusWindow(win);
-            offsetX = e.clientX - win.getBoundingClientRect().left;
-            offsetY = e.clientY - win.getBoundingClientRect().top;
-            document.addEventListener("mousemove", onMove);
-            document.addEventListener("mouseup", onUp);
-        });
-        function onMove(e) {
-            if (!dragging) return;
-            const shellRect = mainArea.getBoundingClientRect();
-            let x = e.clientX - offsetX;
-            let y = e.clientY - offsetY;
-            x = Math.max(shellRect.left + 10, Math.min(shellRect.right - 200, x));
-            y = Math.max(shellRect.top + 10, Math.min(shellRect.bottom - 80, y));
-            win.style.left = x + "px";
-            win.style.top = y + "px";
+        win.style.zIndex = zCounter++;
+        
+        let left = 100 + (zCounter % 5) * 30;
+        let top = 100 + (zCounter % 5) * 30;
+        if (windowPositions[id]) {
+            left = windowPositions[id].left;
+            top = windowPositions[id].top;
         }
-        function onUp() {
-            dragging = false;
-            document.removeEventListener("mousemove", onMove);
-            document.removeEventListener("mouseup", onUp);
-        }
-    }
+        win.style.left = left + "px";
+        win.style.top = top + "px";
 
-    // ---------- APP IMPLEMENTATIONS ----------
-    function initNotesApp(container) {
-        const saved = localStorage.getItem("apex_notes") || "";
-        container.innerHTML = `
-            <div>Notes are stored locally in this browser.</div>
-            <textarea class="notesArea" id="notesArea">${saved}</textarea>
-            <div class="notesInfo" id="notesInfo">Saved.</div>
-        `;
-        const area = container.querySelector("#notesArea");
-        const info = container.querySelector("#notesInfo");
-        let saveTimeout;
-        area.addEventListener("input", () => {
-            clearTimeout(saveTimeout);
-            info.textContent = "Saving…";
-            saveTimeout = setTimeout(() => {
-                localStorage.setItem("apex_notes", area.value);
-                info.textContent = "Saved.";
-            }, 400);
-        });
-    }
-
-    function initCalcApp(container) {
-        container.innerHTML = `
-            <input class="calcDisplay" id="calcDisplay" readonly value="0">
-            <div class="calcRow">
-                <div class="calcBtn">7</div><div class="calcBtn">8</div><div class="calcBtn">9</div><div class="calcBtn">/</div>
-            </div>
-            <div class="calcRow">
-                <div class="calcBtn">4</div><div class="calcBtn">5</div><div class="calcBtn">6</div><div class="calcBtn">*</div>
-            </div>
-            <div class="calcRow">
-                <div class="calcBtn">1</div><div class="calcBtn">2</div><div class="calcBtn">3</div><div class="calcBtn">-</div>
-            </div>
-            <div class="calcRow">
-                <div class="calcBtn">0</div><div class="calcBtn">.</div><div class="calcBtn">C</div><div class="calcBtn">+</div>
-            </div>
-            <div class="calcRow">
-                <div class="calcBtn" style="grid-column: span 4;">=</div>
-            </div>
-        `;
-        const display = container.querySelector("#calcDisplay");
-        let expr = "";
-        container.querySelectorAll(".calcBtn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const v = btn.textContent;
-                if (v === "C") {
-                    expr = "";
-                    display.value = "0";
-                } else if (v === "=") {
-                    try {
-                        const res = Function("return " + expr)();
-                        display.value = res;
-                        expr = String(res);
-                    } catch {
-                        display.value = "ERR";
-                        expr = "";
-                    }
-                } else {
-                    expr += v;
-                    display.value = expr;
-                }
-            });
-        });
-    }
-
-    function initTimerApp(container) {
-        container.innerHTML = `
-            <div>Focus timer (minutes):</div>
-            <input type="number" id="timerMinutes" value="25" min="1" max="180" style="width:60px;margin:4px 0;">
-            <div class="timerDisplay" id="timerDisplay">25:00</div>
-            <div class="timerControls">
-                <button class="timerBtn" id="timerStart">Start</button>
-                <button class="timerBtn" id="timerPause">Pause</button>
-                <button class="timerBtn" id="timerReset">Reset</button>
-            </div>
-        `;
-        const minutesInput = container.querySelector("#timerMinutes");
-        const display = container.querySelector("#timerDisplay");
-        const startBtn = container.querySelector("#timerStart");
-        const pauseBtn = container.querySelector("#timerPause");
-        const resetBtn = container.querySelector("#timerReset");
-
-        let remaining = parseInt(minutesInput.value, 10) * 60;
-        let timerId = null;
-
-        function updateDisplay() {
-            const m = Math.floor(remaining / 60);
-            const s = remaining % 60;
-            display.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-        }
-        function startTimer() {
-            if (timerId) return;
-            timerId = setInterval(() => {
-                remaining--;
-                if (remaining <= 0) {
-                    remaining = 0;
-                    clearInterval(timerId);
-                    timerId = null;
-                    pushNotif("Timer finished");
-                }
-                updateDisplay();
-            }, 1000);
-        }
-        function pauseTimer() {
-            if (timerId) {
-                clearInterval(timerId);
-                timerId = null;
-            }
-        }
-        function resetTimer() {
-            pauseTimer();
-            remaining = parseInt(minutesInput.value, 10) * 60;
-            updateDisplay();
-        }
-
-        minutesInput.addEventListener("change", () => {
-            if (!timerId) {
-                remaining = parseInt(minutesInput.value, 10) * 60;
-                updateDisplay();
-            }
-        });
-        startBtn.addEventListener("click", startTimer);
-        pauseBtn.addEventListener("click", pauseTimer);
-        resetBtn.addEventListener("click", resetTimer);
-
-        updateDisplay();
-    }
-
-    function initTerminalApp(container) {
-        container.innerHTML = `
-            <div>Zero Terminal — local only, fake shell.</div>
-            <div class="terminalOutput" id="termOut"></div>
-            <div class="terminalInputRow">
-                <span class="terminalPrompt">zero&gt;</span>
-                <input class="terminalInput" id="termIn" autocomplete="off">
-            </div>
-        `;
-        const out = container.querySelector("#termOut");
-        const input = container.querySelector("#termIn");
-
-        function print(line) {
-            const div = document.createElement("div");
-            div.textContent = line;
-            out.appendChild(div);
-            out.scrollTop = out.scrollHeight;
-        }
-
-        print("APEX ZERO TERMINAL");
-        print("Type 'help' for commands.");
-
-        input.addEventListener("keydown", e => {
-            if (e.key === "Enter") {
-                const cmd = input.value.trim();
-                input.value = "";
-                if (!cmd) return;
-                print("zero> " + cmd);
-                handleCommand(cmd);
-            }
-        });
-
-        function handleCommand(cmd) {
-            if (cmd === "help") {
-                print("Commands: help, clear, time, uptime, about, echo <text>");
-            } else if (cmd === "clear") {
-                out.innerHTML = "";
-            } else if (cmd === "time") {
-                print("Time: " + new Date().toLocaleTimeString());
-            } else if (cmd === "uptime") {
-                const diff = Date.now() - startTime;
-                const totalSeconds = Math.floor(diff / 1000);
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = totalSeconds % 60;
-                print("Uptime: " + minutes + "m " + seconds + "s");
-            } else if (cmd === "about") {
-                print("APEX ZERO — monochrome glass OS.");
-            } else if (cmd.startsWith("echo ")) {
-                print(cmd.slice(5));
-            } else {
-                print("Unknown command. Type 'help'.");
-            }
-        }
-    }
-
-    function initCanvasApp(container) {
-        container.innerHTML = `
-            <div>Zero Canvas — simple monochrome drawing.</div>
-            <div class="canvasWrapper">
-                <div class="canvasToolbar">
-                    <button class="canvasBtn" id="canvasClear">Clear</button>
-                    <button class="canvasBtn" id="canvasThin">Thin</button>
-                    <button class="canvasBtn" id="canvasThick">Thick</button>
+        let content = "";
+        if (app.appType === "notes") {
+            content = `
+                <textarea class="notesArea" id="notesText" placeholder="Type your notes here..."></textarea>
+                <div class="notesInfo">Auto-saved to browser storage</div>
+            `;
+        } else if (app.appType === "calc") {
+            content = `
+                <div class="calcDisplay" id="calcDisplay">0</div>
+                <div class="calcRow">
+                    <button class="calcBtn" onclick="calcAppend('7')">7</button>
+                    <button class="calcBtn" onclick="calcAppend('8')">8</button>
+                    <button class="calcBtn" onclick="calcAppend('9')">9</button>
+                    <button class="calcBtn" onclick="calcOp('/')">/</button>
                 </div>
-                <canvas id="zeroCanvas" width="320" height="200"></canvas>
+                <div class="calcRow">
+                    <button class="calcBtn" onclick="calcAppend('4')">4</button>
+                    <button class="calcBtn" onclick="calcAppend('5')">5</button>
+                    <button class="calcBtn" onclick="calcAppend('6')">6</button>
+                    <button class="calcBtn" onclick="calcOp('*')">*</button>
+                </div>
+                <div class="calcRow">
+                    <button class="calcBtn" onclick="calcAppend('1')">1</button>
+                    <button class="calcBtn" onclick="calcAppend('2')">2</button>
+                    <button class="calcBtn" onclick="calcAppend('3')">3</button>
+                    <button class="calcBtn" onclick="calcOp('-')">-</button>
+                </div>
+                <div class="calcRow">
+                    <button class="calcBtn" onclick="calcAppend('0')">0</button>
+                    <button class="calcBtn" onclick="calcAppend('.')">.</button>
+                    <button class="calcBtn" onclick="calcEq()">=</button>
+                    <button class="calcBtn" onclick="calcOp('+')">+</button>
+                </div>
+                <button class="calcBtn" onclick="calcClear()" style="grid-column: 1/-1; margin-top: 6px;">C</button>
+            `;
+        } else if (app.appType === "timer") {
+            content = `
+                <div class="timerDisplay" id="timerDisplay">00:00</div>
+                <div style="margin-bottom: 10px;">
+                    <input type="number" id="timerInput" min="1" max="3600" value="5" style="width: 60px; padding: 4px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.25); background: rgba(0,0,0,0.6); color: #fff; font-size: 12px;">
+                    <span style="opacity: 0.7; font-size: 11px;">minutes</span>
+                </div>
+                <div class="timerControls">
+                    <button class="timerBtn" onclick="timerStart()">START</button>
+                    <button class="timerBtn" onclick="timerPause()">PAUSE</button>
+                    <button class="timerBtn" onclick="timerReset()">RESET</button>
+                </div>
+            `;
+        } else if (app.appType === "terminal") {
+            content = `
+                <div class="terminalOutput" id="terminalOutput"></div>
+                <div class="terminalInputRow">
+                    <span class="terminalPrompt">$</span>
+                    <input type="text" class="terminalInput" id="terminalInput" placeholder="Type command...">
+                </div>
+            `;
+        } else if (app.appType === "canvas") {
+            content = `
+                <div class="canvasToolbar">
+                    <button class="canvasBtn" onclick="canvasClear()">CLEAR</button>
+                    <button class="canvasBtn" onclick="canvasSave()">SAVE</button>
+                </div>
+                <canvas id="drawCanvas" width="340" height="180" style="background: #000; display: block;"></canvas>
+            `;
+        }
+
+        win.innerHTML = `
+            <div class="windowTitleBar">
+                <span class="windowTitle">${app.name}</span>
+                <div class="windowControls">
+                    <div class="windowBtn" onclick="closeWindow('${id}')"></div>
+                </div>
             </div>
+            <div class="windowContent">${content}</div>
         `;
-        const canvas = container.querySelector("#zeroCanvas");
-        const ctx = canvas.getContext("2d");
-        const clearBtn = container.querySelector("#canvasClear");
-        const thinBtn = container.querySelector("#canvasThin");
-        const thickBtn = container.querySelector("#canvasThick");
 
-        let drawing = false;
-        let lineWidth = 2;
+        winLayer.appendChild(win);
+        makeDraggable(win, id);
+        addDockItem(app);
 
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle = "#fff";
-        ctx.lineCap = "round";
+        if (app.appType === "notes") {
+            let saved = localStorage.getItem("notes-" + id);
+            if (saved) document.getElementById("notesText").value = saved;
+            document.getElementById("notesText").addEventListener("input", (e) => {
+                localStorage.setItem("notes-" + id, e.target.value);
+            });
+        } else if (app.appType === "canvas") {
+            initCanvas();
+        } else if (app.appType === "terminal") {
+            initTerminal();
+        }
+    }
 
-        canvas.addEventListener("mousedown", e => {
-            drawing = true;
-            ctx.beginPath();
-            const rect = canvas.getBoundingClientRect();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    function makeDraggable(elem, id) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        const titleBar = elem.querySelector(".windowTitleBar");
+        titleBar.onmousedown = dragMouseDown;
+
+        function dragMouseDown(e) {
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            elem.style.top = (elem.offsetTop - pos2) + "px";
+            elem.style.left = (elem.offsetLeft - pos1) + "px";
+            elem.style.zIndex = zCounter++;
+            windowPositions[id] = { left: elem.offsetLeft, top: elem.offsetTop };
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+
+    function closeWindow(id) {
+        const win = document.getElementById("win-" + id);
+        if (win) {
+            win.style.animation = "winOut 0.2s ease forwards";
+            setTimeout(() => win.remove(), 200);
+        }
+        removeDockItem(id);
+    }
+
+    function addDockItem(app) {
+        const dock = document.getElementById("dock");
+        if (!document.getElementById("dock-" + app.id)) {
+            const item = document.createElement("div");
+            item.id = "dock-" + app.id;
+            item.className = "dockItem running";
+            item.textContent = app.name.toUpperCase().substring(0, 6);
+            item.addEventListener("click", () => {
+                const win = document.getElementById("win-" + app.id);
+                if (win) win.style.zIndex = zCounter++;
+            });
+            dock.appendChild(item);
+        }
+    }
+
+    function removeDockItem(id) {
+        const item = document.getElementById("dock-" + id);
+        if (item) item.remove();
+    }
+
+    function updateFooter() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const mins = String(now.getMinutes()).padStart(2, "0");
+        document.getElementById("footerClock").textContent = hours + ":" + mins;
+
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const uptimeHours = Math.floor(elapsed / 3600);
+        const uptimeMins = Math.floor((elapsed % 3600) / 60);
+        document.getElementById("footerUptime").textContent = "UPTIME " + uptimeHours + ":" + String(uptimeMins).padStart(2, "0");
+        document.getElementById("footerLaunches").textContent = "LAUNCHES " + launchCount;
+    }
+
+    // ---------- UTILITIES ----------
+    let calcState = { display: "0", memory: 0, op: null, newNum: true };
+
+    function calcAppend(val) {
+        if (calcState.newNum) {
+            calcState.display = val;
+            calcState.newNum = false;
+        } else {
+            calcState.display = calcState.display === "0" ? val : calcState.display + val;
+        }
+        document.getElementById("calcDisplay").textContent = calcState.display;
+    }
+
+    function calcOp(op) {
+        let num = parseFloat(calcState.display);
+        if (calcState.op) {
+            switch (calcState.op) {
+                case "+": num = calcState.memory + num; break;
+                case "-": num = calcState.memory - num; break;
+                case "*": num = calcState.memory * num; break;
+                case "/": num = calcState.memory / num; break;
+            }
+        }
+        calcState.display = String(num);
+        document.getElementById("calcDisplay").textContent = calcState.display;
+        calcState.memory = num;
+        calcState.op = op;
+        calcState.newNum = true;
+    }
+
+    function calcEq() {
+        calcOp(null);
+        calcState.op = null;
+    }
+
+    function calcClear() {
+        calcState = { display: "0", memory: 0, op: null, newNum: true };
+        document.getElementById("calcDisplay").textContent = "0";
+    }
+
+    let timerInterval = null, timerTime = 0;
+
+    function timerStart() {
+        if (timerInterval) return;
+        const input = parseInt(document.getElementById("timerInput").value);
+        if (timerTime === 0) timerTime = input * 60;
+        timerInterval = setInterval(() => {
+            if (timerTime > 0) {
+                timerTime--;
+                document.getElementById("timerDisplay").textContent = String(Math.floor(timerTime / 60)).padStart(2, "0") + ":" + String(timerTime % 60).padStart(2, "0");
+            }
+        }, 1000);
+    }
+
+    function timerPause() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    function timerReset() {
+        timerPause();
+        timerTime = 0;
+        document.getElementById("timerDisplay").textContent = "00:00";
+    }
+
+    function initTerminal() {
+        const output = document.getElementById("terminalOutput");
+        const input = document.getElementById("terminalInput");
+        
+        const commands = {
+            "help": "Available commands: help, time, date, echo, clear, version",
+            "time": new Date().toLocaleTimeString(),
+            "date": new Date().toLocaleDateString(),
+            "version": "APEX ZERO v1.0.0",
+            "clear": "___CLEAR___"
+        };
+
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                const cmd = input.value.trim().toLowerCase();
+                input.value = "";
+                
+                const line = document.createElement("div");
+                line.textContent = "$ " + cmd;
+                output.appendChild(line);
+
+                if (cmd.startsWith("echo ")) {
+                    const msg = document.createElement("div");
+                    msg.textContent = cmd.substring(5);
+                    output.appendChild(msg);
+                } else if (commands[cmd] === "___CLEAR___") {
+                    output.innerHTML = "";
+                } else if (commands[cmd]) {
+                    const msg = document.createElement("div");
+                    msg.textContent = commands[cmd];
+                    output.appendChild(msg);
+                } else {
+                    const msg = document.createElement("div");
+                    msg.textContent = "Command not found";
+                    output.appendChild(msg);
+                }
+                output.scrollTop = output.scrollHeight;
+            }
         });
-        canvas.addEventListener("mousemove", e => {
+    }
+
+    let drawing = false;
+    function initCanvas() {
+        const canvas = document.getElementById("drawCanvas");
+        const ctx = canvas.getContext("2d");
+        
+        canvas.addEventListener("mousedown", () => drawing = true);
+        canvas.addEventListener("mouseup", () => drawing = false);
+        canvas.addEventListener("mousemove", (e) => {
             if (!drawing) return;
             const rect = canvas.getBoundingClientRect();
-            ctx.lineWidth = lineWidth;
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.stroke();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(x - 2, y - 2, 4, 4);
         });
-        document.addEventListener("mouseup", () => drawing = false);
-
-        clearBtn.addEventListener("click", () => {
-            ctx.fillStyle = "#000";
-            ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.strokeStyle = "#fff";
-        });
-        thinBtn.addEventListener("click", () => lineWidth = 2);
-        thickBtn.addEventListener("click", () => lineWidth = 5);
     }
 
-    // ---------- ADMIN DASHBOARD ----------
-    function openAdmin() {
-        adminOpen = true;
-        adminOverlay.style.display = "flex";
-        renderAdminTab("system");
+    function canvasClear() {
+        const canvas = document.getElementById("drawCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-    function closeAdmin() {
-        adminOpen = false;
-        adminOverlay.style.display = "none";
+
+    function canvasSave() {
+        const canvas = document.getElementById("drawCanvas");
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL();
+        link.download = "canvas-" + Date.now() + ".png";
+        link.click();
     }
-    function renderAdminTab(tab) {
-        adminTabs.forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
-        if (tab === "system") renderAdminSystem();
-        if (tab === "ui") renderAdminUI();
-        if (tab === "games") renderAdminGames();
-        if (tab === "dev") renderAdminDev();
-    }
-    function renderAdminSystem() {
-        const recentCount = getRecent().length;
-        adminContent.innerHTML = `
-            <div class="adminSectionTitle">SYSTEM STATS</div>
-            <div class="adminRow"><div class="adminLabel">Uptime</div><div class="adminValue" id="adminUptime">...</div></div>
-            <div class="adminRow"><div class="adminLabel">Launches</div><div class="adminValue">${launchCount}</div></div>
-            <div class="adminRow"><div class="adminLabel">Games/Apps</div><div class="adminValue">${games.length}</div></div>
-            <div class="adminRow"><div class="adminLabel">Recently Used</div><div class="adminValue">${recentCount}</div></div>
-            <div class="adminRow"><div class="adminLabel">Profile</div><div class="adminValue">BRYCE</div></div>
-            <div class="adminBtnRow">
-                <button class="adminBtn" id="adminClearRecent">Clear Recent</button>
-                <button class="adminBtn" id="adminResetUI">Reset UI</button>
-            </div>
-        `;
-        document.getElementById("adminClearRecent").onclick = () => {
-            saveRecent([]);
-            renderRecent();
-            renderAdminSystem();
-        };
-        document.getElementById("adminResetUI").onclick = () => {
-            resetLayoutBtn.click();
-            renderAdminSystem();
-        };
-        const updateAdminUptime = () => {
-            const diff = Date.now() - startTime;
-            const totalSeconds = Math.floor(diff / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            const el = document.getElementById("adminUptime");
-            if (el) el.textContent = `${minutes}:${String(seconds).padStart(2, "0")}`;
-        };
-        updateAdminUptime();
-    }
-    function renderAdminUI() {
-        adminContent.innerHTML = `
-            <div class="adminSectionTitle">UI CONTROLS</div>
-            <div class="adminRow"><div class="adminLabel">Footer Visible</div><div class="adminValue">${footerEnabled}</div></div>
-            <div class="adminRow"><div class="adminLabel">Hover Enabled</div><div class="adminValue">${hoverEnabled}</div></div>
-            <div class="adminRow"><div class="adminLabel">Dock Visible</div><div class="adminValue">${dockEnabled}</div></div>
-            <div class="adminBtnRow">
-                <button class="adminBtn" id="adminToggleFooter">Toggle Footer</button>
-                <button class="adminBtn" id="adminToggleHover">Toggle Hover</button>
-                <button class="adminBtn" id="adminToggleDock">Toggle Dock</button>
-            </div>
-        `;
-        document.getElementById("adminToggleFooter").onclick = () => toggleFooterBtn.click();
-        document.getElementById("adminToggleHover").onclick = () => toggleHoverBtn.click();
-        document.getElementById("adminToggleDock").onclick = () => toggleDockBtn.click();
-    }
-    function renderAdminGames() {
-        const listHtml = games.map(g => `<li>${g.name} <span style="opacity:0.6;">[${g.category}/${g.type}]</span></li>`).join("");
-        adminContent.innerHTML = `
-            <div class="adminSectionTitle">GAMES & APPS</div>
-            <ul style="margin-top:4px; padding-left:18px; font-size:11px;">${listHtml}</ul>
-            <div class="adminSectionTitle" style="margin-top:10px;">ADD CUSTOM GAME (LOCAL ONLY)</div>
-            <input class="adminInput" id="adminGameName" placeholder="Name">
-            <input class="adminInput" id="adminGameURL" placeholder="URL (or #)">
-            <select class="adminInput" id="adminGameCategory">
-                <option value="games">games</option>
-                <option value="apps">apps</option>
-                <option value="tools">tools</option>
-            </select>
-            <button class="adminBtn" id="adminAddGame">Add Game</button>
-        `;
-        document.getElementById("adminAddGame").onclick = () => {
-            const name = document.getElementById("adminGameName").value.trim();
-            const url = document.getElementById("adminGameURL").value.trim() || "#";
-            const cat = document.getElementById("adminGameCategory").value;
-            if (!name) return;
-            const id = "custom_" + Date.now();
-            games.push({ id, name, url, category: cat, type: "game", desc: "Custom entry." });
+
+    // ---------- EVENT LISTENERS ----------
+    document.getElementById("launchBtn").addEventListener("click", confirmLaunch);
+    document.getElementById("cancelBtn").addEventListener("click", () => {
+        document.getElementById("overlay").style.display = "none";
+        pendingGame = null;
+    });
+
+    document.getElementById("settingsBtn").addEventListener("click", () => {
+        document.getElementById("settingsOverlay").style.display = "flex";
+    });
+
+    document.getElementById("closeSettingsBtn").addEventListener("click", () => {
+        document.getElementById("settingsOverlay").style.display = "none";
+    });
+
+    document.getElementById("notifBtn").addEventListener("click", () => {
+        const nc = document.getElementById("notifCenter");
+        nc.style.display = nc.style.display === "flex" ? "none" : "flex";
+    });
+
+    document.getElementById("toggleFooterBtn").addEventListener("click", (e) => {
+        footerEnabled = !footerEnabled;
+        document.getElementById("footer").style.display = footerEnabled ? "flex" : "none";
+        e.target.textContent = footerEnabled ? "ON" : "OFF";
+        e.target.classList.toggle("active", footerEnabled);
+    });
+
+    document.getElementById("toggleHoverBtn").addEventListener("click", (e) => {
+        hoverEnabled = !hoverEnabled;
+        document.querySelectorAll(".icon").forEach(icon => {
+            icon.style.pointerEvents = hoverEnabled ? "auto" : "none";
+        });
+        e.target.textContent = hoverEnabled ? "ON" : "OFF";
+        e.target.classList.toggle("active", hoverEnabled);
+    });
+
+    document.getElementById("toggleDockBtn").addEventListener("click", (e) => {
+        dockEnabled = !dockEnabled;
+        document.getElementById("dock").style.display = dockEnabled ? "flex" : "none";
+        e.target.textContent = dockEnabled ? "ON" : "OFF";
+        e.target.classList.toggle("active", dockEnabled);
+    });
+
+    document.getElementById("clearRecentSettingsBtn").addEventListener("click", () => {
+        recentlyPlayed = [];
+        localStorage.removeItem("recentlyPlayed");
+        renderRecent();
+    });
+
+    document.getElementById("resetLayoutBtn").addEventListener("click", () => {
+        location.reload();
+    });
+
+    document.getElementById("clearRecentBtn").addEventListener("click", () => {
+        recentlyPlayed = [];
+        localStorage.removeItem("recentlyPlayed");
+        renderRecent();
+    });
+
+    document.getElementById("searchBox").addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        renderGrid();
+    });
+
+    document.querySelectorAll(".sideLink[data-category]").forEach(link => {
+        link.addEventListener("click", (e) => {
+            document.querySelectorAll(".sideLink[data-category]").forEach(l => l.classList.remove("active"));
+            e.target.classList.add("active");
+            currentCategory = e.target.getAttribute("data-category");
             renderGrid();
-            renderAdminGames();
-        };
-    }
-    function renderAdminDev() {
-        const recentRaw = JSON.stringify(getRecent());
-        adminContent.innerHTML = `
-            <div class="adminSectionTitle">DEV TOOLS</div>
-            <div class="adminRow"><div class="adminLabel">Recent IDs</div><div class="adminValue">${recentRaw}</div></div>
-            <div class="adminRow"><div class="adminLabel">Current Category</div><div class="adminValue">${currentCategory}</div></div>
-            <div class="adminRow"><div class="adminLabel">Search Query</div><div class="adminValue">${searchQuery || "(none)"}</div></div>
-            <div class="adminBtnRow">
-                <button class="adminBtn" id="adminForceReload">Force Reload</button>
-                <button class="adminBtn" id="adminClearAllStorage">Clear Local Storage</button>
-            </div>
-            <div style="margin-top:8px; font-size:10px; opacity:0.7;">
-                Admin Mode is local only. No data leaves this browser.
-            </div>
+        });
+    });
+
+    document.getElementById("sideScrollGames").addEventListener("click", () => {
+        document.getElementById("mainArea").scrollTop = 0;
+    });
+
+    document.getElementById("sideScrollRecent").addEventListener("click", () => {
+        document.getElementById("mainArea").scrollTop = document.getElementById("mainArea").scrollHeight;
+    });
+
+    document.getElementById("dockHome").addEventListener("click", () => {
+        document.getElementById("mainArea").scrollTop = 0;
+        currentCategory = "all";
+        document.querySelectorAll(".sideLink[data-category]").forEach(l => l.classList.remove("active"));
+        document.querySelector(".sideLink[data-category='all']").classList.add("active");
+        renderGrid();
+    });
+
+    document.getElementById("dockGames").addEventListener("click", () => {
+        currentCategory = "games";
+        document.querySelectorAll(".sideLink[data-category]").forEach(l => l.classList.remove("active"));
+        document.querySelector(".sideLink[data-category='games']").classList.add("active");
+        renderGrid();
+        document.getElementById("mainArea").scrollTop = 0;
+    });
+
+    document.getElementById("dockRecent").addEventListener("click", () => {
+        document.getElementById("mainArea").scrollTop = document.getElementById("mainArea").scrollHeight;
+    });
+
+    document.getElementById("dockNotes").addEventListener("click", () => {
+        const app = games.find(g => g.appType === "notes");
+        if (app) openApp(app);
+    });
+
+    document.getElementById("dockCalc").addEventListener("click", () => {
+        const app = games.find(g => g.appType === "calc");
+        if (app) openApp(app);
+    });
+
+    document.getElementById("dockTimer").addEventListener("click", () => {
+        const app = games.find(g => g.appType === "timer");
+        if (app) openApp(app);
+    });
+
+    document.getElementById("dockTerminal").addEventListener("click", () => {
+        const app = games.find(g => g.appType === "terminal");
+        if (app) openApp(app);
+    });
+
+    document.getElementById("dockCanvas").addEventListener("click", () => {
+        const app = games.find(g => g.appType === "canvas");
+        if (app) openApp(app);
+    });
+
+    document.getElementById("dockSettings").addEventListener("click", () => {
+        document.getElementById("settingsOverlay").style.display = "flex";
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.shiftKey && e.key === "Z") {
+            adminOpen = !adminOpen;
+            document.getElementById("adminOverlay").style.display = adminOpen ? "flex" : "none";
+            if (adminOpen) renderAdminDashboard();
+        }
+    });
+
+    function renderAdminDashboard() {
+        // Admin dashboard rendering logic...
+        const content = document.getElementById("adminContent");
+        content.innerHTML = `
+            <div class="adminSectionTitle">SYSTEM INFO</div>
+            <div class="adminRow"><span class="adminLabel">Profile:</span><span class="adminValue">${document.getElementById("profileName").textContent}</span></div>
+            <div class="adminRow"><span class="adminLabel">Launches:</span><span class="adminValue">${launchCount}</span></div>
+            <div class="adminRow"><span class="adminLabel">Uptime:</span><span class="adminValue">${document.getElementById("footerUptime").textContent}</span></div>
         `;
-        document.getElementById("adminForceReload").onclick = () => location.reload();
-        document.getElementById("adminClearAllStorage").onclick = () => {
-            localStorage.clear();
-            location.reload();
-        };
     }
-    adminTabs.forEach(tab => {
-        tab.addEventListener("click", () => renderAdminTab(tab.dataset.tab));
-    });
-
-    // ---------- KEYBOARD / ADMIN SEQUENCE ----------
-    document.addEventListener("keydown", e => {
-        if (overlay.style.display === "flex") {
-            if (e.key === "Enter") launchBtn.click();
-            if (e.key === "Escape") closeLaunchOverlay();
-        }
-        if (settingsOverlay.style.display === "flex" && e.key === "Escape") closeSettings();
-        if (adminOpen && e.key === "Escape") closeAdmin();
-
-        if (e.key === "Shift") {
-            shiftHeld = true;
-            adminSeq = [];
-        } else if (shiftHeld) {
-            const k = e.key.toLowerCase();
-            if (["z","e","r","o"].includes(k)) {
-                adminSeq.push(k);
-                if (adminSeq.join("") === "zero") {
-                    adminOpen ? closeAdmin() : openAdmin();
-                    adminSeq = [];
-                    shiftHeld = false;
-                }
-            } else {
-                adminSeq = [];
-            }
-        }
-    });
-    document.addEventListener("keyup", e => {
-        if (e.key === "Shift") {
-            shiftHeld = false;
-            adminSeq = [];
-        }
-    });
 
     // ---------- INIT ----------
-    function init() {
-        loadSettings();
-        renderGrid();
-        renderRecent();
-        updateClock();
-        updateUptime();
-        updateFooterLaunches();
-        updateDockRunning();
-    }
-    init();
+    renderGrid();
+    renderRecent();
+    updateFooter();
+    setInterval(updateFooter, 1000);
+
+    // Initialize toggle buttons
+    document.getElementById("toggleFooterBtn").classList.add("active");
+    document.getElementById("toggleHoverBtn").classList.add("active");
+    document.getElementById("toggleDockBtn").classList.add("active");
 </script>
 
 </body>
