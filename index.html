@@ -15,7 +15,195 @@
 
     /* Title */
     #title {
+        text-align: center;<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Apex Zero</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    /* GLOBAL */
+    body {
+        margin: 0;
+        background: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+    }
+
+    /* TOP BAR */
+    #topBar {
         text-align: center;
+        padding: 22px 0;
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 4px;
+        backdrop-filter: blur(8px);
+        background: rgba(255,255,255,0.04);
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    /* SECTION LABEL */
+    #sectionLabel {
+        text-align: left;
+        max-width: 1100px;
+        margin: 30px auto 10px auto;
+        font-size: 14px;
+        letter-spacing: 2px;
+        opacity: 0.7;
+    }
+
+    /* GRID */
+    #grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 26px;
+        padding: 20px;
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    /* SOFT GLASS CARD */
+    .icon {
+        padding: 26px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(10px);
+        transition: 0.25s;
+        font-size: 15px;
+    }
+
+    .icon:hover {
+        background: rgba(255,255,255,0.16);
+        border-color: rgba(255,255,255,0.45);
+        transform: translateY(-3px);
+    }
+
+    /* OVERLAY */
+    #overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.65);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* OVERLAY BOX — SOFT GLASS */
+    #overlayBox {
+        width: 340px;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.25);
+        backdrop-filter: blur(12px);
+        padding: 32px;
+        text-align: center;
+        border-radius: 20px;
+    }
+
+    #overlayBox h2 {
+        margin: 0 0 22px 0;
+        font-size: 18px;
+        letter-spacing: 2px;
+    }
+
+    /* GLASS BUTTONS */
+    .glassBtn {
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.35);
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(6px);
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .glassBtn:hover {
+        background: rgba(255,255,255,0.22);
+        border-color: rgba(255,255,255,0.55);
+    }
+
+    /* FOOTER WATERMARK */
+    #footer {
+        text-align: center;
+        padding: 30px 0;
+        opacity: 0.25;
+        letter-spacing: 4px;
+        font-size: 12px;
+    }
+</style>
+
+</head>
+<body>
+
+<div id="topBar">APEX ZERO</div>
+
+<div id="sectionLabel">GAMES</div>
+
+<div id="grid">
+    <div class="icon" data-url="2048cupcakes.html">2048 Cupcakes</div>
+    <div class="icon" data-url="agariolite.html">Agario Lite</div>
+    <div class="icon" data-url="cookieclicker (1).htm">Cookie Clicker</div>
+    <div class="icon" data-url="Eaglercraft_1.12.2_WASM_Offline_Download (2).html">Minecraft 1.12.2</div>
+    <div class="icon" data-url="paperio2.htm">Paper.io 2</div>
+    <div class="icon" data-url="rooftopsnipers2.html">Rooftop Snipers 2</div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay">
+    <div id="overlayBox">
+        <h2 id="gameTitle">Game</h2>
+        <button class="glassBtn" id="launchBtn">Launch</button>
+        <button class="glassBtn" id="cancelBtn">Cancel</button>
+    </div>
+</div>
+
+<div id="footer">APEX ZERO</div>
+
+<script>
+    const overlay = document.getElementById("overlay");
+    const gameTitle = document.getElementById("gameTitle");
+    const launchBtn = document.getElementById("launchBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+
+    let pendingURL = null;
+
+    document.querySelectorAll(".icon").forEach(icon => {
+        icon.addEventListener("click", () => {
+            pendingURL = icon.dataset.url;
+            gameTitle.textContent = icon.textContent;
+            overlay.style.display = "flex";
+        });
+    });
+
+    launchBtn.onclick = () => {
+        if (pendingURL) window.open(pendingURL, "_blank");
+        overlay.style.display = "none";
+    };
+
+    cancelBtn.onclick = () => {
+        overlay.style.display = "none";
+    };
+</script>
+
+</body>
+</html>
+
         padding: 25px 0;
         font-size: 22px;
         font-weight: bold;
