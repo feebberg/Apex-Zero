@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <title>APEX ZERO</title>
@@ -8,10 +9,18 @@
 <style>
     :root {
         --glass-bg: rgba(255,255,255,0.08);
-        --glass-bg-strong: rgba(255,255,255,0.12);
+        --glass-bg-strong: rgba(255,255,255,0.14);
         --glass-border: rgba(255,255,255,0.25);
         --glass-border-strong: rgba(255,255,255,0.45);
+
+        --panel-bg: rgba(255,255,255,0.10);
+        --panel-border: rgba(255,255,255,0.28);
+
         --divider: rgba(255,255,255,0.18);
+
+        --brightness: 1;
+        --theme-intensity: 1;
+        --wallpaper-opacity: 0.15;
     }
 
     * { box-sizing: border-box; }
@@ -22,6 +31,21 @@
         color: #fff;
         font-family: Arial, sans-serif;
         overflow: hidden;
+        filter: brightness(var(--brightness));
+    }
+
+    /* GLOBAL ANIMATIONS */
+    @keyframes panelIn {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes panelSlide {
+        from { opacity: 0; transform: translateX(14px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
 
     /* LOADING */
@@ -78,12 +102,12 @@
         position: absolute;
         right: 16px;
         display: flex;
-        gap: 10px;
+        gap: 8px;
         align-items: center;
         font-size: 12px;
         opacity: 0.8;
     }
-    #settingsBtn {
+    .topBtn {
         padding: 6px 10px;
         border-radius: 999px;
         border: 1px solid var(--glass-border);
@@ -94,11 +118,13 @@
         letter-spacing: 1px;
         text-transform: uppercase;
         color: #fff;
+        transition: 0.2s;
     }
-    #settingsBtn:hover {
+    .topBtn:hover {
         background: var(--glass-bg-strong);
         border-color: var(--glass-border-strong);
     }
+
     #adminHint {
         font-size: 9px;
         opacity: 0.5;
@@ -167,32 +193,6 @@
         overflow: auto;
         position: relative;
     }
-    #sectionHeaderRow {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1100px;
-        margin: 0 auto 10px auto;
-    }
-    #sectionLabel {
-        font-size: 13px;
-        letter-spacing: 2px;
-        opacity: 0.7;
-    }
-    #searchBox {
-        padding: 8px 12px;
-        border-radius: 999px;
-        border: 1px solid var(--glass-border);
-        background: rgba(255,255,255,0.04);
-        color: #fff;
-        font-size: 12px;
-        min-width: 180px;
-        outline: none;
-        backdrop-filter: blur(6px);
-    }
-    #searchBox::placeholder {
-        color: rgba(255,255,255,0.5);
-    }
 
     /* GRID */
     #grid {
@@ -214,21 +214,13 @@
         transition: 0.25s;
         font-size: 14px;
     }
-    .iconTitle {
-        font-size: 15px;
-        margin-bottom: 6px;
-    }
-    .iconDesc {
-        font-size: 11px;
-        opacity: 0.7;
-    }
     .icon:hover {
         background: var(--glass-bg-strong);
         border-color: var(--glass-border-strong);
         transform: translateY(-3px);
     }
 
-    /* RECENT */
+    /* RECENT PANEL */
     #recentPanel {
         max-width: 1100px;
         margin: 0 auto 40px auto;
@@ -238,284 +230,104 @@
         backdrop-filter: blur(10px);
         padding: 16px 18px;
     }
-    #recentHeaderRow {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-    }
-    #recentTitle {
-        font-size: 12px;
-        letter-spacing: 2px;
-        opacity: 0.75;
-    }
-    #clearRecentBtn {
-        font-size: 11px;
-        border-radius: 999px;
-        border: 1px solid var(--glass-border);
-        background: rgba(255,255,255,0.04);
-        color: #fff;
-        padding: 4px 10px;
-        cursor: pointer;
-        backdrop-filter: blur(6px);
-    }
-    #clearRecentBtn:hover {
-        background: var(--glass-bg-strong);
-        border-color: var(--glass-border-strong);
-    }
-    #recentList {
-        font-size: 13px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .recentItem {
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.25);
-        background: rgba(255,255,255,0.08);
-        cursor: pointer;
-        font-size: 12px;
-    }
-    .recentItem:hover {
-        background: rgba(255,255,255,0.16);
-        border-color: var(--glass-border-strong);
-    }
 
-    /* LAUNCH OVERLAY */
-    #overlay {
-        position: fixed;
+    /* WINDOWS */
+    #windowLayer {
+        position: absolute;
         inset: 0;
-        background: rgba(0,0,0,0.65);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        animation: fadeIn 0.25s ease;
-        z-index: 50;
+        pointer-events: none;
+        z-index: 15;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    #overlayBox {
-        width: 380px;
-        background: rgba(255,255,255,0.10);
-        border: 1px solid var(--glass-border);
-        backdrop-filter: blur(12px);
-        border-radius: 20px;
-        overflow: hidden;
-    }
-    #overlayTitleBar {
-        padding: 14px 16px;
-        font-size: 13px;
-        letter-spacing: 2px;
-        border-bottom: 1px solid var(--divider);
-        text-align: center;
-        background: rgba(255,255,255,0.06);
-    }
-    #overlayContent {
-        padding: 22px 24px 20px 24px;
-        text-align: left;
-    }
-    #overlayGameName {
-        font-size: 17px;
-        margin-bottom: 6px;
-    }
-    #overlayGameDesc {
-        font-size: 12px;
-        opacity: 0.75;
-        margin-bottom: 18px;
-    }
-    #buttonRow {
-        display: flex;
-        gap: 12px;
-        margin-top: 6px;
-    }
-    .glassBtn {
-        flex: 1;
-        padding: 10px;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.35);
-        background: rgba(255,255,255,0.12);
-        backdrop-filter: blur(6px);
-        color: #fff;
-        font-size: 13px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .glassBtn:hover {
-        background: rgba(255,255,255,0.22);
-        border-color: var(--glass-border-strong);
-    }
-
-    /* SETTINGS */
-    #settingsOverlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.65);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 60;
-    }
-    #settingsBox {
+    .window {
+        position: absolute;
         width: 360px;
+        min-height: 200px;
+        max-height: 70%;
         background: rgba(255,255,255,0.10);
         border: 1px solid var(--glass-border);
-        backdrop-filter: blur(12px);
-        border-radius: 20px;
-        overflow: hidden;
-    }
-    #settingsTitleBar {
-        padding: 14px 16px;
-        font-size: 13px;
-        letter-spacing: 2px;
-        border-bottom: 1px solid var(--divider);
-        text-align: center;
-        background: rgba(255,255,255,0.06);
-    }
-    #settingsContent {
-        padding: 18px 20px 16px 20px;
-        font-size: 13px;
-    }
-    .settingsRow {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    .settingsLabel {
-        font-size: 12px;
-        opacity: 0.85;
-    }
-    .settingsToggle {
-        padding: 4px 10px;
-        border-radius: 999px;
-        border: 1px solid var(--glass-border);
-        background: rgba(255,255,255,0.06);
-        cursor: pointer;
-        font-size: 11px;
-    }
-    .settingsToggle.active {
-        background: rgba(255,255,255,0.18);
-        border-color: var(--glass-border-strong);
-    }
-    #settingsButtons {
-        display: flex;
-        gap: 10px;
-        margin-top: 14px;
-    }
-    #aboutText {
-        font-size: 11px;
-        opacity: 0.7;
-        margin-top: 10px;
-    }
-
-    /* ADMIN DASHBOARD */
-    #adminOverlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.75);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 80;
-    }
-    #adminBox {
-        width: 520px;
-        max-width: 95vw;
-        background: rgba(255,255,255,0.10);
-        border: 1px solid var(--glass-border);
-        backdrop-filter: blur(16px);
-        border-radius: 22px;
+        backdrop-filter: blur(14px);
+        border-radius: 18px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        pointer-events: auto;
         transform: translateY(12px);
         opacity: 0;
-        animation: adminIn 0.25s ease forwards;
+        animation: panelIn 0.22s ease forwards;
     }
-    @keyframes adminIn {
-        from { opacity: 0; transform: translateY(24px); }
-        to { opacity: 1; transform: translateY(12px); }
-    }
-    #adminTitleBar {
-        padding: 12px 16px;
-        font-size: 13px;
-        letter-spacing: 2px;
-        border-bottom: 1px solid var(--divider);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(255,255,255,0.06);
-    }
-    #adminTabs {
-        display: flex;
-        gap: 8px;
-        padding: 10px 14px 0 14px;
-        border-bottom: 1px solid var(--divider);
-    }
-    .adminTab {
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid transparent;
-        font-size: 11px;
-        cursor: pointer;
-        opacity: 0.8;
-    }
-    .adminTab.active {
-        border-color: var(--glass-border);
-        background: rgba(255,255,255,0.10);
-        opacity: 1;
-    }
-    #adminContent {
-        padding: 14px 16px 16px 16px;
-        font-size: 12px;
+
+    /* NOTIFICATION CENTER */
+    #notifCenter {
+        position: fixed;
+        top: 52px;
+        right: 16px;
+        width: 260px;
         max-height: 60vh;
-        overflow: auto;
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        backdrop-filter: blur(14px);
+        border-radius: 16px;
+        padding: 10px;
+        display: none;
+        flex-direction: column;
+        z-index: 90;
+        animation: panelIn 0.25s ease forwards;
     }
-    .adminSectionTitle {
+    .notifItem {
+        padding: 8px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.25);
         font-size: 11px;
-        letter-spacing: 2px;
-        opacity: 0.8;
         margin-bottom: 6px;
     }
-    .adminRow {
+
+    /* QUICK SETTINGS PANEL */
+    #quickSettings {
+        position: fixed;
+        top: 52px;
+        right: 16px;
+        width: 280px;
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        backdrop-filter: blur(16px);
+        border-radius: 18px;
+        padding: 14px;
+        display: none;
+        flex-direction: column;
+        gap: 14px;
+        z-index: 95;
+        animation: panelSlide 0.25s ease forwards;
+    }
+    .qsTitle {
+        font-size: 12px;
+        letter-spacing: 2px;
+        opacity: 0.8;
+        margin-bottom: 4px;
+    }
+    .qsRow {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 6px;
     }
-    .adminLabel { opacity: 0.85; }
-    .adminValue {
-        opacity: 0.7;
-        font-family: monospace;
-        font-size: 11px;
+    .qsLabel {
+        font-size: 12px;
+        opacity: 0.85;
     }
-    .adminInput {
-        width: 100%;
-        padding: 6px 8px;
-        border-radius: 8px;
-        border: 1px solid var(--glass-border);
-        background: rgba(255,255,255,0.06);
-        color: #fff;
-        font-size: 11px;
-        margin-bottom: 6px;
-    }
-    .adminBtnRow {
-        display: flex;
-        gap: 8px;
-        margin-top: 8px;
-        flex-wrap: wrap;
-    }
-    .adminBtn {
-        padding: 6px 10px;
+    .qsToggle {
+        padding: 4px 10px;
         border-radius: 999px;
         border: 1px solid var(--glass-border);
         background: rgba(255,255,255,0.08);
-        font-size: 11px;
         cursor: pointer;
+        font-size: 11px;
     }
-    .adminBtn:hover {
-        background: rgba(255,255,255,0.16);
+    .qsToggle.active {
+        background: rgba(255,255,255,0.18);
         border-color: var(--glass-border-strong);
+    }
+    .qsSlider {
+        width: 100%;
     }
 
     /* DOCK */
@@ -545,10 +357,6 @@
         border-color: var(--glass-border);
         background: rgba(255,255,255,0.16);
     }
-    .dockItem:hover {
-        border-color: var(--glass-border);
-        background: rgba(255,255,255,0.12);
-    }
 
     /* FOOTER */
     #footer {
@@ -567,200 +375,6 @@
         border-top: 1px solid rgba(255,255,255,0.12);
         z-index: 25;
     }
-    #footerLeft { text-transform: uppercase; }
-    #footerRight {
-        display: flex;
-        gap: 16px;
-        font-size: 10px;
-    }
-
-    /* WINDOWS */
-    #windowLayer {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 15;
-    }
-    .window {
-        position: absolute;
-        width: 360px;
-        min-height: 200px;
-        max-height: 70%;
-        background: rgba(255,255,255,0.10);
-        border: 1px solid var(--glass-border);
-        backdrop-filter: blur(14px);
-        border-radius: 18px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        pointer-events: auto;
-        transform: translateY(12px);
-        opacity: 0;
-        animation: winIn 0.22s ease forwards;
-    }
-    @keyframes winIn {
-        from { opacity: 0; transform: translateY(24px); }
-        to { opacity: 1; transform: translateY(12px); }
-    }
-    .windowTitleBar {
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 10px;
-        border-bottom: 1px solid var(--divider);
-        font-size: 12px;
-        letter-spacing: 1px;
-        background: rgba(255,255,255,0.06);
-        cursor: move;
-    }
-    .windowTitle {
-        opacity: 0.85;
-    }
-    .windowControls {
-        display: flex;
-        gap: 6px;
-    }
-    .windowBtn {
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.4);
-        background: rgba(255,255,255,0.1);
-        cursor: pointer;
-    }
-    .windowContent {
-        padding: 10px 12px;
-        font-size: 12px;
-        overflow: auto;
-        flex: 1;
-    }
-
-    /* APP CONTENT STYLES */
-    .notesArea {
-        width: 100%;
-        height: 180px;
-        background: rgba(0,0,0,0.4);
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.25);
-        color: #fff;
-        padding: 8px;
-        font-size: 12px;
-        resize: none;
-        outline: none;
-    }
-    .notesInfo {
-        font-size: 10px;
-        opacity: 0.6;
-        margin-top: 4px;
-    }
-    .calcRow {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 6px;
-        margin-top: 6px;
-    }
-    .calcBtn {
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.3);
-        background: rgba(255,255,255,0.08);
-        cursor: pointer;
-        font-size: 12px;
-        text-align: center;
-    }
-    .calcBtn:hover {
-        background: rgba(255,255,255,0.16);
-    }
-    .calcDisplay {
-        width: 100%;
-        padding: 6px 8px;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.3);
-        background: rgba(0,0,0,0.5);
-        color: #fff;
-        font-size: 13px;
-        margin-bottom: 4px;
-        text-align: right;
-    }
-    .timerDisplay {
-        font-size: 24px;
-        letter-spacing: 2px;
-        margin-bottom: 8px;
-    }
-    .timerControls {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-    .timerBtn {
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.3);
-        background: rgba(255,255,255,0.08);
-        cursor: pointer;
-        font-size: 11px;
-    }
-    .timerBtn:hover {
-        background: rgba(255,255,255,0.16);
-    }
-
-    .terminalOutput {
-        background: rgba(0,0,0,0.6);
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.25);
-        padding: 6px;
-        height: 150px;
-        overflow-y: auto;
-        font-family: monospace;
-        font-size: 11px;
-        margin-bottom: 6px;
-    }
-    .terminalInputRow {
-        display: flex;
-        gap: 6px;
-        align-items: center;
-    }
-    .terminalPrompt {
-        font-family: monospace;
-        font-size: 11px;
-        opacity: 0.7;
-    }
-    .terminalInput {
-        flex: 1;
-        padding: 4px 6px;
-        border-radius: 6px;
-        border: 1px solid rgba(255,255,255,0.25);
-        background: rgba(0,0,0,0.6);
-        color: #fff;
-        font-size: 11px;
-        outline: none;
-        font-family: monospace;
-    }
-
-    .canvasWrapper {
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.25);
-        overflow: hidden;
-        background: #000;
-    }
-    .canvasToolbar {
-        display: flex;
-        gap: 6px;
-        padding: 6px;
-        border-bottom: 1px solid rgba(255,255,255,0.25);
-        font-size: 11px;
-    }
-    .canvasBtn {
-        padding: 4px 8px;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.3);
-        background: rgba(255,255,255,0.08);
-        cursor: pointer;
-    }
-    .canvasBtn:hover {
-        background: rgba(255,255,255,0.16);
-    }
 
     .hidden { display: none !important; }
 
@@ -770,13 +384,9 @@
     }
 </style>
 </head>
+<!DOCTYPE html>
+<html lang="en">
 <body>
-
-<!-- LOADING -->
-<div id="loadingScreen">
-    <div id="loadingTitle">APEX ZERO</div>
-    <div id="loadingBar"><div id="loadingFill"></div></div>
-</div>
 
 <!-- TOP BAR -->
 <div id="topBar">
@@ -784,12 +394,15 @@
     <div id="topBarRight">
         <span id="profileName">BRYCE</span>
         <span id="adminHint">SHIFT + Z E R O</span>
-        <button id="settingsBtn">SETTINGS</button>
+        <button class="topBtn" id="notifBtn">NOTIF</button>
+        <button class="topBtn" id="qsBtn">QS</button>
+        <button class="topBtn" id="settingsBtn">SETTINGS</button>
     </div>
 </div>
 
 <!-- SHELL -->
 <div id="shell">
+
     <!-- SIDEBAR -->
     <div id="sidebar">
         <div id="sidebarTitle">SYSTEM</div>
@@ -811,13 +424,17 @@
 
     <!-- MAIN AREA -->
     <div id="mainArea">
+
+        <!-- HEADER ROW -->
         <div id="sectionHeaderRow">
             <div id="sectionLabel">GAMES & APPS</div>
             <input id="searchBox" type="text" placeholder="Search…">
         </div>
 
+        <!-- GRID -->
         <div id="grid"></div>
 
+        <!-- RECENT -->
         <div id="recentPanel">
             <div id="recentHeaderRow">
                 <div id="recentTitle">RECENTLY PLAYED</div>
@@ -828,6 +445,7 @@
 
         <!-- WINDOW LAYER -->
         <div id="windowLayer"></div>
+
     </div>
 </div>
 
@@ -846,23 +464,27 @@
     </div>
 </div>
 
-<!-- SETTINGS -->
+<!-- SETTINGS PANEL -->
 <div id="settingsOverlay">
     <div id="settingsBox">
         <div id="settingsTitleBar">SETTINGS</div>
         <div id="settingsContent">
+
             <div class="settingsRow">
                 <div class="settingsLabel">Footer Status Bar</div>
                 <button class="settingsToggle" id="toggleFooterBtn">ON</button>
             </div>
+
             <div class="settingsRow">
                 <div class="settingsLabel">Hover Lift on Cards</div>
                 <button class="settingsToggle" id="toggleHoverBtn">ON</button>
             </div>
+
             <div class="settingsRow">
                 <div class="settingsLabel">Dock Visible</div>
                 <button class="settingsToggle" id="toggleDockBtn">ON</button>
             </div>
+
             <div class="settingsRow">
                 <div class="settingsLabel">Clear Recently Played</div>
                 <button class="settingsToggle" id="clearRecentSettingsBtn">CLEAR</button>
@@ -877,6 +499,7 @@
                 APEX ZERO — Monochrome Glass OS.  
                 Games fullscreen, tools in windows, admin via SHIFT + Z E R O.
             </div>
+
         </div>
     </div>
 </div>
@@ -888,14 +511,58 @@
             <span>ADMIN DASHBOARD</span>
             <span style="font-size:10px;opacity:0.7;">SHIFT + Z E R O TO CLOSE</span>
         </div>
+
         <div id="adminTabs">
             <div class="adminTab active" data-tab="system">SYSTEM</div>
             <div class="adminTab" data-tab="ui">UI</div>
             <div class="adminTab" data-tab="games">GAMES</div>
             <div class="adminTab" data-tab="dev">DEV</div>
         </div>
+
         <div id="adminContent"></div>
     </div>
+</div>
+
+<!-- NOTIFICATION CENTER -->
+<div id="notifCenter">
+    <div class="qsTitle">NOTIFICATIONS</div>
+    <div id="notifList"></div>
+</div>
+
+<!-- QUICK SETTINGS PANEL -->
+<div id="quickSettings">
+    <div class="qsTitle">QUICK SETTINGS</div>
+
+    <div class="qsRow">
+        <div class="qsLabel">Brightness</div>
+    </div>
+    <input type="range" min="0.5" max="1.5" step="0.01" value="1" class="qsSlider" id="qsBrightness">
+
+    <div class="qsRow">
+        <div class="qsLabel">Theme Intensity</div>
+    </div>
+    <input type="range" min="0.5" max="1.5" step="0.01" value="1" class="qsSlider" id="qsTheme">
+
+    <div class="qsRow">
+        <div class="qsLabel">Wallpaper</div>
+        <button class="qsToggle" id="qsWallpaperBtn">ON</button>
+    </div>
+
+    <div class="qsRow">
+        <div class="qsLabel">Dock</div>
+        <button class="qsToggle" id="qsDockBtn">ON</button>
+    </div>
+
+    <div class="qsRow">
+        <div class="qsLabel">Footer</div>
+        <button class="qsToggle" id="qsFooterBtn">ON</button>
+    </div>
+
+    <div class="qsRow">
+        <div class="qsLabel">Hover</div>
+        <button class="qsToggle" id="qsHoverBtn">ON</button>
+    </div>
+
 </div>
 
 <!-- DOCK -->
@@ -922,805 +589,614 @@
 </div>
 
 <script>
-    // ---------- DATA ----------
-    let games = [
-        // GAMES
-        { id: "2048cupcakes", name: "2048 Cupcakes", url: "2048cupcakes.html", category: "games", type: "game", desc: "Classic 2048 with cupcakes." },
-        { id: "agariolite", name: "Agario Lite", url: "agariolite.html", category: "games", type: "game", desc: "Lightweight agar-style multiplayer." },
-        { id: "cookieclicker", name: "Cookie Clicker", url: "cookieclicker (1).htm", category: "games", type: "game", desc: "Endless cookie clicking madness." },
-        { id: "mc1122", name: "Minecraft 1.12.2", url: "Eaglercraft_1.12.2_WASM_Offline_Download (2).html", category: "games", type: "game", desc: "Sandbox survival and creativity." },
-        { id: "paperio2", name: "Paper.io 2", url: "paperio2.htm", category: "games", type: "game", desc: "Capture territory with smooth lines." },
-        { id: "rooftopsnipers2", name: "Rooftop Snipers 2", url: "rooftopsnipers2.html", category: "games", type: "game", desc: "Chaotic rooftop duels." },
 
-        // APPS (WINDOWED)
-        { id: "notes", name: "Zero Notes", url: "", category: "apps", type: "app", appType: "notes", desc: "Local glass notes." },
-        { id: "calculator", name: "Zero Calc", url: "", category: "apps", type: "app", appType: "calc", desc: "Clean calculator." },
-        { id: "timer", name: "Zero Timer", url: "", category: "tools", type: "app", appType: "timer", desc: "Focus timer & countdown." },
-        { id: "terminal", name: "Zero Terminal", url: "", category: "tools", type: "app", appType: "terminal", desc: "Fake command line with real commands." },
-        { id: "canvas", name: "Zero Canvas", url: "", category: "apps", type: "app", appType: "canvas", desc: "Monochrome drawing canvas." }
-    ];
+// ===============================
+// CORE OS ENGINE — CHUNK 3A
+// ===============================
 
-    // ---------- STATE ----------
-    let currentCategory = "all";
-    let searchQuery = "";
-    let pendingGame = null;
-    let hoverEnabled = true;
-    let footerEnabled = true;
-    let dockEnabled = true;
-    let launchCount = 0;
-    let startTime = Date.now();
-    let adminOpen = false;
-    let zCounter = 10;
-    let windows = {}; // id -> window element
+// GLOBAL STATE
+let zIndexCounter = 50;
+let openWindows = [];
+let runningApps = new Set();
 
-    // admin shortcut sequence: SHIFT + Z E R O
-    let adminSeq = [];
-    let shiftHeld = false;
+// CREATE WINDOW
+function createWindow(appId, title, contentHTML) {
+    const win = document.createElement("div");
+    win.classList.add("window");
+    win.style.left = (120 + Math.random() * 80) + "px";
+    win.style.top = (120 + Math.random() * 80) + "px";
+    win.dataset.app = appId;
 
-    // ---------- ELEMENTS ----------
-    const grid = document.getElementById("grid");
-    const searchBox = document.getElementById("searchBox");
-    const sideLinks = document.querySelectorAll(".sideLink[data-category]");
-    const overlay = document.getElementById("overlay");
-    const overlayGameName = document.getElementById("overlayGameName");
-    const overlayGameDesc = document.getElementById("overlayGameDesc");
-    const launchBtn = document.getElementById("launchBtn");
-    const cancelBtn = document.getElementById("cancelBtn");
-    const recentList = document.getElementById("recentList");
-    const clearRecentBtn = document.getElementById("clearRecentBtn");
-    const footer = document.getElementById("footer");
-    const footerClock = document.getElementById("footerClock");
-    const footerUptime = document.getElementById("footerUptime");
-    const footerLaunches = document.getElementById("footerLaunches");
-    const settingsOverlay = document.getElementById("settingsOverlay");
-    const settingsBtn = document.getElementById("settingsBtn");
-    const closeSettingsBtn = document.getElementById("closeSettingsBtn");
-    const toggleFooterBtn = document.getElementById("toggleFooterBtn");
-    const toggleHoverBtn = document.getElementById("toggleHoverBtn");
-    const toggleDockBtn = document.getElementById("toggleDockBtn");
-    const clearRecentSettingsBtn = document.getElementById("clearRecentSettingsBtn");
-    const resetLayoutBtn = document.getElementById("resetLayoutBtn");
-    const dock = document.getElementById("dock");
-    const dockHome = document.getElementById("dockHome");
-    const dockGames = document.getElementById("dockGames");
-    const dockRecent = document.getElementById("dockRecent");
-    const dockNotes = document.getElementById("dockNotes");
-    const dockCalc = document.getElementById("dockCalc");
-    const dockTimer = document.getElementById("dockTimer");
-    const dockTerminal = document.getElementById("dockTerminal");
-    const dockCanvas = document.getElementById("dockCanvas");
-    const dockSettings = document.getElementById("dockSettings");
-    const sideScrollGames = document.getElementById("sideScrollGames");
-    const sideScrollRecent = document.getElementById("sideScrollRecent");
-    const mainArea = document.getElementById("mainArea");
-    const windowLayer = document.getElementById("windowLayer");
+    win.innerHTML = `
+        <div class="windowTitleBar">
+            <span>${title}</span>
+            <button class="windowCloseBtn">✕</button>
+        </div>
+        <div class="windowContent">${contentHTML}</div>
+    `;
 
-    const adminOverlay = document.getElementById("adminOverlay");
-    const adminTabs = document.querySelectorAll(".adminTab");
-    const adminContent = document.getElementById("adminContent");
+    document.getElementById("windowLayer").appendChild(win);
 
-    // ---------- GRID ----------
-    function renderGrid() {
-        grid.innerHTML = "";
-        const filtered = games.filter(g => {
-            if (currentCategory !== "all" && g.category !== currentCategory) return false;
-            if (searchQuery && !g.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-            return true;
-        });
+    focusWindow(win);
+    enableDragging(win);
 
-        filtered.forEach(g => {
-            const card = document.createElement("div");
-            card.className = "icon";
-            card.dataset.id = g.id;
-
-            const title = document.createElement("div");
-            title.className = "iconTitle";
-            title.textContent = g.name;
-
-            const desc = document.createElement("div");
-            desc.className = "iconDesc";
-            desc.textContent = g.desc;
-
-            card.appendChild(title);
-            card.appendChild(desc);
-
-            card.addEventListener("click", () => {
-                if (g.type === "game") openLaunchOverlay(g);
-                else openAppWindow(g);
-            });
-
-            grid.appendChild(card);
-        });
-
-        applyHoverState();
-    }
-
-    // ---------- GAME OVERLAY ----------
-    function openLaunchOverlay(game) {
-        pendingGame = game;
-        overlayGameName.textContent = game.name;
-        overlayGameDesc.textContent = game.desc;
-        overlay.style.display = "flex";
-    }
-    function closeLaunchOverlay() {
-        overlay.style.display = "none";
-        pendingGame = null;
-    }
-    launchBtn.onclick = () => {
-        if (!pendingGame) return;
-        if (pendingGame.url && pendingGame.url !== "#") {
-            window.open(pendingGame.url, "_blank");
-        }
-        addRecent(pendingGame);
-        launchCount++;
-        updateFooterLaunches();
-        closeLaunchOverlay();
-    };
-    cancelBtn.onclick = closeLaunchOverlay;
-
-    // ---------- RECENT ----------
-    function getRecent() {
-        try {
-            const raw = localStorage.getItem("apex_recent");
-            if (!raw) return [];
-            return JSON.parse(raw);
-        } catch { return []; }
-    }
-    function saveRecent(list) {
-        localStorage.setItem("apex_recent", JSON.stringify(list));
-    }
-    function addRecent(game) {
-        let list = getRecent();
-        list = list.filter(id => id !== game.id);
-        list.unshift(game.id);
-        if (list.length > 5) list = list.slice(0, 5);
-        saveRecent(list);
-        renderRecent();
-    }
-    function renderRecent() {
-        recentList.innerHTML = "";
-        const list = getRecent();
-        if (list.length === 0) {
-            recentList.textContent = "No items yet.";
-            return;
-        }
-        list.forEach(id => {
-            const g = games.find(x => x.id === id);
-            if (!g) return;
-            const item = document.createElement("div");
-            item.className = "recentItem";
-            item.textContent = g.name;
-            item.addEventListener("click", () => {
-                if (g.type === "game") openLaunchOverlay(g);
-                else openAppWindow(g);
-            });
-            recentList.appendChild(item);
-        });
-    }
-    clearRecentBtn.onclick = () => { saveRecent([]); renderRecent(); };
-    clearRecentSettingsBtn.onclick = () => { saveRecent([]); renderRecent(); };
-
-    // ---------- CATEGORY + SEARCH ----------
-    sideLinks.forEach(link => {
-        link.addEventListener("click", () => {
-            sideLinks.forEach(l => l.classList.remove("active"));
-            link.classList.add("active");
-            currentCategory = link.dataset.category;
-            renderGrid();
-        });
-    });
-    searchBox.addEventListener("input", () => {
-        searchQuery = searchBox.value.trim();
-        renderGrid();
+    win.querySelector(".windowCloseBtn").addEventListener("click", () => {
+        closeWindow(win);
     });
 
-    // ---------- SETTINGS ----------
-    function openSettings() { settingsOverlay.style.display = "flex"; }
-    function closeSettings() { settingsOverlay.style.display = "none"; }
-    settingsBtn.onclick = openSettings;
-    closeSettingsBtn.onclick = closeSettings;
+    openWindows.push(win);
+    runningApps.add(appId);
+    updateDockRunningState();
 
-    toggleFooterBtn.onclick = () => {
-        footerEnabled = !footerEnabled;
-        updateFooterVisibility();
-        updateSettingsToggles();
-        localStorage.setItem("apex_footer", footerEnabled ? "1" : "0");
-    };
-    toggleHoverBtn.onclick = () => {
-        hoverEnabled = !hoverEnabled;
-        applyHoverState();
-        updateSettingsToggles();
-        localStorage.setItem("apex_hover", hoverEnabled ? "1" : "0");
-    };
-    toggleDockBtn.onclick = () => {
-        dockEnabled = !dockEnabled;
-        updateDockVisibility();
-        updateSettingsToggles();
-        localStorage.setItem("apex_dock", dockEnabled ? "1" : "0");
-    };
-    resetLayoutBtn.onclick = () => {
-        footerEnabled = true;
-        hoverEnabled = true;
-        dockEnabled = true;
-        localStorage.removeItem("apex_footer");
-        localStorage.removeItem("apex_hover");
-        localStorage.removeItem("apex_dock");
-        updateFooterVisibility();
-        updateDockVisibility();
-        applyHoverState();
-        updateSettingsToggles();
-    };
-    function updateSettingsToggles() {
-        toggleFooterBtn.textContent = footerEnabled ? "ON" : "OFF";
-        toggleHoverBtn.textContent = hoverEnabled ? "ON" : "OFF";
-        toggleDockBtn.textContent = dockEnabled ? "ON" : "OFF";
-        toggleFooterBtn.classList.toggle("active", footerEnabled);
-        toggleHoverBtn.classList.toggle("active", hoverEnabled);
-        toggleDockBtn.classList.toggle("active", dockEnabled);
-    }
-    function updateFooterVisibility() {
-        footer.classList.toggle("hidden", !footerEnabled);
-    }
-    function updateDockVisibility() {
-        dock.classList.toggle("hidden", !dockEnabled);
-    }
-    function applyHoverState() {
-        document.querySelectorAll(".icon").forEach(card => {
-            card.style.transition = hoverEnabled ? "0.25s" : "0s";
-            card.style.transform = "none";
-        });
-    }
+    return win;
+}
 
-    // ---------- DOCK + NAV ----------
-    function scrollToGames() { mainArea.scrollTo({ top: 0, behavior: "smooth" }); }
-    function scrollToRecent() {
-        const offset = document.getElementById("recentPanel").offsetTop - 40;
-        mainArea.scrollTo({ top: offset, behavior: "smooth" });
-    }
-    dockHome.onclick = scrollToGames;
-    dockGames.onclick = scrollToGames;
-    dockRecent.onclick = scrollToRecent;
-    dockSettings.onclick = openSettings;
-    sideScrollGames.onclick = scrollToGames;
-    sideScrollRecent.onclick = scrollToRecent;
+// FOCUS WINDOW
+function focusWindow(win) {
+    zIndexCounter++;
+    win.style.zIndex = zIndexCounter;
+}
 
-    dockNotes.onclick = () => {
-        const app = games.find(g => g.id === "notes");
-        if (app) openAppWindow(app);
-    };
-    dockCalc.onclick = () => {
-        const app = games.find(g => g.id === "calculator");
-        if (app) openAppWindow(app);
-    };
-    dockTimer.onclick = () => {
-        const app = games.find(g => g.id === "timer");
-        if (app) openAppWindow(app);
-    };
-    dockTerminal.onclick = () => {
-        const app = games.find(g => g.id === "terminal");
-        if (app) openAppWindow(app);
-    };
-    dockCanvas.onclick = () => {
-        const app = games.find(g => g.id === "canvas");
-        if (app) openAppWindow(app);
-    };
+// CLOSE WINDOW
+function closeWindow(win) {
+    const appId = win.dataset.app;
+    win.remove();
 
-    function updateDockRunning() {
-        dockNotes.classList.toggle("running", !!windows["notes"]);
-        dockCalc.classList.toggle("running", !!windows["calculator"]);
-        dockTimer.classList.toggle("running", !!windows["timer"]);
-        dockTerminal.classList.toggle("running", !!windows["terminal"]);
-        dockCanvas.classList.toggle("running", !!windows["canvas"]);
-    }
+    openWindows = openWindows.filter(w => w !== win);
 
-    // ---------- FOOTER CLOCK + UPTIME ----------
-    function updateClock() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, "0");
-        const m = String(now.getMinutes()).padStart(2, "0");
-        footerClock.textContent = `${h}:${m}`;
-    }
-    function updateUptime() {
-        const diff = Date.now() - startTime;
-        const totalSeconds = Math.floor(diff / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        footerUptime.textContent = `UPTIME ${minutes}:${String(seconds).padStart(2, "0")}`;
-    }
-    function updateFooterLaunches() {
-        footerLaunches.textContent = `LAUNCHES ${launchCount}`;
-    }
-    setInterval(() => { updateClock(); updateUptime(); }, 1000);
+    const stillOpen = openWindows.some(w => w.dataset.app === appId);
+    if (!stillOpen) runningApps.delete(appId);
 
-    // ---------- SETTINGS LOAD ----------
-    function loadSettings() {
-        const f = localStorage.getItem("apex_footer");
-        const h = localStorage.getItem("apex_hover");
-        const d = localStorage.getItem("apex_dock");
-        if (f !== null) footerEnabled = f === "1";
-        if (h !== null) hoverEnabled = h === "1";
-        if (d !== null) dockEnabled = d === "1";
-        updateFooterVisibility();
-        updateDockVisibility();
-        updateSettingsToggles();
-    }
+    updateDockRunningState();
+}
 
-    // ---------- WINDOW MANAGER ----------
-    function openAppWindow(app) {
-        if (windows[app.id]) {
-            focusWindow(windows[app.id]);
-            return;
+// UPDATE DOCK RUNNING STATE
+function updateDockRunningState() {
+    document.querySelectorAll(".dockItem").forEach(item => {
+        const appId = item.id.replace("dock", "").toLowerCase();
+        if (runningApps.has(appId)) {
+            item.classList.add("running");
+        } else {
+            item.classList.remove("running");
         }
-        const win = document.createElement("div");
-        win.className = "window";
-        win.style.left = "220px";
-        win.style.top = "80px";
-        win.style.zIndex = ++zCounter;
+    });
+}
 
-        const titleBar = document.createElement("div");
-        titleBar.className = "windowTitleBar";
-        const title = document.createElement("div");
-        title.className = "windowTitle";
-        title.textContent = app.name;
-        const controls = document.createElement("div");
-        controls.className = "windowControls";
-        const closeBtn = document.createElement("div");
-        closeBtn.className = "windowBtn";
-        controls.appendChild(closeBtn);
-        titleBar.appendChild(title);
-        titleBar.appendChild(controls);
+// DRAGGING ENGINE
+function enableDragging(win) {
+    const bar = win.querySelector(".windowTitleBar");
+    let offsetX = 0;
+    let offsetY = 0;
+    let dragging = false;
 
-        const content = document.createElement("div");
-        content.className = "windowContent";
-
-        win.appendChild(titleBar);
-        win.appendChild(content);
-        windowLayer.appendChild(win);
-        windows[app.id] = win;
-        updateDockRunning();
+    bar.addEventListener("mousedown", e => {
+        dragging = true;
         focusWindow(win);
+        offsetX = e.clientX - win.offsetLeft;
+        offsetY = e.clientY - win.offsetTop;
+    });
 
-        makeWindowDraggable(win, titleBar);
+    document.addEventListener("mousemove", e => {
+        if (!dragging) return;
+        win.style.left = (e.clientX - offsetX) + "px";
+        win.style.top = (e.clientY - offsetY) + "px";
+    });
 
-        if (app.appType === "notes") initNotesApp(content);
-        if (app.appType === "calc") initCalcApp(content);
-        if (app.appType === "timer") initTimerApp(content);
-        if (app.appType === "terminal") initTerminalApp(content);
-        if (app.appType === "canvas") initCanvasApp(content);
+    document.addEventListener("mouseup", () => {
+        dragging = false;
+    });
+}
 
-        closeBtn.addEventListener("click", () => {
-            delete windows[app.id];
-            win.remove();
-            updateDockRunning();
-        });
-    }
+// GENERIC APP LAUNCH HANDLER
+function launchApp(appId, title, contentHTML) {
+    createWindow(appId, title, contentHTML);
+}
 
-    function focusWindow(win) {
-        zCounter++;
-        win.style.zIndex = zCounter;
-    }
+</script>
+// ===============================
+// APPS ENGINE — CHUNK 3B
+// ===============================
 
-    function makeWindowDraggable(win, handle) {
-        let offsetX = 0, offsetY = 0, dragging = false;
-        handle.addEventListener("mousedown", e => {
-            dragging = true;
-            focusWindow(win);
-            offsetX = e.clientX - win.getBoundingClientRect().left;
-            offsetY = e.clientY - win.getBoundingClientRect().top;
-            document.addEventListener("mousemove", onMove);
-            document.addEventListener("mouseup", onUp);
-        });
-        function onMove(e) {
-            if (!dragging) return;
-            const shellRect = mainArea.getBoundingClientRect();
-            let x = e.clientX - offsetX;
-            let y = e.clientY - offsetY;
-            x = Math.max(shellRect.left + 10, Math.min(shellRect.right - 200, x));
-            y = Math.max(shellRect.top + 10, Math.min(shellRect.bottom - 80, y));
-            win.style.left = x + "px";
-            win.style.top = y + "px";
-        }
-        function onUp() {
-            dragging = false;
-            document.removeEventListener("mousemove", onMove);
-            document.removeEventListener("mouseup", onUp);
-        }
-    }
+// NOTES APP
+function openNotes() {
+    launchApp("notes", "Notes", `
+        <textarea id="notesArea" style="
+            width:100%; 
+            height:100%; 
+            background:rgba(255,255,255,0.05);
+            color:white;
+            border:none;
+            padding:10px;
+            resize:none;
+            outline:none;
+        "></textarea>
+    `);
+}
 
-    // ---------- APP IMPLEMENTATIONS ----------
-    function initNotesApp(container) {
-        const saved = localStorage.getItem("apex_notes") || "";
-        container.innerHTML = `
-            <div>Notes are stored locally in this browser.</div>
-            <textarea class="notesArea" id="notesArea">${saved}</textarea>
-            <div class="notesInfo" id="notesInfo">Saved.</div>
-        `;
-        const area = container.querySelector("#notesArea");
-        const info = container.querySelector("#notesInfo");
-        let saveTimeout;
-        area.addEventListener("input", () => {
-            clearTimeout(saveTimeout);
-            info.textContent = "Saving…";
-            saveTimeout = setTimeout(() => {
-                localStorage.setItem("apex_notes", area.value);
-                info.textContent = "Saved.";
-            }, 400);
-        });
-    }
+// CALCULATOR APP
+function openCalc() {
+    launchApp("calc", "Calculator", `
+        <div id="calcDisplay" style="
+            width:100%;
+            height:40px;
+            background:rgba(255,255,255,0.1);
+            margin-bottom:10px;
+            padding:8px;
+            font-size:18px;
+            text-align:right;
+        ">0</div>
 
-    function initCalcApp(container) {
-        container.innerHTML = `
-            <input class="calcDisplay" id="calcDisplay" readonly value="0">
-            <div class="calcRow">
-                <div class="calcBtn">7</div><div class="calcBtn">8</div><div class="calcBtn">9</div><div class="calcBtn">/</div>
-            </div>
-            <div class="calcRow">
-                <div class="calcBtn">4</div><div class="calcBtn">5</div><div class="calcBtn">6</div><div class="calcBtn">*</div>
-            </div>
-            <div class="calcRow">
-                <div class="calcBtn">1</div><div class="calcBtn">2</div><div class="calcBtn">3</div><div class="calcBtn">-</div>
-            </div>
-            <div class="calcRow">
-                <div class="calcBtn">0</div><div class="calcBtn">.</div><div class="calcBtn">C</div><div class="calcBtn">+</div>
-            </div>
-            <div class="calcRow">
-                <div class="calcBtn" style="grid-column: span 4;">=</div>
-            </div>
-        `;
-        const display = container.querySelector("#calcDisplay");
-        let expr = "";
-        container.querySelectorAll(".calcBtn").forEach(btn => {
+        <div id="calcButtons" style="
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:6px;
+        ">
+            ${["7","8","9","/",
+               "4","5","6","*",
+               "1","2","3","-",
+               "0",".","=","+"].map(b => `
+                <button class="calcBtn" data-val="${b}" style="
+                    padding:12px;
+                    background:rgba(255,255,255,0.08);
+                    border:1px solid rgba(255,255,255,0.2);
+                    color:white;
+                    font-size:16px;
+                ">${b}</button>
+            `).join("")}
+        </div>
+    `);
+
+    setTimeout(() => {
+        const display = document.getElementById("calcDisplay");
+        document.querySelectorAll(".calcBtn").forEach(btn => {
             btn.addEventListener("click", () => {
-                const v = btn.textContent;
-                if (v === "C") {
-                    expr = "";
-                    display.value = "0";
-                } else if (v === "=") {
-                    try {
-                        const res = Function("return " + expr)();
-                        display.value = res;
-                        expr = String(res);
-                    } catch {
-                        display.value = "ERR";
-                        expr = "";
-                    }
+                const val = btn.dataset.val;
+                if (val === "=") {
+                    try { display.textContent = eval(display.textContent); }
+                    catch { display.textContent = "ERR"; }
                 } else {
-                    expr += v;
-                    display.value = expr;
+                    if (display.textContent === "0") display.textContent = val;
+                    else display.textContent += val;
                 }
             });
         });
-    }
+    }, 50);
+}
 
-    function initTimerApp(container) {
-        container.innerHTML = `
-            <div>Focus timer (minutes):</div>
-            <input type="number" id="timerMinutes" value="25" min="1" max="180" style="width:60px;margin:4px 0;">
-            <div class="timerDisplay" id="timerDisplay">25:00</div>
-            <div class="timerControls">
-                <button class="timerBtn" id="timerStart">Start</button>
-                <button class="timerBtn" id="timerPause">Pause</button>
-                <button class="timerBtn" id="timerReset">Reset</button>
-            </div>
-        `;
-        const minutesInput = container.querySelector("#timerMinutes");
-        const display = container.querySelector("#timerDisplay");
-        const startBtn = container.querySelector("#timerStart");
-        const pauseBtn = container.querySelector("#timerPause");
-        const resetBtn = container.querySelector("#timerReset");
+// TIMER APP
+function openTimer() {
+    launchApp("timer", "Timer", `
+        <div style="font-size:32px; text-align:center; margin-top:20px;" id="timerDisplay">00:00</div>
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+            <button id="timerStart" class="glassBtn">Start</button>
+            <button id="timerStop" class="glassBtn">Stop</button>
+            <button id="timerReset" class="glassBtn">Reset</button>
+        </div>
+    `);
 
-        let remaining = parseInt(minutesInput.value, 10) * 60;
-        let timerId = null;
+    setTimeout(() => {
+        let sec = 0;
+        let running = false;
+        let interval;
 
-        function updateDisplay() {
-            const m = Math.floor(remaining / 60);
-            const s = remaining % 60;
-            display.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+        const display = document.getElementById("timerDisplay");
+
+        function update() {
+            const m = String(Math.floor(sec / 60)).padStart(2, "0");
+            const s = String(sec % 60).padStart(2, "0");
+            display.textContent = `${m}:${s}`;
         }
-        function startTimer() {
-            if (timerId) return;
-            timerId = setInterval(() => {
-                remaining--;
-                if (remaining <= 0) {
-                    remaining = 0;
-                    clearInterval(timerId);
-                    timerId = null;
-                }
-                updateDisplay();
-            }, 1000);
-        }
-        function pauseTimer() {
-            if (timerId) {
-                clearInterval(timerId);
-                timerId = null;
+
+        document.getElementById("timerStart").onclick = () => {
+            if (!running) {
+                running = true;
+                interval = setInterval(() => { sec++; update(); }, 1000);
             }
-        }
-        function resetTimer() {
-            pauseTimer();
-            remaining = parseInt(minutesInput.value, 10) * 60;
-            updateDisplay();
-        }
+        };
 
-        minutesInput.addEventListener("change", () => {
-            if (!timerId) {
-                remaining = parseInt(minutesInput.value, 10) * 60;
-                updateDisplay();
-            }
-        });
-        startBtn.addEventListener("click", startTimer);
-        pauseBtn.addEventListener("click", pauseTimer);
-        resetBtn.addEventListener("click", resetTimer);
+        document.getElementById("timerStop").onclick = () => {
+            running = false;
+            clearInterval(interval);
+        };
 
-        updateDisplay();
-    }
+        document.getElementById("timerReset").onclick = () => {
+            running = false;
+            clearInterval(interval);
+            sec = 0;
+            update();
+        };
+    }, 50);
+}
 
-    function initTerminalApp(container) {
-        container.innerHTML = `
-            <div>Zero Terminal — local only, fake shell.</div>
-            <div class="terminalOutput" id="termOut"></div>
-            <div class="terminalInputRow">
-                <span class="terminalPrompt">zero&gt;</span>
-                <input class="terminalInput" id="termIn" autocomplete="off">
-            </div>
-        `;
-        const out = container.querySelector("#termOut");
-        const input = container.querySelector("#termIn");
+// TERMINAL APP
+function openTerminal() {
+    launchApp("terminal", "Terminal", `
+        <div id="termOutput" style="
+            height:200px;
+            overflow:auto;
+            background:rgba(255,255,255,0.05);
+            padding:8px;
+            font-family:monospace;
+            font-size:13px;
+        "></div>
 
-        function print(line) {
-            const div = document.createElement("div");
-            div.textContent = line;
-            out.appendChild(div);
+        <input id="termInput" placeholder="Type a command..." style="
+            width:100%;
+            margin-top:8px;
+            padding:8px;
+            background:rgba(255,255,255,0.08);
+            border:none;
+            color:white;
+            outline:none;
+        ">
+    `);
+
+    setTimeout(() => {
+        const out = document.getElementById("termOutput");
+        const input = document.getElementById("termInput");
+
+        function print(text) {
+            out.innerHTML += text + "<br>";
             out.scrollTop = out.scrollHeight;
         }
 
-        print("APEX ZERO TERMINAL");
-        print("Type 'help' for commands.");
+        print("APEX ZERO TERMINAL READY");
 
         input.addEventListener("keydown", e => {
             if (e.key === "Enter") {
                 const cmd = input.value.trim();
+                print("> " + cmd);
+
+                if (cmd === "help") print("Commands: help, clear, time, echo [text]");
+                else if (cmd === "clear") out.innerHTML = "";
+                else if (cmd === "time") print(new Date().toLocaleTimeString());
+                else if (cmd.startsWith("echo ")) print(cmd.slice(5));
+                else print("Unknown command");
+
                 input.value = "";
-                if (!cmd) return;
-                print("zero> " + cmd);
-                handleCommand(cmd);
             }
         });
+    }, 50);
+}
 
-        function handleCommand(cmd) {
-            if (cmd === "help") {
-                print("Commands: help, clear, time, uptime, about, echo <text>");
-            } else if (cmd === "clear") {
-                out.innerHTML = "";
-            } else if (cmd === "time") {
-                print("Time: " + new Date().toLocaleTimeString());
-            } else if (cmd === "uptime") {
-                const diff = Date.now() - startTime;
-                const totalSeconds = Math.floor(diff / 1000);
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = totalSeconds % 60;
-                print("Uptime: " + minutes + "m " + seconds + "s");
-            } else if (cmd === "about") {
-                print("APEX ZERO — monochrome glass OS.");
-            } else if (cmd.startsWith("echo ")) {
-                print(cmd.slice(5));
-            } else {
-                print("Unknown command. Type 'help'.");
-            }
-        }
-    }
+// CANVAS LAUNCHER
+function openCanvas() {
+    window.open("https://canvas.instructure.com", "_blank");
+}
 
-    function initCanvasApp(container) {
-        container.innerHTML = `
-            <div>Zero Canvas — simple monochrome drawing.</div>
-            <div class="canvasWrapper">
-                <div class="canvasToolbar">
-                    <button class="canvasBtn" id="canvasClear">Clear</button>
-                    <button class="canvasBtn" id="canvasThin">Thin</button>
-                    <button class="canvasBtn" id="canvasThick">Thick</button>
-                </div>
-                <canvas id="zeroCanvas" width="320" height="200"></canvas>
-            </div>
-        `;
-        const canvas = container.querySelector("#zeroCanvas");
-        const ctx = canvas.getContext("2d");
-        const clearBtn = container.querySelector("#canvasClear");
-        const thinBtn = container.querySelector("#canvasThin");
-        const thickBtn = container.querySelector("#canvasThick");
+// ===============================
+// APPS ENGINE — CHUNK 3B
+// ===============================
 
-        let drawing = false;
-        let lineWidth = 2;
+// NOTES APP
+function openNotes() {
+    launchApp("notes", "Notes", `
+        <textarea id="notesArea" style="
+            width:100%; 
+            height:100%; 
+            background:rgba(255,255,255,0.05);
+            color:white;
+            border:none;
+            padding:10px;
+            resize:none;
+            outline:none;
+        "></textarea>
+    `);
+}
 
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle = "#fff";
-        ctx.lineCap = "round";
+// CALCULATOR APP
+function openCalc() {
+    launchApp("calc", "Calculator", `
+        <div id="calcDisplay" style="
+            width:100%;
+            height:40px;
+            background:rgba(255,255,255,0.1);
+            margin-bottom:10px;
+            padding:8px;
+            font-size:18px;
+            text-align:right;
+        ">0</div>
 
-        canvas.addEventListener("mousedown", e => {
-            drawing = true;
-            ctx.beginPath();
-            const rect = canvas.getBoundingClientRect();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-        });
-        canvas.addEventListener("mousemove", e => {
-            if (!drawing) return;
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineWidth = lineWidth;
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.stroke();
-        });
-        document.addEventListener("mouseup", () => drawing = false);
+        <div id="calcButtons" style="
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:6px;
+        ">
+            ${["7","8","9","/",
+               "4","5","6","*",
+               "1","2","3","-",
+               "0",".","=","+"].map(b => `
+                <button class="calcBtn" data-val="${b}" style="
+                    padding:12px;
+                    background:rgba(255,255,255,0.08);
+                    border:1px solid rgba(255,255,255,0.2);
+                    color:white;
+                    font-size:16px;
+                ">${b}</button>
+            `).join("")}
+        </div>
+    `);
 
-        clearBtn.addEventListener("click", () => {
-            ctx.fillStyle = "#000";
-            ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.strokeStyle = "#fff";
-        });
-        thinBtn.addEventListener("click", () => lineWidth = 2);
-        thickBtn.addEventListener("click", () => lineWidth = 5);
-    }
-
-    // ---------- ADMIN DASHBOARD ----------
-    function openAdmin() {
-        adminOpen = true;
-        adminOverlay.style.display = "flex";
-        renderAdminTab("system");
-    }
-    function closeAdmin() {
-        adminOpen = false;
-        adminOverlay.style.display = "none";
-    }
-    function renderAdminTab(tab) {
-        adminTabs.forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
-        if (tab === "system") renderAdminSystem();
-        if (tab === "ui") renderAdminUI();
-        if (tab === "games") renderAdminGames();
-        if (tab === "dev") renderAdminDev();
-    }
-    function renderAdminSystem() {
-        const recentCount = getRecent().length;
-        adminContent.innerHTML = `
-            <div class="adminSectionTitle">SYSTEM STATS</div>
-            <div class="adminRow"><div class="adminLabel">Uptime</div><div class="adminValue" id="adminUptime">...</div></div>
-            <div class="adminRow"><div class="adminLabel">Launches</div><div class="adminValue">${launchCount}</div></div>
-            <div class="adminRow"><div class="adminLabel">Games/Apps</div><div class="adminValue">${games.length}</div></div>
-            <div class="adminRow"><div class="adminLabel">Recently Used</div><div class="adminValue">${recentCount}</div></div>
-            <div class="adminRow"><div class="adminLabel">Profile</div><div class="adminValue">BRYCE</div></div>
-            <div class="adminBtnRow">
-                <button class="adminBtn" id="adminClearRecent">Clear Recent</button>
-                <button class="adminBtn" id="adminResetUI">Reset UI</button>
-            </div>
-        `;
-        document.getElementById("adminClearRecent").onclick = () => {
-            saveRecent([]);
-            renderRecent();
-            renderAdminSystem();
-        };
-        document.getElementById("adminResetUI").onclick = () => {
-            resetLayoutBtn.click();
-            renderAdminSystem();
-        };
-        const updateAdminUptime = () => {
-            const diff = Date.now() - startTime;
-            const totalSeconds = Math.floor(diff / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            const el = document.getElementById("adminUptime");
-            if (el) el.textContent = `${minutes}:${String(seconds).padStart(2, "0")}`;
-        };
-        updateAdminUptime();
-    }
-    function renderAdminUI() {
-        adminContent.innerHTML = `
-            <div class="adminSectionTitle">UI CONTROLS</div>
-            <div class="adminRow"><div class="adminLabel">Footer Visible</div><div class="adminValue">${footerEnabled}</div></div>
-            <div class="adminRow"><div class="adminLabel">Hover Enabled</div><div class="adminValue">${hoverEnabled}</div></div>
-            <div class="adminRow"><div class="adminLabel">Dock Visible</div><div class="adminValue">${dockEnabled}</div></div>
-            <div class="adminBtnRow">
-                <button class="adminBtn" id="adminToggleFooter">Toggle Footer</button>
-                <button class="adminBtn" id="adminToggleHover">Toggle Hover</button>
-                <button class="adminBtn" id="adminToggleDock">Toggle Dock</button>
-            </div>
-        `;
-        document.getElementById("adminToggleFooter").onclick = () => toggleFooterBtn.click();
-        document.getElementById("adminToggleHover").onclick = () => toggleHoverBtn.click();
-        document.getElementById("adminToggleDock").onclick = () => toggleDockBtn.click();
-    }
-    function renderAdminGames() {
-        const listHtml = games.map(g => `<li>${g.name} <span style="opacity:0.6;">[${g.category}/${g.type}]</span></li>`).join("");
-        adminContent.innerHTML = `
-            <div class="adminSectionTitle">GAMES & APPS</div>
-            <ul style="margin-top:4px; padding-left:18px; font-size:11px;">${listHtml}</ul>
-            <div class="adminSectionTitle" style="margin-top:10px;">ADD CUSTOM GAME (LOCAL ONLY)</div>
-            <input class="adminInput" id="adminGameName" placeholder="Name">
-            <input class="adminInput" id="adminGameURL" placeholder="URL (or #)">
-            <select class="adminInput" id="adminGameCategory">
-                <option value="games">games</option>
-                <option value="apps">apps</option>
-                <option value="tools">tools</option>
-            </select>
-            <button class="adminBtn" id="adminAddGame">Add Game</button>
-        `;
-        document.getElementById("adminAddGame").onclick = () => {
-            const name = document.getElementById("adminGameName").value.trim();
-            const url = document.getElementById("adminGameURL").value.trim() || "#";
-            const cat = document.getElementById("adminGameCategory").value;
-            if (!name) return;
-            const id = "custom_" + Date.now();
-            games.push({ id, name, url, category: cat, type: "game", desc: "Custom entry." });
-            renderGrid();
-            renderAdminGames();
-        };
-    }
-    function renderAdminDev() {
-        const recentRaw = JSON.stringify(getRecent());
-        adminContent.innerHTML = `
-            <div class="adminSectionTitle">DEV TOOLS</div>
-            <div class="adminRow"><div class="adminLabel">Recent IDs</div><div class="adminValue">${recentRaw}</div></div>
-            <div class="adminRow"><div class="adminLabel">Current Category</div><div class="adminValue">${currentCategory}</div></div>
-            <div class="adminRow"><div class="adminLabel">Search Query</div><div class="adminValue">${searchQuery || "(none)"}</div></div>
-            <div class="adminBtnRow">
-                <button class="adminBtn" id="adminForceReload">Force Reload</button>
-                <button class="adminBtn" id="adminClearAllStorage">Clear Local Storage</button>
-            </div>
-            <div style="margin-top:8px; font-size:10px; opacity:0.7;">
-                Admin Mode is local only. No data leaves this browser.
-            </div>
-        `;
-        document.getElementById("adminForceReload").onclick = () => location.reload();
-        document.getElementById("adminClearAllStorage").onclick = () => {
-            localStorage.clear();
-            location.reload();
-        };
-    }
-    adminTabs.forEach(tab => {
-        tab.addEventListener("click", () => renderAdminTab(tab.dataset.tab));
-    });
-
-    // ---------- KEYBOARD / ADMIN SEQUENCE ----------
-    document.addEventListener("keydown", e => {
-        if (overlay.style.display === "flex") {
-            if (e.key === "Enter") launchBtn.click();
-            if (e.key === "Escape") closeLaunchOverlay();
-        }
-        if (settingsOverlay.style.display === "flex" && e.key === "Escape") closeSettings();
-        if (adminOpen && e.key === "Escape") closeAdmin();
-
-        if (e.key === "Shift") {
-            shiftHeld = true;
-            adminSeq = [];
-        } else if (shiftHeld) {
-            const k = e.key.toLowerCase();
-            if (["z","e","r","o"].includes(k)) {
-                adminSeq.push(k);
-                if (adminSeq.join("") === "zero") {
-                    adminOpen ? closeAdmin() : openAdmin();
-                    adminSeq = [];
-                    shiftHeld = false;
+    setTimeout(() => {
+        const display = document.getElementById("calcDisplay");
+        document.querySelectorAll(".calcBtn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const val = btn.dataset.val;
+                if (val === "=") {
+                    try { display.textContent = eval(display.textContent); }
+                    catch { display.textContent = "ERR"; }
+                } else {
+                    if (display.textContent === "0") display.textContent = val;
+                    else display.textContent += val;
                 }
-            } else {
-                adminSeq = [];
+            });
+        });
+    }, 50);
+}
+
+// TIMER APP
+function openTimer() {
+    launchApp("timer", "Timer", `
+        <div style="font-size:32px; text-align:center; margin-top:20px;" id="timerDisplay">00:00</div>
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+            <button id="timerStart" class="glassBtn">Start</button>
+            <button id="timerStop" class="glassBtn">Stop</button>
+            <button id="timerReset" class="glassBtn">Reset</button>
+        </div>
+    `);
+
+    setTimeout(() => {
+        let sec = 0;
+        let running = false;
+        let interval;
+
+        const display = document.getElementById("timerDisplay");
+
+        function update() {
+            const m = String(Math.floor(sec / 60)).padStart(2, "0");
+            const s = String(sec % 60).padStart(2, "0");
+            display.textContent = `${m}:${s}`;
+        }
+
+        document.getElementById("timerStart").onclick = () => {
+            if (!running) {
+                running = true;
+                interval = setInterval(() => { sec++; update(); }, 1000);
             }
-        }
-    });
-    document.addEventListener("keyup", e => {
-        if (e.key === "Shift") {
-            shiftHeld = false;
-            adminSeq = [];
-        }
-    });
+        };
 
-    // ---------- INIT ----------
-    function init() {
-        loadSettings();
-        renderGrid();
-        renderRecent();
-        updateClock();
-        updateUptime();
-        updateFooterLaunches();
-        updateDockRunning();
+        document.getElementById("timerStop").onclick = () => {
+            running = false;
+            clearInterval(interval);
+        };
+
+        document.getElementById("timerReset").onclick = () => {
+            running = false;
+            clearInterval(interval);
+            sec = 0;
+            update();
+        };
+    }, 50);
+}
+
+// TERMINAL APP
+function openTerminal() {
+    launchApp("terminal", "Terminal", `
+        <div id="termOutput" style="
+            height:200px;
+            overflow:auto;
+            background:rgba(255,255,255,0.05);
+            padding:8px;
+            font-family:monospace;
+            font-size:13px;
+        "></div>
+
+        <input id="termInput" placeholder="Type a command..." style="
+            width:100%;
+            margin-top:8px;
+            padding:8px;
+            background:rgba(255,255,255,0.08);
+            border:none;
+            color:white;
+            outline:none;
+        ">
+    `);
+
+    setTimeout(() => {
+        const out = document.getElementById("termOutput");
+        const input = document.getElementById("termInput");
+
+        function print(text) {
+            out.innerHTML += text + "<br>";
+            out.scrollTop = out.scrollHeight;
+        }
+
+        print("APEX ZERO TERMINAL READY");
+
+        input.addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+                const cmd = input.value.trim();
+                print("> " + cmd);
+
+                if (cmd === "help") print("Commands: help, clear, time, echo [text]");
+                else if (cmd === "clear") out.innerHTML = "";
+                else if (cmd === "time") print(new Date().toLocaleTimeString());
+                else if (cmd.startsWith("echo ")) print(cmd.slice(5));
+                else print("Unknown command");
+
+                input.value = "";
+            }
+        });
+    }, 50);
+}
+
+// CANVAS LAUNCHER
+function openCanvas() {
+    window.open("https://canvas.instructure.com", "_blank");
+}
+
+// ===============================
+// SYSTEM ENGINE — CHUNK 3D
+// ===============================
+
+// ===============================
+// ADMIN MODE
+// ===============================
+
+let adminOpen = false;
+const adminOverlay = document.getElementById("adminOverlay");
+
+function toggleAdmin() {
+    adminOpen = !adminOpen;
+    adminOverlay.style.display = adminOpen ? "flex" : "none";
+}
+
+// SECRET SHORTCUT: SHIFT + Z E R O
+let adminSequence = [];
+const adminCode = ["Shift", "z", "e", "r", "o"];
+
+document.addEventListener("keydown", e => {
+    adminSequence.push(e.key);
+    if (adminSequence.length > adminCode.length) adminSequence.shift();
+
+    if (JSON.stringify(adminSequence) === JSON.stringify(adminCode)) {
+        toggleAdmin();
+        adminSequence = [];
     }
-    init();
-</script>
+});
 
-</body>
+// ===============================
+// SEARCH SYSTEM
+// ===============================
+
+const searchBox = document.getElementById("searchBox");
+
+searchBox.addEventListener("input", () => {
+    const term = searchBox.value.toLowerCase();
+    document.querySelectorAll(".gridItem").forEach(item => {
+        const name = item.dataset.name.toLowerCase();
+        item.style.display = name.includes(term) ? "flex" : "none";
+    });
+});
+
+// ===============================
+// CATEGORY FILTERS
+// ===============================
+
+document.querySelectorAll(".sideLink[data-category]").forEach(link => {
+    link.addEventListener("click", () => {
+        const cat = link.dataset.category;
+
+        document.querySelectorAll(".sideLink").forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
+
+        document.querySelectorAll(".gridItem").forEach(item => {
+            if (cat === "all" || item.dataset.category === cat) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    });
+});
+
+// ===============================
+// RECENTLY PLAYED
+// ===============================
+
+const recentList = document.getElementById("recentList");
+let recent = [];
+
+function addRecent(name) {
+    recent.unshift(name);
+    recent = [...new Set(recent)].slice(0, 8);
+    renderRecent();
+}
+
+function renderRecent() {
+    recentList.innerHTML = "";
+    recent.forEach(r => {
+        const div = document.createElement("div");
+        div.classList.add("recentItem");
+        div.textContent = r;
+        recentList.appendChild(div);
+    });
+}
+
+document.getElementById("clearRecentBtn").onclick = () => {
+    recent = [];
+    renderRecent();
+};
+
+document.getElementById("clearRecentSettingsBtn").onclick = () => {
+    recent = [];
+    renderRecent();
+};
+
+// ===============================
+// DOCK NAVIGATION
+// ===============================
+
+document.getElementById("dockHome").onclick = () => window.scrollTo(0, 0);
+document.getElementById("dockGames").onclick = () => document.getElementById("grid").scrollIntoView();
+document.getElementById("dockRecent").onclick = () => document.getElementById("recentPanel").scrollIntoView();
+
+document.getElementById("dockNotes").onclick = openNotes;
+document.getElementById("dockCalc").onclick = openCalc;
+document.getElementById("dockTimer").onclick = openTimer;
+document.getElementById("dockTerminal").onclick = openTerminal;
+document.getElementById("dockCanvas").onclick = openCanvas;
+document.getElementById("dockSettings").onclick = openSettings;
+
+// ===============================
+// CLOCK + UPTIME + LAUNCH COUNTER
+// ===============================
+
+const footerClock = document.getElementById("footerClock");
+const footerUptime = document.getElementById("footerUptime");
+const footerLaunches = document.getElementById("footerLaunches");
+
+let uptimeSec = 0;
+let launchCount = 0;
+
+setInterval(() => {
+    const now = new Date();
+    footerClock.textContent = now.toLocaleTimeString();
+
+    uptimeSec++;
+    const m = String(Math.floor(uptimeSec / 60)).padStart(2, "0");
+    const s = String(uptimeSec % 60).padStart(2, "0");
+    footerUptime.textContent = `UPTIME ${m}:${s}`;
+}, 1000);
+
+// Count launches
+function countLaunch() {
+    launchCount++;
+    footerLaunches.textContent = `LAUNCHES ${launchCount}`;
+}
+
+// ===============================
+// KEYBOARD SHORTCUTS
+// ===============================
+
+// SHIFT + Q = Quick Settings
+document.addEventListener("keydown", e => {
+    if (e.shiftKey && e.key.toLowerCase() === "q") toggleQS();
+});
+
+// SHIFT + N = Notifications
+document.addEventListener("keydown", e => {
+    if (e.shiftKey && e.key.toLowerCase() === "n") toggleNotif();
+});
+
+// SHIFT + S = Settings
+document.addEventListener("keydown", e => {
+    if (e.shiftKey && e.key.toLowerCase() === "s") openSettings();
+});
+
+// ===============================
+// END OF SCRIPT
+// ===============================
+
+</script>
 </html>
