@@ -1,391 +1,669 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<title>APEX ZERO</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Apex Zero OS</title>
+    <style>
+        :root {
+            --theme-intensity: 1;
+            --hover-lift: 6px;
+            --accent: #00f0ff;
+            --accent-soft: rgba(0, 240, 255, 0.2);
+            --glass: rgba(255, 255, 255, 0.06);
+            --glass-strong: rgba(255, 255, 255, 0.12);
+            --border-soft: rgba(255, 255, 255, 0.18);
+            --text-soft: rgba(255, 255, 255, 0.7);
+        }
 
-<style>
-    :root {
-        --glass-bg: rgba(255,255,255,0.08);
-        --glass-bg-strong: rgba(255,255,255,0.14);
-        --glass-border: rgba(255,255,255,0.25);
-        --glass-border-strong: rgba(255,255,255,0.45);
+        * {
+            box-sizing: border-box;
+        }
 
-        --panel-bg: rgba(255,255,255,0.10);
-        --panel-border: rgba(255,255,255,0.28);
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1920&q=80") center/cover fixed;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            filter: brightness(1);
+        }
 
-        --divider: rgba(255,255,255,0.18);
+        /* TOP BAR */
+        #topBar {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+            border-bottom: 1px solid var(--border-soft);
+            letter-spacing: 0.18em;
+            font-size: 11px;
+        }
 
-        --brightness: 1;
-        --theme-intensity: 1;
-        --wallpaper-opacity: 0.15;
-    }
+        #topBarRight {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
 
-    * { box-sizing: border-box; }
+        #profileName {
+            font-weight: 600;
+            color: white;
+        }
 
-    body {
-        margin: 0;
-        background: #000;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-        filter: brightness(var(--brightness));
-    }
+        #adminHint {
+            opacity: 0.7;
+        }
 
-    /* GLOBAL ANIMATIONS */
-    @keyframes panelIn {
-        from { opacity: 0; transform: translateY(14px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes panelSlide {
-        from { opacity: 0; transform: translateX(14px); }
-        to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+        .topBtn {
+            background: transparent;
+            border: 1px solid var(--border-soft);
+            color: var(--text-soft);
+            padding: 3px 8px;
+            font-size: 9px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
 
-    /* LOADING */
-    #loadingScreen {
-        position: fixed;
-        inset: 0;
-        background: #000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 999;
-        animation: fadeOut 1s ease forwards;
-        animation-delay: 1.8s;
-    }
-    #loadingTitle {
-        font-size: 26px;
-        letter-spacing: 6px;
-        margin-bottom: 20px;
-    }
-    #loadingBar {
-        width: 180px;
-        height: 4px;
-        background: rgba(255,255,255,0.15);
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    #loadingFill {
-        width: 0%;
-        height: 100%;
-        background: rgba(255,255,255,0.8);
-        animation: loadAnim 1.6s ease forwards;
-    }
-    @keyframes loadAnim { to { width: 100%; } }
-    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+        .topBtn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
 
-    /* TOP BAR */
-    #topBar {
-        position: fixed;
-        top: 0; left: 0; right: 0;
-        height: 52px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: bold;
-        letter-spacing: 4px;
-        backdrop-filter: blur(8px);
-        background: rgba(255,255,255,0.04);
-        border-bottom: 1px solid rgba(255,255,255,0.12);
-        z-index: 20;
-    }
-    #topBarRight {
-        position: absolute;
-        right: 16px;
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        font-size: 12px;
-        opacity: 0.8;
-    }
-    .topBtn {
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid var(--glass-border);
-        background: var(--glass-bg);
-        backdrop-filter: blur(6px);
-        cursor: pointer;
-        font-size: 11px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: #fff;
-        transition: 0.2s;
-    }
-    .topBtn:hover {
-        background: var(--glass-bg-strong);
-        border-color: var(--glass-border-strong);
-    }
+        /* SHELL LAYOUT */
+        #shell {
+            flex: 1;
+            display: flex;
+            backdrop-filter: blur(18px);
+            background: radial-gradient(circle at top left, rgba(0,0,0,0.7), rgba(0,0,0,0.95));
+        }
 
-    #adminHint {
-        font-size: 9px;
-        opacity: 0.5;
-        letter-spacing: 1px;
-    }
+        /* SIDEBAR */
+        #sidebar {
+            width: 210px;
+            border-right: 1px solid var(--border-soft);
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.95));
+        }
 
-    /* SHELL */
-    #shell {
-        position: absolute;
-        top: 52px;
-        bottom: 40px;
-        left: 0;
-        right: 0;
-        display: flex;
-    }
+        #sidebarTitle {
+            font-size: 11px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            margin-bottom: 4px;
+        }
 
-    /* SIDEBAR */
-    #sidebar {
-        width: 200px;
-        border-right: 1px solid rgba(255,255,255,0.12);
-        background: rgba(255,255,255,0.03);
-        backdrop-filter: blur(10px);
-        padding: 16px 14px;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        z-index: 5;
-    }
-    #sidebarTitle {
-        font-size: 12px;
-        letter-spacing: 3px;
-        opacity: 0.7;
-    }
-    .sideSectionLabel {
-        font-size: 11px;
-        letter-spacing: 2px;
-        opacity: 0.6;
-        margin-bottom: 6px;
-    }
-    .sideLink {
-        padding: 8px 10px;
-        border-radius: 10px;
-        border: 1px solid transparent;
-        cursor: pointer;
-        font-size: 13px;
-        opacity: 0.85;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        transition: 0.2s;
-    }
-    .sideLink span {
-        font-size: 11px;
-        opacity: 0.7;
-    }
-    .sideLink.active,
-    .sideLink:hover {
-        border-color: var(--glass-border);
-        background: var(--glass-bg);
-    }
+        .sideSectionLabel {
+            font-size: 9px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            margin-bottom: 6px;
+        }
 
-    /* MAIN AREA */
-    #mainArea {
-        flex: 1;
-        padding: 18px 22px;
-        overflow: auto;
-        position: relative;
-    }
+        .sideLink {
+            font-size: 11px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-soft);
+        }
 
-    /* GRID */
-    #grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 26px;
-        padding: 10px 0 24px 0;
-        max-width: 1100px;
-        margin: auto;
-    }
-    .icon {
-        padding: 24px;
-        text-align: left;
-        cursor: pointer;
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.22);
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        transition: 0.25s;
-        font-size: 14px;
-    }
-    .icon:hover {
-        background: var(--glass-bg-strong);
-        border-color: var(--glass-border-strong);
-        transform: translateY(-3px);
-    }
+        .sideLink span {
+            font-size: 9px;
+            opacity: 0.7;
+        }
 
-    /* RECENT PANEL */
-    #recentPanel {
-        max-width: 1100px;
-        margin: 0 auto 40px auto;
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.22);
-        background: rgba(255,255,255,0.06);
-        backdrop-filter: blur(10px);
-        padding: 16px 18px;
-    }
+        .sideLink:hover {
+            background: var(--glass);
+        }
 
-    /* WINDOWS */
-    #windowLayer {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 15;
-    }
-    .window {
-        position: absolute;
-        width: 360px;
-        min-height: 200px;
-        max-height: 70%;
-        background: rgba(255,255,255,0.10);
-        border: 1px solid var(--glass-border);
-        backdrop-filter: blur(14px);
-        border-radius: 18px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        pointer-events: auto;
-        transform: translateY(12px);
-        opacity: 0;
-        animation: panelIn 0.22s ease forwards;
-    }
+        .sideLink.active {
+            background: var(--accent-soft);
+            color: white;
+        }
 
-    /* NOTIFICATION CENTER */
-    #notifCenter {
-        position: fixed;
-        top: 52px;
-        right: 16px;
-        width: 260px;
-        max-height: 60vh;
-        background: var(--panel-bg);
-        border: 1px solid var(--panel-border);
-        backdrop-filter: blur(14px);
-        border-radius: 16px;
-        padding: 10px;
-        display: none;
-        flex-direction: column;
-        z-index: 90;
-        animation: panelIn 0.25s ease forwards;
-    }
-    .notifItem {
-        padding: 8px;
-        border-radius: 10px;
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.25);
-        font-size: 11px;
-        margin-bottom: 6px;
-    }
+        /* MAIN AREA */
+        #mainArea {
+            flex: 1;
+            padding: 16px 18px 60px 18px;
+            position: relative;
+            overflow: auto;
+        }
 
-    /* QUICK SETTINGS PANEL */
-    #quickSettings {
-        position: fixed;
-        top: 52px;
-        right: 16px;
-        width: 280px;
-        background: var(--panel-bg);
-        border: 1px solid var(--panel-border);
-        backdrop-filter: blur(16px);
-        border-radius: 18px;
-        padding: 14px;
-        display: none;
-        flex-direction: column;
-        gap: 14px;
-        z-index: 95;
-        animation: panelSlide 0.25s ease forwards;
-    }
-    .qsTitle {
-        font-size: 12px;
-        letter-spacing: 2px;
-        opacity: 0.8;
-        margin-bottom: 4px;
-    }
-    .qsRow {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .qsLabel {
-        font-size: 12px;
-        opacity: 0.85;
-    }
-    .qsToggle {
-        padding: 4px 10px;
-        border-radius: 999px;
-        border: 1px solid var(--glass-border);
-        background: rgba(255,255,255,0.08);
-        cursor: pointer;
-        font-size: 11px;
-    }
-    .qsToggle.active {
-        background: rgba(255,255,255,0.18);
-        border-color: var(--glass-border-strong);
-    }
-    .qsSlider {
-        width: 100%;
-    }
+        #sectionHeaderRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
 
-    /* DOCK */
-    #dock {
-        position: fixed;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 8px 14px;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.22);
-        background: rgba(255,255,255,0.06);
-        backdrop-filter: blur(12px);
-        display: flex;
-        gap: 10px;
-        z-index: 30;
-    }
-    .dockItem {
-        padding: 8px 12px;
-        border-radius: 999px;
-        border: 1px solid transparent;
-        font-size: 11px;
-        cursor: pointer;
-        opacity: 0.85;
-    }
-    .dockItem.running {
-        border-color: var(--glass-border);
-        background: rgba(255,255,255,0.16);
-    }
+        #sectionLabel {
+            font-size: 12px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
 
-    /* FOOTER */
-    #footer {
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 16px;
-        font-size: 11px;
-        opacity: 0.7;
-        letter-spacing: 2px;
-        backdrop-filter: blur(6px);
-        background: rgba(255,255,255,0.04);
-        border-top: 1px solid rgba(255,255,255,0.12);
-        z-index: 25;
-    }
+        #searchBox {
+            width: 220px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-soft);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 11px;
+            outline: none;
+        }
 
-    .hidden { display: none !important; }
+        #searchBox::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
 
-    @media (max-width: 800px) {
-        #sidebar { display: none; }
-        #shell { left: 0; }
-    }
-</style>
+        /* GRID */
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .gridItem {
+            background: var(--glass);
+            border: 1px solid var(--border-soft);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 90px;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+
+        .gridItem:hover {
+            transform: translateY(calc(-1 * var(--hover-lift)));
+            box-shadow: 0 14px 30px rgba(0,0,0,0.7);
+            border-color: var(--accent);
+        }
+
+        .gridTitle {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .gridMeta {
+            font-size: 10px;
+            color: var(--text-soft);
+        }
+
+        /* RECENT PANEL */
+        #recentPanel {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--border-soft);
+        }
+
+        #recentHeaderRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        #recentTitle {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
+
+        #clearRecentBtn {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-soft);
+            background: transparent;
+            color: var(--text-soft);
+            cursor: pointer;
+        }
+
+        #clearRecentBtn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        #recentList {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .recentItem {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: var(--glass);
+            border: 1px solid var(--border-soft);
+        }
+
+        /* WINDOW LAYER */
+        #windowLayer {
+            position: fixed;
+            inset: 40px 0 40px 210px;
+            pointer-events: none;
+        }
+
+        .window {
+            position: absolute;
+            width: 320px;
+            height: 240px;
+            background: rgba(0,0,0,0.9);
+            border-radius: 8px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .windowTitleBar {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+            font-size: 11px;
+        }
+
+        .windowCloseBtn {
+            background: transparent;
+            border: 1px solid var(--border-soft);
+            color: var(--text-soft);
+            font-size: 10px;
+            width: 20px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .windowCloseBtn:hover {
+            border-color: #ff4b4b;
+            color: #ff4b4b;
+        }
+
+        .windowContent {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        /* OVERLAY LAUNCH BOX */
+        #overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.7);
+            z-index: 200;
+        }
+
+        #overlayBox {
+            width: 320px;
+            background: rgba(0,0,0,0.9);
+            border-radius: 8px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.9);
+            overflow: hidden;
+        }
+
+        #overlayTitleBar {
+            padding: 8px 10px;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+        }
+
+        #overlayContent {
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        #overlayGameName {
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        #overlayGameDesc {
+            font-size: 11px;
+            color: var(--text-soft);
+            margin-bottom: 10px;
+        }
+
+        #buttonRow {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .glassBtn {
+            padding: 5px 10px;
+            font-size: 11px;
+            border-radius: 4px;
+            border: 1px solid var(--border-soft);
+            background: var(--glass);
+            color: white;
+            cursor: pointer;
+        }
+
+        .glassBtn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(0,240,255,0.3);
+        }
+
+        /* SETTINGS OVERLAY */
+        #settingsOverlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.7);
+            z-index: 210;
+        }
+
+        #settingsBox {
+            width: 360px;
+            background: rgba(0,0,0,0.95);
+            border-radius: 8px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.9);
+            overflow: hidden;
+        }
+
+        #settingsTitleBar {
+            padding: 8px 10px;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+        }
+
+        #settingsContent {
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .settingsRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .settingsLabel {
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        .settingsToggle {
+            padding: 4px 10px;
+            font-size: 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+            background: transparent;
+            color: var(--text-soft);
+            cursor: pointer;
+        }
+
+        .settingsToggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        #settingsButtons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        #aboutText {
+            margin-top: 10px;
+            font-size: 10px;
+            color: var(--text-soft);
+        }
+
+        /* ADMIN OVERLAY */
+        #adminOverlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.8);
+            z-index: 220;
+        }
+
+        #adminBox {
+            width: 420px;
+            height: 260px;
+            background: rgba(0,0,0,0.96);
+            border-radius: 8px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #adminTitleBar {
+            padding: 8px 10px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+        }
+
+        #adminTabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .adminTab {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: var(--text-soft);
+        }
+
+        .adminTab.active {
+            background: var(--glass);
+            color: white;
+        }
+
+        #adminContent {
+            flex: 1;
+            padding: 10px;
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        /* NOTIFICATION CENTER */
+        #notifCenter {
+            position: fixed;
+            top: 40px;
+            right: -260px;
+            width: 240px;
+            bottom: 40px;
+            background: rgba(0,0,0,0.95);
+            border-left: 1px solid var(--border-soft);
+            padding: 10px;
+            z-index: 180;
+            transition: right 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .qsTitle {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            margin-bottom: 8px;
+        }
+
+        #notifList {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .notifItem {
+            font-size: 11px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            background: var(--glass);
+            border: 1px solid var(--border-soft);
+        }
+
+        /* QUICK SETTINGS */
+        #quickSettings {
+            position: fixed;
+            top: 40px;
+            right: -260px;
+            width: 240px;
+            bottom: 40px;
+            background: rgba(0,0,0,0.95);
+            border-left: 1px solid var(--border-soft);
+            padding: 10px;
+            z-index: 185;
+            transition: right 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .qsRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 6px 0;
+        }
+
+        .qsLabel {
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        .qsSlider {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .qsToggle {
+            padding: 3px 10px;
+            font-size: 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+            background: transparent;
+            color: var(--text-soft);
+            cursor: pointer;
+        }
+
+        .qsToggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* DOCK */
+        #dock {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 26px;
+            display: flex;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(0,0,0,0.85);
+            border: 1px solid var(--border-soft);
+            z-index: 190;
+        }
+
+        .dockItem {
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            color: var(--text-soft);
+            cursor: pointer;
+        }
+
+        .dockItem:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .dockItem.running {
+            border-color: var(--accent);
+            background: rgba(0,240,255,0.12);
+            color: white;
+        }
+
+        /* FOOTER */
+        #footer {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 10px;
+            background: rgba(0,0,0,0.9);
+            border-top: 1px solid var(--border-soft);
+            z-index: 195;
+        }
+
+        #footerLeft {
+            color: var(--text-soft);
+        }
+
+        #footerRight span {
+            margin-left: 10px;
+            color: var(--text-soft);
+        }
+    </style>
 </head>
-<!DOCTYPE html>
-<html lang="en">
 <body>
 
 <!-- TOP BAR -->
@@ -519,7 +797,9 @@
             <div class="adminTab" data-tab="dev">DEV</div>
         </div>
 
-        <div id="adminContent"></div>
+        <div id="adminContent">
+            System panel placeholder. (You can customize this later.)
+        </div>
     </div>
 </div>
 
@@ -570,11 +850,11 @@
     <div class="dockItem" id="dockHome">HOME</div>
     <div class="dockItem" id="dockGames">GAMES</div>
     <div class="dockItem" id="dockRecent">RECENT</div>
-    <div class="dockItem" id="dockNotes">NOTES</div>
-    <div class="dockItem" id="dockCalc">CALC</div>
-    <div class="dockItem" id="dockTimer">TIMER</div>
-    <div class="dockItem" id="dockTerminal">TERM</div>
-    <div class="dockItem" id="dockCanvas">CANVAS</div>
+    <div class="dockItem" id="dockNotes" data-app="notes">NOTES</div>
+    <div class="dockItem" id="dockCalc" data-app="calc">CALC</div>
+    <div class="dockItem" id="dockTimer" data-app="timer">TIMER</div>
+    <div class="dockItem" id="dockTerminal" data-app="terminal">TERM</div>
+    <div class="dockItem" id="dockCanvas" data-app="canvas">CANVAS</div>
     <div class="dockItem" id="dockSettings">SETTINGS</div>
 </div>
 
@@ -589,17 +869,14 @@
 </div>
 
 <script>
-
 // ===============================
-// CORE OS ENGINE — CHUNK 3A
+// CORE OS ENGINE
 // ===============================
 
-// GLOBAL STATE
 let zIndexCounter = 50;
 let openWindows = [];
 let runningApps = new Set();
 
-// CREATE WINDOW
 function createWindow(appId, title, contentHTML) {
     const win = document.createElement("div");
     win.classList.add("window");
@@ -627,17 +904,16 @@ function createWindow(appId, title, contentHTML) {
     openWindows.push(win);
     runningApps.add(appId);
     updateDockRunningState();
+    countLaunch();
 
     return win;
 }
 
-// FOCUS WINDOW
 function focusWindow(win) {
     zIndexCounter++;
     win.style.zIndex = zIndexCounter;
 }
 
-// CLOSE WINDOW
 function closeWindow(win) {
     const appId = win.dataset.app;
     win.remove();
@@ -650,10 +926,9 @@ function closeWindow(win) {
     updateDockRunningState();
 }
 
-// UPDATE DOCK RUNNING STATE
 function updateDockRunningState() {
-    document.querySelectorAll(".dockItem").forEach(item => {
-        const appId = item.id.replace("dock", "").toLowerCase();
+    document.querySelectorAll(".dockItem[data-app]").forEach(item => {
+        const appId = item.dataset.app;
         if (runningApps.has(appId)) {
             item.classList.add("running");
         } else {
@@ -662,7 +937,6 @@ function updateDockRunningState() {
     });
 }
 
-// DRAGGING ENGINE
 function enableDragging(win) {
     const bar = win.querySelector(".windowTitleBar");
     let offsetX = 0;
@@ -687,17 +961,14 @@ function enableDragging(win) {
     });
 }
 
-// GENERIC APP LAUNCH HANDLER
 function launchApp(appId, title, contentHTML) {
     createWindow(appId, title, contentHTML);
 }
 
-</script>
 // ===============================
-// APPS ENGINE — CHUNK 3B
+// APPS ENGINE
 // ===============================
 
-// NOTES APP
 function openNotes() {
     launchApp("notes", "Notes", `
         <textarea id="notesArea" style="
@@ -713,7 +984,6 @@ function openNotes() {
     `);
 }
 
-// CALCULATOR APP
 function openCalc() {
     launchApp("calc", "Calculator", `
         <div id="calcDisplay" style="
@@ -763,7 +1033,6 @@ function openCalc() {
     }, 50);
 }
 
-// TIMER APP
 function openTimer() {
     launchApp("timer", "Timer", `
         <div style="font-size:32px; text-align:center; margin-top:20px;" id="timerDisplay">00:00</div>
@@ -808,7 +1077,6 @@ function openTimer() {
     }, 50);
 }
 
-// TERMINAL APP
 function openTerminal() {
     launchApp("terminal", "Terminal", `
         <div id="termOutput" style="
@@ -859,199 +1127,137 @@ function openTerminal() {
     }, 50);
 }
 
-// CANVAS LAUNCHER
 function openCanvas() {
     window.open("https://canvas.instructure.com", "_blank");
 }
 
 // ===============================
-// APPS ENGINE — CHUNK 3B
+// PANELS ENGINE
 // ===============================
 
-// NOTES APP
-function openNotes() {
-    launchApp("notes", "Notes", `
-        <textarea id="notesArea" style="
-            width:100%; 
-            height:100%; 
-            background:rgba(255,255,255,0.05);
-            color:white;
-            border:none;
-            padding:10px;
-            resize:none;
-            outline:none;
-        "></textarea>
-    `);
+const qsPanel = document.getElementById("quickSettings");
+const notifPanel = document.getElementById("notifCenter");
+const settingsOverlay = document.getElementById("settingsOverlay");
+
+const qsBtn = document.getElementById("qsBtn");
+const notifBtn = document.getElementById("notifBtn");
+const settingsBtn = document.getElementById("settingsBtn");
+const closeSettingsBtn = document.getElementById("closeSettingsBtn");
+
+const qsBrightness = document.getElementById("qsBrightness");
+const qsTheme = document.getElementById("qsTheme");
+
+const qsWallpaperBtn = document.getElementById("qsWallpaperBtn");
+const qsDockBtn = document.getElementById("qsDockBtn");
+const qsFooterBtn = document.getElementById("qsFooterBtn");
+const qsHoverBtn = document.getElementById("qsHoverBtn");
+
+const dock = document.getElementById("dock");
+const footer = document.getElementById("footer");
+
+let qsOpen = false;
+let notifOpen = false;
+let settingsOpen = false;
+
+function toggleQS() {
+    qsOpen = !qsOpen;
+    qsPanel.style.right = qsOpen ? "0px" : "-260px";
+    if (qsOpen) closeNotif();
 }
 
-// CALCULATOR APP
-function openCalc() {
-    launchApp("calc", "Calculator", `
-        <div id="calcDisplay" style="
-            width:100%;
-            height:40px;
-            background:rgba(255,255,255,0.1);
-            margin-bottom:10px;
-            padding:8px;
-            font-size:18px;
-            text-align:right;
-        ">0</div>
-
-        <div id="calcButtons" style="
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:6px;
-        ">
-            ${["7","8","9","/",
-               "4","5","6","*",
-               "1","2","3","-",
-               "0",".","=","+"].map(b => `
-                <button class="calcBtn" data-val="${b}" style="
-                    padding:12px;
-                    background:rgba(255,255,255,0.08);
-                    border:1px solid rgba(255,255,255,0.2);
-                    color:white;
-                    font-size:16px;
-                ">${b}</button>
-            `).join("")}
-        </div>
-    `);
-
-    setTimeout(() => {
-        const display = document.getElementById("calcDisplay");
-        document.querySelectorAll(".calcBtn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const val = btn.dataset.val;
-                if (val === "=") {
-                    try { display.textContent = eval(display.textContent); }
-                    catch { display.textContent = "ERR"; }
-                } else {
-                    if (display.textContent === "0") display.textContent = val;
-                    else display.textContent += val;
-                }
-            });
-        });
-    }, 50);
+function toggleNotif() {
+    notifOpen = !notifOpen;
+    notifPanel.style.right = notifOpen ? "0px" : "-260px";
+    if (notifOpen) closeQS();
 }
 
-// TIMER APP
-function openTimer() {
-    launchApp("timer", "Timer", `
-        <div style="font-size:32px; text-align:center; margin-top:20px;" id="timerDisplay">00:00</div>
-        <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
-            <button id="timerStart" class="glassBtn">Start</button>
-            <button id="timerStop" class="glassBtn">Stop</button>
-            <button id="timerReset" class="glassBtn">Reset</button>
-        </div>
-    `);
-
-    setTimeout(() => {
-        let sec = 0;
-        let running = false;
-        let interval;
-
-        const display = document.getElementById("timerDisplay");
-
-        function update() {
-            const m = String(Math.floor(sec / 60)).padStart(2, "0");
-            const s = String(sec % 60).padStart(2, "0");
-            display.textContent = `${m}:${s}`;
-        }
-
-        document.getElementById("timerStart").onclick = () => {
-            if (!running) {
-                running = true;
-                interval = setInterval(() => { sec++; update(); }, 1000);
-            }
-        };
-
-        document.getElementById("timerStop").onclick = () => {
-            running = false;
-            clearInterval(interval);
-        };
-
-        document.getElementById("timerReset").onclick = () => {
-            running = false;
-            clearInterval(interval);
-            sec = 0;
-            update();
-        };
-    }, 50);
+function openSettings() {
+    settingsOpen = true;
+    settingsOverlay.style.display = "flex";
 }
 
-// TERMINAL APP
-function openTerminal() {
-    launchApp("terminal", "Terminal", `
-        <div id="termOutput" style="
-            height:200px;
-            overflow:auto;
-            background:rgba(255,255,255,0.05);
-            padding:8px;
-            font-family:monospace;
-            font-size:13px;
-        "></div>
-
-        <input id="termInput" placeholder="Type a command..." style="
-            width:100%;
-            margin-top:8px;
-            padding:8px;
-            background:rgba(255,255,255,0.08);
-            border:none;
-            color:white;
-            outline:none;
-        ">
-    `);
-
-    setTimeout(() => {
-        const out = document.getElementById("termOutput");
-        const input = document.getElementById("termInput");
-
-        function print(text) {
-            out.innerHTML += text + "<br>";
-            out.scrollTop = out.scrollHeight;
-        }
-
-        print("APEX ZERO TERMINAL READY");
-
-        input.addEventListener("keydown", e => {
-            if (e.key === "Enter") {
-                const cmd = input.value.trim();
-                print("> " + cmd);
-
-                if (cmd === "help") print("Commands: help, clear, time, echo [text]");
-                else if (cmd === "clear") out.innerHTML = "";
-                else if (cmd === "time") print(new Date().toLocaleTimeString());
-                else if (cmd.startsWith("echo ")) print(cmd.slice(5));
-                else print("Unknown command");
-
-                input.value = "";
-            }
-        });
-    }, 50);
+function closeSettings() {
+    settingsOpen = false;
+    settingsOverlay.style.display = "none";
 }
 
-// CANVAS LAUNCHER
-function openCanvas() {
-    window.open("https://canvas.instructure.com", "_blank");
+function closeQS() {
+    qsOpen = false;
+    qsPanel.style.right = "-260px";
 }
+
+function closeNotif() {
+    notifOpen = false;
+    notifPanel.style.right = "-260px";
+}
+
+qsBtn.onclick = toggleQS;
+notifBtn.onclick = toggleNotif;
+settingsBtn.onclick = openSettings;
+closeSettingsBtn.onclick = closeSettings;
+
+qsBrightness.addEventListener("input", () => {
+    document.body.style.filter = `brightness(${qsBrightness.value})`;
+});
+
+qsTheme.addEventListener("input", () => {
+    document.documentElement.style.setProperty("--theme-intensity", qsTheme.value);
+});
+
+qsWallpaperBtn.onclick = () => {
+    const on = qsWallpaperBtn.textContent === "ON";
+    qsWallpaperBtn.textContent = on ? "OFF" : "ON";
+    document.body.style.background = on
+        ? "black"
+        : "url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1920&q=80') center/cover fixed";
+};
+
+qsDockBtn.onclick = () => {
+    const on = qsDockBtn.textContent === "ON";
+    qsDockBtn.textContent = on ? "OFF" : "ON";
+    dock.style.display = on ? "none" : "flex";
+};
+
+qsFooterBtn.onclick = () => {
+    const on = qsFooterBtn.textContent === "ON";
+    qsFooterBtn.textContent = on ? "OFF" : "ON";
+    footer.style.display = on ? "none" : "flex";
+};
+
+qsHoverBtn.onclick = () => {
+    const on = qsHoverBtn.textContent === "ON";
+    qsHoverBtn.textContent = on ? "OFF" : "ON";
+    if (on) {
+        document.documentElement.style.setProperty("--hover-lift", "0px");
+    } else {
+        document.documentElement.style.setProperty("--hover-lift", "6px");
+    }
+};
+
+const notifList = document.getElementById("notifList");
+
+function pushNotification(text) {
+    const item = document.createElement("div");
+    item.classList.add("notifItem");
+    item.textContent = text;
+    notifList.prepend(item);
+}
+
+pushNotification("System Ready");
 
 // ===============================
-// SYSTEM ENGINE — CHUNK 3D
+// SYSTEM ENGINE
 // ===============================
 
-// ===============================
 // ADMIN MODE
-// ===============================
-
 let adminOpen = false;
-const adminOverlay = document.getElementById("adminOverlay");
+const adminOverlayEl = document.getElementById("adminOverlay");
 
 function toggleAdmin() {
     adminOpen = !adminOpen;
-    adminOverlay.style.display = adminOpen ? "flex" : "none";
+    adminOverlayEl.style.display = adminOpen ? "flex" : "none";
 }
 
-// SECRET SHORTCUT: SHIFT + Z E R O
 let adminSequence = [];
 const adminCode = ["Shift", "z", "e", "r", "o"];
 
@@ -1065,10 +1271,7 @@ document.addEventListener("keydown", e => {
     }
 });
 
-// ===============================
-// SEARCH SYSTEM
-// ===============================
-
+// SEARCH
 const searchBox = document.getElementById("searchBox");
 
 searchBox.addEventListener("input", () => {
@@ -1079,10 +1282,7 @@ searchBox.addEventListener("input", () => {
     });
 });
 
-// ===============================
 // CATEGORY FILTERS
-// ===============================
-
 document.querySelectorAll(".sideLink[data-category]").forEach(link => {
     link.addEventListener("click", () => {
         const cat = link.dataset.category;
@@ -1100,10 +1300,7 @@ document.querySelectorAll(".sideLink[data-category]").forEach(link => {
     });
 });
 
-// ===============================
 // RECENTLY PLAYED
-// ===============================
-
 const recentList = document.getElementById("recentList");
 let recent = [];
 
@@ -1133,13 +1330,10 @@ document.getElementById("clearRecentSettingsBtn").onclick = () => {
     renderRecent();
 };
 
-// ===============================
 // DOCK NAVIGATION
-// ===============================
-
 document.getElementById("dockHome").onclick = () => window.scrollTo(0, 0);
-document.getElementById("dockGames").onclick = () => document.getElementById("grid").scrollIntoView();
-document.getElementById("dockRecent").onclick = () => document.getElementById("recentPanel").scrollIntoView();
+document.getElementById("dockGames").onclick = () => document.getElementById("grid").scrollIntoView({behavior:"smooth"});
+document.getElementById("dockRecent").onclick = () => document.getElementById("recentPanel").scrollIntoView({behavior:"smooth"});
 
 document.getElementById("dockNotes").onclick = openNotes;
 document.getElementById("dockCalc").onclick = openCalc;
@@ -1148,10 +1342,7 @@ document.getElementById("dockTerminal").onclick = openTerminal;
 document.getElementById("dockCanvas").onclick = openCanvas;
 document.getElementById("dockSettings").onclick = openSettings;
 
-// ===============================
 // CLOCK + UPTIME + LAUNCH COUNTER
-// ===============================
-
 const footerClock = document.getElementById("footerClock");
 const footerUptime = document.getElementById("footerUptime");
 const footerLaunches = document.getElementById("footerLaunches");
@@ -1169,34 +1360,55 @@ setInterval(() => {
     footerUptime.textContent = `UPTIME ${m}:${s}`;
 }, 1000);
 
-// Count launches
 function countLaunch() {
     launchCount++;
     footerLaunches.textContent = `LAUNCHES ${launchCount}`;
 }
 
-// ===============================
 // KEYBOARD SHORTCUTS
-// ===============================
-
-// SHIFT + Q = Quick Settings
 document.addEventListener("keydown", e => {
     if (e.shiftKey && e.key.toLowerCase() === "q") toggleQS();
 });
 
-// SHIFT + N = Notifications
 document.addEventListener("keydown", e => {
     if (e.shiftKey && e.key.toLowerCase() === "n") toggleNotif();
 });
 
-// SHIFT + S = Settings
 document.addEventListener("keydown", e => {
     if (e.shiftKey && e.key.toLowerCase() === "s") openSettings();
 });
 
-// ===============================
-// END OF SCRIPT
-// ===============================
+// SIMPLE GRID CONTENT (DEMO)
+const grid = document.getElementById("grid");
+const items = [
+    { name: "Notes", category: "apps", desc: "Write quick notes", action: openNotes },
+    { name: "Calculator", category: "tools", desc: "Basic math", action: openCalc },
+    { name: "Timer", category: "tools", desc: "Simple timer", action: openTimer },
+    { name: "Terminal", category: "tools", desc: "Fake shell", action: openTerminal },
+    { name: "Canvas", category: "apps", desc: "Open Canvas in new tab", action: openCanvas }
+];
+
+items.forEach(item => {
+    const div = document.createElement("div");
+    div.classList.add("gridItem");
+    div.dataset.name = item.name;
+    div.dataset.category = item.category;
+    div.innerHTML = `
+        <div class="gridTitle">${item.name}</div>
+        <div class="gridMeta">${item.desc}</div>
+    `;
+    div.addEventListener("click", () => {
+        item.action();
+        addRecent(item.name);
+        pushNotification(`Launched ${item.name}`);
+    });
+    grid.appendChild(div);
+});
+
+// SIDEBAR SCROLL LINKS
+document.getElementById("sideScrollGames").onclick = () => grid.scrollIntoView({behavior:"smooth"});
+document.getElementById("sideScrollRecent").onclick = () => document.getElementById("recentPanel").scrollIntoView({behavior:"smooth"});
 
 </script>
+</body>
 </html>
