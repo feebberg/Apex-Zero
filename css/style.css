@@ -1,31 +1,49 @@
+/* --------------------------------------------------
+   APEX ZERO — FULL UI UPGRADE (MONOCHROME OS THEME)
+   Clean, readable, modern, OS‑style interface
+-------------------------------------------------- */
+
 :root {
-    --bg: #f5f5f5;
+    --bg: #f4f4f4;
     --bg-elevated: #ffffff;
     --bg-overlay: rgba(0, 0, 0, 0.35);
+
     --border: #d0d0d0;
+    --border-strong: #bcbcbc;
+
     --text-main: #111111;
     --text-soft: #555555;
+    --text-faint: #888888;
+
     --accent: #111111;
-    --hover: #e6e6e6;
-    --danger: #b00020;
-    --mono-soft: #999999;
-    --pill-bg: #ffffff;
+    --hover: #e8e8e8;
+
+    --radius: 14px;
+    --radius-small: 10px;
+
+    --shadow-soft: 0 2px 6px rgba(0,0,0,0.06);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.10);
+
+    --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: ui-monospace, Menlo, Consolas, "Courier New", monospace;
 }
 
+/* GLOBAL -------------------------------------------------- */
+
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    box-sizing: border-box;
+    font-family: var(--font-main);
 }
 
 body {
     background: var(--bg);
     color: var(--text-main);
-    min-height: 100vh;
+    font-size: 16px;
 }
 
-/* LOADING */
+/* LOADING -------------------------------------------------- */
 
 #loadingScreen {
     position: fixed;
@@ -39,18 +57,18 @@ body {
 }
 
 #loadingTitle {
-    font-size: 26px;
+    font-size: 32px;
     letter-spacing: 0.25em;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 #loadingBar {
-    width: 220px;
-    height: 4px;
+    width: 260px;
+    height: 6px;
     border-radius: 999px;
     background: #ddd;
     overflow: hidden;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 #loadingFill {
@@ -61,44 +79,44 @@ body {
 }
 
 #loadingSub {
-    font-size: 11px;
+    font-size: 13px;
     color: var(--text-soft);
 }
 
-/* TOP BAR */
+/* TOP BAR -------------------------------------------------- */
 
 #topBar {
     position: sticky;
     top: 0;
     z-index: 10;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 22px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 18px;
-    border-bottom: 1px solid var(--border);
-    background: rgba(245, 245, 245, 0.96);
-    backdrop-filter: blur(8px);
 }
 
 #logo {
-    font-size: 16px;
-    letter-spacing: 0.2em;
-    cursor: default;
+    font-size: 18px;
+    letter-spacing: 0.22em;
 }
 
 #topBarRight {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 #searchBox {
-    padding: 6px 10px;
+    padding: 10px 16px;
     border-radius: 999px;
     border: 1px solid var(--border);
     background: #fff;
-    font-size: 12px;
-    min-width: 180px;
+    font-size: 15px;
+    min-width: 240px;
 }
 
 #searchBox:focus {
@@ -107,84 +125,83 @@ body {
 }
 
 #adminHint {
-    font-size: 10px;
-    color: var(--mono-soft);
-}
-
-/* COMMON BUTTONS */
-
-.pillBtn {
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: #fff;
-    font-size: 11px;
-    cursor: pointer;
-}
-
-.pillBtn:hover {
-    background: var(--hover);
-}
-
-.glassBtn {
-    padding: 7px 18px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: #fff;
     font-size: 12px;
+    color: var(--text-faint);
+}
+
+/* BUTTONS -------------------------------------------------- */
+
+.pillBtn,
+.glassBtn,
+.settingsToggle,
+.adminBtn {
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-size: 15px;
     cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 
-.glassBtn:hover {
+.pillBtn:hover,
+.glassBtn:hover,
+.settingsToggle:hover,
+.adminBtn:hover {
     background: var(--hover);
+    box-shadow: var(--shadow-soft);
 }
 
-/* MAIN LAYOUT */
+.settingsToggle.active {
+    background: var(--hover);
+    border-color: var(--text-main);
+}
+
+/* MAIN LAYOUT -------------------------------------------------- */
 
 #launcher {
-    max-width: 980px;
-    margin: 18px auto 40px auto;
-    padding: 0 16px;
+    max-width: 1100px;
+    margin: 26px auto 60px auto;
+    padding: 0 20px;
 }
 
-/* SECTIONS */
+/* SECTION HEADERS -------------------------------------------------- */
 
 .sectionHeader {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 .sectionTitle {
-    font-size: 13px;
-    letter-spacing: 0.12em;
+    font-size: 18px;
+    letter-spacing: 0.14em;
 }
 
 .sectionSub {
-    font-size: 11px;
+    font-size: 14px;
     color: var(--text-soft);
 }
 
-/* RECENT */
+/* RECENT -------------------------------------------------- */
 
 #recentSection {
-    margin-bottom: 22px;
+    margin-bottom: 30px;
 }
 
 .pillRow {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    min-height: 24px;
+    gap: 10px;
 }
 
 .recentItem {
-    padding: 4px 10px;
+    padding: 8px 16px;
     border-radius: 999px;
     border: 1px solid var(--border);
-    background: var(--pill-bg);
-    font-size: 11px;
+    background: #fff;
+    font-size: 14px;
     cursor: pointer;
 }
 
@@ -192,41 +209,43 @@ body {
     background: var(--hover);
 }
 
-/* GRID */
+/* GAME GRID -------------------------------------------------- */
 
 #grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
 }
 
 .icon {
-    border-radius: 10px;
-    border: 1px solid var(--border);
     background: var(--bg-elevated);
-    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
     cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-}
-
-.iconTitle {
-    font-size: 13px;
-    margin-bottom: 4px;
-}
-
-.iconDesc {
-    font-size: 11px;
-    color: var(--text-soft);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .icon:hover {
-    background: var(--hover);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
 }
 
-/* OVERLAY */
+.iconTitle {
+    font-size: 17px;
+    margin-bottom: 6px;
+}
 
-#overlay {
+.iconDesc {
+    font-size: 14px;
+    color: var(--text-soft);
+}
+
+/* OVERLAY -------------------------------------------------- */
+
+#overlay,
+#settingsOverlay,
+#adminOverlay {
     position: fixed;
     inset: 0;
     background: var(--bg-overlay);
@@ -236,142 +255,102 @@ body {
     z-index: 50;
 }
 
+/* LAUNCH BOX -------------------------------------------------- */
+
 #overlayBox {
-    width: 320px;
-    border-radius: 12px;
+    width: 380px;
+    border-radius: var(--radius);
     border: 1px solid var(--border);
     background: var(--bg-elevated);
     overflow: hidden;
+    box-shadow: var(--shadow-soft);
 }
 
 #overlayTitleBar {
-    padding: 8px 12px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: 0.16em;
 }
 
 #overlayContent {
-    padding: 12px;
+    padding: 18px;
 }
 
 #overlayGameName {
-    font-size: 15px;
-    margin-bottom: 4px;
+    font-size: 20px;
+    margin-bottom: 6px;
 }
 
 #overlayGameDesc {
-    font-size: 11px;
+    font-size: 14px;
     color: var(--text-soft);
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 #buttonRow {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 10px;
 }
 
-/* SETTINGS */
-
-#settingsOverlay {
-    position: fixed;
-    inset: 0;
-    background: var(--bg-overlay);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 60;
-}
+/* SETTINGS PANEL -------------------------------------------------- */
 
 #settingsBox {
-    width: 360px;
-    border-radius: 12px;
+    width: 420px;
+    border-radius: var(--radius);
     border: 1px solid var(--border);
     background: var(--bg-elevated);
     overflow: hidden;
+    box-shadow: var(--shadow-soft);
 }
 
 #settingsTitleBar {
-    padding: 8px 12px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: 0.16em;
 }
 
 #settingsContent {
-    padding: 12px;
+    padding: 18px;
 }
 
 .settingsRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
 }
 
 .settingsLabel {
-    font-size: 13px;
-    color: var(--text-main);
-}
-
-.settingsToggle {
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: #fff;
-    cursor: pointer;
-    font-size: 11px;
-}
-
-.settingsToggle:hover {
-    background: var(--hover);
-}
-
-.settingsToggle.active {
-    background: var(--hover);
-    border-color: var(--text-main);
-}
-
-#settingsButtons {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
+    font-size: 16px;
 }
 
 #aboutText {
-    margin-top: 12px;
-    font-size: 10px;
+    margin-top: 16px;
+    font-size: 13px;
     color: var(--text-soft);
 }
 
-/* ADMIN */
-
-#adminOverlay {
-    position: fixed;
-    inset: 0;
-    background: var(--bg-overlay);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 70;
-}
+/* ADMIN PANEL -------------------------------------------------- */
 
 #adminBox {
-    width: 520px;
-    max-height: 80vh;
-    border-radius: 12px;
+    width: 620px;
+    max-height: 82vh;
+    border-radius: var(--radius);
     border: 1px solid var(--border);
     background: var(--bg-elevated);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    box-shadow: var(--shadow-soft);
 }
 
 #adminTitleBar {
-    padding: 8px 12px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: 0.16em;
     display: flex;
     justify-content: space-between;
@@ -385,8 +364,8 @@ body {
 .adminTab {
     flex: 1;
     text-align: center;
-    padding: 6px 0;
-    font-size: 11px;
+    padding: 12px 0;
+    font-size: 15px;
     cursor: pointer;
     border-right: 1px solid var(--border);
 }
@@ -400,57 +379,44 @@ body {
 }
 
 #adminContent {
-    padding: 10px 12px;
+    padding: 18px;
     overflow-y: auto;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .adminSectionTitle {
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    margin-bottom: 6px;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
 }
 
 .adminRow {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .adminValue {
-    font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: var(--font-mono);
 }
 
 .adminBtnRow {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
-}
-
-.adminBtn {
-    padding: 5px 10px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: #fff;
-    font-size: 10px;
-    cursor: pointer;
-}
-
-.adminBtn:hover {
-    background: var(--hover);
+    gap: 10px;
+    margin-top: 12px;
 }
 
 .adminInput {
     width: 100%;
-    padding: 5px 8px;
-    border-radius: 6px;
+    padding: 10px 12px;
+    border-radius: var(--radius-small);
     border: 1px solid var(--border);
-    font-size: 11px;
-    margin-bottom: 6px;
+    font-size: 15px;
+    margin-bottom: 10px;
 }
 
-/* SMALL SCREENS */
+/* RESPONSIVE -------------------------------------------------- */
 
 @media (max-width: 640px) {
     #adminBox,
@@ -460,10 +426,10 @@ body {
     }
 
     #launcher {
-        padding: 0 10px;
+        padding: 0 12px;
     }
 
     #searchBox {
-        min-width: 120px;
+        min-width: 160px;
     }
 }
