@@ -12,8 +12,6 @@
         --glass-border: rgba(255,255,255,0.25);
         --glass-border-strong: rgba(255,255,255,0.45);
         --divider: rgba(255,255,255,0.18);
-        --accent: rgba(100,200,255,0.6);
-        --accent-strong: rgba(100,200,255,0.9);
     }
 
     * { box-sizing: border-box; }
@@ -67,8 +65,7 @@
         height: 52px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 0 16px;
+        justify-content: center;
         font-size: 18px;
         font-weight: bold;
         letter-spacing: 4px;
@@ -77,18 +74,16 @@
         border-bottom: 1px solid rgba(255,255,255,0.12);
         z-index: 20;
     }
-    #topBarLeft {
-        flex: 1;
-        text-align: center;
-    }
     #topBarRight {
+        position: absolute;
+        right: 16px;
         display: flex;
         gap: 8px;
         align-items: center;
         font-size: 12px;
         opacity: 0.8;
     }
-    #settingsBtn, #notifBtn, #themeBtn, #searchToggleBtn {
+    #settingsBtn, #notifBtn {
         padding: 6px 10px;
         border-radius: 999px;
         border: 1px solid var(--glass-border);
@@ -99,9 +94,8 @@
         letter-spacing: 1px;
         text-transform: uppercase;
         color: #fff;
-        transition: 0.2s;
     }
-    #settingsBtn:hover, #notifBtn:hover, #themeBtn:hover, #searchToggleBtn:hover {
+    #settingsBtn:hover, #notifBtn:hover {
         background: var(--glass-bg-strong);
         border-color: var(--glass-border-strong);
     }
@@ -132,7 +126,6 @@
         flex-direction: column;
         gap: 18px;
         z-index: 5;
-        overflow-y: auto;
     }
     #sidebarTitle {
         font-size: 12px;
@@ -179,14 +172,12 @@
         justify-content: space-between;
         align-items: center;
         max-width: 1100px;
-        margin: 0 auto 16px auto;
-        gap: 12px;
+        margin: 0 auto 10px auto;
     }
     #sectionLabel {
         font-size: 13px;
         letter-spacing: 2px;
         opacity: 0.7;
-        white-space: nowrap;
     }
     #searchBox {
         padding: 8px 12px;
@@ -195,15 +186,9 @@
         background: rgba(255,255,255,0.04);
         color: #fff;
         font-size: 12px;
-        flex: 1;
-        max-width: 300px;
+        min-width: 180px;
         outline: none;
         backdrop-filter: blur(6px);
-        transition: 0.3s;
-    }
-    #searchBox:focus {
-        background: rgba(255,255,255,0.08);
-        border-color: var(--glass-border-strong);
     }
     #searchBox::placeholder {
         color: rgba(255,255,255,0.5);
@@ -228,13 +213,6 @@
         padding-bottom: 8px;
         border-bottom: 1px solid rgba(255,255,255,0.15);
         text-transform: uppercase;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .categoryCount {
-        font-size: 10px;
-        opacity: 0.5;
     }
 
     /* GRID */
@@ -253,47 +231,19 @@
         backdrop-filter: blur(10px);
         transition: 0.25s;
         font-size: 14px;
-        position: relative;
-        overflow: hidden;
     }
-    .icon::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, transparent 0%, rgba(100,200,255,0.1) 100%);
-        opacity: 0;
-        transition: 0.3s;
+    .iconTitle {
+        font-size: 15px;
+        margin-bottom: 6px;
+    }
+    .iconDesc {
+        font-size: 11px;
+        opacity: 0.7;
     }
     .icon:hover {
         background: var(--glass-bg-strong);
         border-color: var(--glass-border-strong);
         transform: translateY(-3px);
-    }
-    .icon:hover::before {
-        opacity: 1;
-    }
-    .iconTitle {
-        font-size: 15px;
-        margin-bottom: 6px;
-        position: relative;
-        z-index: 1;
-    }
-    .iconDesc {
-        font-size: 11px;
-        opacity: 0.7;
-        position: relative;
-        z-index: 1;
-    }
-
-    /* EMPTY STATE */
-    .emptyState {
-        grid-column: 1/-1;
-        text-align: center;
-        padding: 40px 20px;
-        opacity: 0.5;
     }
 
     /* RECENT */
@@ -310,7 +260,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
     #recentTitle {
         font-size: 12px;
@@ -326,7 +276,6 @@
         padding: 4px 10px;
         cursor: pointer;
         backdrop-filter: blur(6px);
-        transition: 0.2s;
     }
     #clearRecentBtn:hover {
         background: var(--glass-bg-strong);
@@ -345,15 +294,10 @@
         background: rgba(255,255,255,0.08);
         cursor: pointer;
         font-size: 12px;
-        transition: 0.2s;
     }
     .recentItem:hover {
         background: rgba(255,255,255,0.16);
         border-color: var(--glass-border-strong);
-    }
-    .recentEmpty {
-        opacity: 0.5;
-        font-size: 12px;
     }
 
     /* LAUNCH OVERLAY */
@@ -366,7 +310,6 @@
         justify-content: center;
         animation: fadeIn 0.25s ease;
         z-index: 50;
-        backdrop-filter: blur(2px);
     }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     #overlayBox {
@@ -392,7 +335,6 @@
     #overlayGameName {
         font-size: 17px;
         margin-bottom: 6px;
-        color: var(--accent-strong);
     }
     #overlayGameDesc {
         font-size: 12px;
@@ -420,13 +362,6 @@
         background: rgba(255,255,255,0.22);
         border-color: var(--glass-border-strong);
     }
-    .glassBtn.primary {
-        background: var(--accent);
-        border-color: var(--accent-strong);
-    }
-    .glassBtn.primary:hover {
-        background: var(--accent-strong);
-    }
 
     /* SETTINGS */
     #settingsOverlay {
@@ -437,7 +372,6 @@
         align-items: center;
         justify-content: center;
         z-index: 60;
-        backdrop-filter: blur(2px);
     }
     #settingsBox {
         width: 360px;
@@ -446,8 +380,6 @@
         backdrop-filter: blur(12px);
         border-radius: 20px;
         overflow: hidden;
-        max-height: 80vh;
-        overflow-y: auto;
     }
     #settingsTitleBar {
         padding: 14px 16px;
@@ -456,8 +388,6 @@
         border-bottom: 1px solid var(--divider);
         text-align: center;
         background: rgba(255,255,255,0.06);
-        position: sticky;
-        top: 0;
     }
     #settingsContent {
         padding: 18px 20px 16px 20px;
@@ -480,11 +410,10 @@
         background: rgba(255,255,255,0.06);
         cursor: pointer;
         font-size: 11px;
-        transition: 0.2s;
     }
     .settingsToggle.active {
-        background: var(--accent);
-        border-color: var(--accent-strong);
+        background: rgba(255,255,255,0.18);
+        border-color: var(--glass-border-strong);
     }
     #settingsButtons {
         display: flex;
@@ -495,8 +424,6 @@
         font-size: 11px;
         opacity: 0.7;
         margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid var(--divider);
     }
 
     /* ADMIN DASHBOARD */
@@ -508,7 +435,6 @@
         align-items: center;
         justify-content: center;
         z-index: 80;
-        backdrop-filter: blur(2px);
     }
     #adminBox {
         width: 520px;
@@ -523,7 +449,6 @@
         transform: translateY(12px);
         opacity: 0;
         animation: adminIn 0.25s ease forwards;
-        max-height: 90vh;
     }
     @keyframes adminIn {
         from { opacity: 0; transform: translateY(24px); }
@@ -544,7 +469,6 @@
         gap: 8px;
         padding: 10px 14px 0 14px;
         border-bottom: 1px solid var(--divider);
-        overflow-x: auto;
     }
     .adminTab {
         padding: 6px 10px;
@@ -553,7 +477,6 @@
         font-size: 11px;
         cursor: pointer;
         opacity: 0.8;
-        white-space: nowrap;
     }
     .adminTab.active {
         border-color: var(--glass-border);
@@ -564,17 +487,13 @@
         padding: 14px 16px 16px 16px;
         font-size: 12px;
         max-height: 60vh;
-        overflow-y: auto;
+        overflow: auto;
     }
     .adminSectionTitle {
         font-size: 11px;
         letter-spacing: 2px;
         opacity: 0.8;
         margin-bottom: 6px;
-        margin-top: 12px;
-    }
-    .adminSectionTitle:first-child {
-        margin-top: 0;
     }
     .adminRow {
         display: flex;
@@ -611,7 +530,6 @@
         background: rgba(255,255,255,0.08);
         font-size: 11px;
         cursor: pointer;
-        transition: 0.2s;
     }
     .adminBtn:hover {
         background: rgba(255,255,255,0.16);
@@ -623,7 +541,7 @@
         position: fixed;
         top: 52px;
         right: 16px;
-        width: 280px;
+        width: 260px;
         max-height: 60vh;
         background: rgba(255,255,255,0.10);
         border: 1px solid var(--glass-border);
@@ -656,10 +574,6 @@
         border: 1px solid rgba(255,255,255,0.25);
         font-size: 11px;
         margin-bottom: 6px;
-        transition: 0.2s;
-    }
-    .notifItem:hover {
-        background: rgba(255,255,255,0.12);
     }
 
     /* DOCK */
@@ -684,7 +598,6 @@
         font-size: 11px;
         cursor: pointer;
         opacity: 0.85;
-        transition: 0.2s;
     }
     .dockItem.running {
         border-color: var(--glass-border);
@@ -758,7 +671,6 @@
         letter-spacing: 1px;
         background: rgba(255,255,255,0.06);
         cursor: move;
-        user-select: none;
     }
     .windowTitle {
         opacity: 0.85;
@@ -774,10 +686,6 @@
         border: 1px solid rgba(255,255,255,0.4);
         background: rgba(255,255,255,0.1);
         cursor: pointer;
-        transition: 0.2s;
-    }
-    .windowBtn:hover {
-        background: rgba(255,255,255,0.2);
     }
     .windowContent {
         padding: 10px 12px;
@@ -798,7 +706,6 @@
         font-size: 12px;
         resize: none;
         outline: none;
-        font-family: monospace;
     }
     .notesInfo {
         font-size: 10px;
@@ -819,7 +726,6 @@
         cursor: pointer;
         font-size: 12px;
         text-align: center;
-        transition: 0.2s;
     }
     .calcBtn:hover {
         background: rgba(255,255,255,0.16);
@@ -852,7 +758,6 @@
         background: rgba(255,255,255,0.08);
         cursor: pointer;
         font-size: 11px;
-        transition: 0.2s;
     }
     .timerBtn:hover {
         background: rgba(255,255,255,0.16);
@@ -903,7 +808,6 @@
         padding: 6px;
         border-bottom: 1px solid rgba(255,255,255,0.25);
         font-size: 11px;
-        flex-wrap: wrap;
     }
     .canvasBtn {
         padding: 4px 8px;
@@ -911,32 +815,9 @@
         border: 1px solid rgba(255,255,255,0.3);
         background: rgba(255,255,255,0.08);
         cursor: pointer;
-        transition: 0.2s;
     }
     .canvasBtn:hover {
         background: rgba(255,255,255,0.16);
-    }
-
-    /* COLOR PICKER */
-    .colorPickerRow {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 6px;
-    }
-    .colorOption {
-        width: 24px;
-        height: 24px;
-        border-radius: 6px;
-        border: 2px solid rgba(255,255,255,0.2);
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .colorOption:hover {
-        border-color: rgba(255,255,255,0.8);
-    }
-    .colorOption.active {
-        border-color: rgba(255,255,255,0.9);
-        box-shadow: 0 0 8px rgba(255,255,255,0.5);
     }
 
     .hidden { display: none !important; }
@@ -944,9 +825,6 @@
     @media (max-width: 800px) {
         #sidebar { display: none; }
         #shell { left: 0; }
-        #topBar { flex-wrap: wrap; }
-        #sectionHeaderRow { flex-direction: column; }
-        #searchBox { max-width: 100%; }
     }
 </style>
 </head>
@@ -960,10 +838,10 @@
 
 <!-- TOP BAR -->
 <div id="topBar">
-    <div id="topBarLeft">APEX ZERO</div>
+    APEX ZERO
     <div id="topBarRight">
+        <span id="profileName">BRYCE</span>
         <span id="adminHint">SHIFT + Z E R O</span>
-        <button id="themeBtn" title="Toggle theme">THEME</button>
         <button id="notifBtn">NOTIF</button>
         <button id="settingsBtn">SETTINGS</button>
     </div>
@@ -988,23 +866,13 @@
             <div class="sideLink" id="sideScrollGames">Go to Games</div>
             <div class="sideLink" id="sideScrollRecent">Go to Recent</div>
         </div>
-
-        <div>
-            <div class="sideSectionLabel">STATS</div>
-            <div class="sideLink" style="opacity: 0.6;">
-                <span>Games: <span id="sideGameCount">6</span></span>
-            </div>
-            <div class="sideLink" style="opacity: 0.6;">
-                <span>Launches: <span id="sideLaunchCount">0</span></span>
-            </div>
-        </div>
     </div>
 
     <!-- MAIN AREA -->
     <div id="mainArea">
         <div id="sectionHeaderRow">
             <div id="sectionLabel">GAMES & APPS</div>
-            <input id="searchBox" type="text" placeholder="Search games, apps...">
+            <input id="searchBox" type="text" placeholder="Search…">
         </div>
 
         <div id="gridContainer"></div>
@@ -1030,8 +898,8 @@
             <div id="overlayGameName">Item</div>
             <div id="overlayGameDesc">Description</div>
             <div id="buttonRow">
+                <button class="glassBtn" id="launchBtn">Launch</button>
                 <button class="glassBtn" id="cancelBtn">Cancel</button>
-                <button class="glassBtn primary" id="launchBtn">Launch</button>
             </div>
         </div>
     </div>
@@ -1044,23 +912,15 @@
         <div id="settingsContent">
             <div class="settingsRow">
                 <div class="settingsLabel">Footer Status Bar</div>
-                <button class="settingsToggle active" id="toggleFooterBtn">ON</button>
+                <button class="settingsToggle" id="toggleFooterBtn">ON</button>
             </div>
             <div class="settingsRow">
                 <div class="settingsLabel">Hover Lift on Cards</div>
-                <button class="settingsToggle active" id="toggleHoverBtn">ON</button>
+                <button class="settingsToggle" id="toggleHoverBtn">ON</button>
             </div>
             <div class="settingsRow">
                 <div class="settingsLabel">Dock Visible</div>
-                <button class="settingsToggle active" id="toggleDockBtn">ON</button>
-            </div>
-            <div class="settingsRow">
-                <div class="settingsLabel">Smooth Animations</div>
-                <button class="settingsToggle active" id="toggleAnimBtn">ON</button>
-            </div>
-            <div class="settingsRow">
-                <div class="settingsLabel">Dark Theme</div>
-                <button class="settingsToggle active" id="toggleDarkThemeBtn">ON</button>
+                <button class="settingsToggle" id="toggleDockBtn">ON</button>
             </div>
             <div class="settingsRow">
                 <div class="settingsLabel">Clear Recently Played</div>
@@ -1073,7 +933,7 @@
             </div>
 
             <div id="aboutText">
-                APEX ZERO v1.0.0 — Monochrome Glass OS.  
+                APEX ZERO — Monochrome Glass OS.  
                 Games fullscreen, tools in windows, admin via SHIFT + Z E R O.
             </div>
         </div>
@@ -1089,8 +949,9 @@
         </div>
         <div id="adminTabs">
             <div class="adminTab active" data-tab="system">SYSTEM</div>
-            <div class="adminTab" data-tab="performance">PERF</div>
-            <div class="adminTab" data-tab="storage">STORAGE</div>
+            <div class="adminTab" data-tab="ui">UI</div>
+            <div class="adminTab" data-tab="games">GAMES</div>
+            <div class="adminTab" data-tab="dev">DEV</div>
         </div>
         <div id="adminContent"></div>
     </div>
@@ -1151,15 +1012,12 @@
     let hoverEnabled = true;
     let footerEnabled = true;
     let dockEnabled = true;
-    let animationsEnabled = true;
-    let darkThemeEnabled = true;
     let launchCount = 0;
     let startTime = Date.now();
     let adminOpen = false;
     let zCounter = 10;
     let recentlyPlayed = JSON.parse(localStorage.getItem("recentlyPlayed")) || [];
     let windowPositions = {};
-    let notifications = [];
 
     // ---------- RENDER ----------
     function renderGrid() {
@@ -1173,11 +1031,6 @@
         const container = document.getElementById("gridContainer");
         container.innerHTML = "";
 
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="emptyState">No items found. Try a different search.</div>';
-            return;
-        }
-
         // Group games by type
         const grouped = {
             games: filtered.filter(g => g.type === "game"),
@@ -1188,18 +1041,13 @@
         if (grouped.games.length > 0) {
             const gamesSection = document.createElement("div");
             gamesSection.className = "categorySection";
-            const header = document.createElement("div");
-            header.className = "categoryHeader";
-            header.innerHTML = `<span>GAMES</span><span class="categoryCount">${grouped.games.length} items</span>`;
-            gamesSection.appendChild(header);
+            gamesSection.innerHTML = `<div class="categoryHeader">GAMES</div><div class="categoryGrid"></div>`;
             
-            const gamesGrid = document.createElement("div");
-            gamesGrid.className = "categoryGrid";
+            const gamesGrid = gamesSection.querySelector(".categoryGrid");
             grouped.games.forEach(g => {
                 gamesGrid.appendChild(createIcon(g));
             });
             
-            gamesSection.appendChild(gamesGrid);
             container.appendChild(gamesSection);
         }
 
@@ -1207,18 +1055,13 @@
         if (grouped.apps.length > 0) {
             const appsSection = document.createElement("div");
             appsSection.className = "categorySection";
-            const header = document.createElement("div");
-            header.className = "categoryHeader";
-            header.innerHTML = `<span>APPS & TOOLS</span><span class="categoryCount">${grouped.apps.length} items</span>`;
-            appsSection.appendChild(header);
+            appsSection.innerHTML = `<div class="categoryHeader">APPS & TOOLS</div><div class="categoryGrid"></div>`;
             
-            const appsGrid = document.createElement("div");
-            appsGrid.className = "categoryGrid";
+            const appsGrid = appsSection.querySelector(".categoryGrid");
             grouped.apps.forEach(g => {
                 appsGrid.appendChild(createIcon(g));
             });
             
-            appsSection.appendChild(appsGrid);
             container.appendChild(appsSection);
         }
     }
@@ -1244,7 +1087,6 @@
         launchCount++;
         addToRecent(pendingGame);
         updateFooter();
-        addNotification(`Launched: ${pendingGame.name}`);
 
         if (pendingGame.type === "game") {
             window.open(pendingGame.url, "_blank");
@@ -1268,7 +1110,7 @@
         const list = document.getElementById("recentList");
         list.innerHTML = "";
         if (recentlyPlayed.length === 0) {
-            list.innerHTML = "<span class='recentEmpty'>No recent items</span>";
+            list.innerHTML = "<span style='opacity:0.5;'>No recent items</span>";
             return;
         }
         recentlyPlayed.forEach(g => {
@@ -1280,33 +1122,6 @@
                 confirmLaunch();
             });
             list.appendChild(item);
-        });
-    }
-
-    function addNotification(message) {
-        notifications.push(message);
-        if (notifications.length > 5) notifications.shift();
-        renderNotifications();
-        
-        // Auto-remove after 4 seconds
-        setTimeout(() => {
-            notifications = notifications.filter(n => n !== message);
-            renderNotifications();
-        }, 4000);
-    }
-
-    function renderNotifications() {
-        const notifList = document.getElementById("notifList");
-        notifList.innerHTML = "";
-        if (notifications.length === 0) {
-            notifList.innerHTML = "<div class='notifItem' style='opacity: 0.5;'>No notifications</div>";
-            return;
-        }
-        notifications.forEach(notif => {
-            const item = document.createElement("div");
-            item.className = "notifItem";
-            item.textContent = notif;
-            notifList.appendChild(item);
         });
     }
 
@@ -1393,11 +1208,8 @@
                 <div class="canvasToolbar">
                     <button class="canvasBtn" onclick="canvasClear()">CLEAR</button>
                     <button class="canvasBtn" onclick="canvasSave()">SAVE</button>
-                    <button class="canvasBtn" onclick="canvasEraser()">ERASER</button>
-                    <div style="flex: 1;"></div>
-                    <div class="colorPickerRow" id="colorPicker" style="margin: 0;"></div>
                 </div>
-                <canvas id="drawCanvas" width="340" height="160" style="background: #000; display: block;"></canvas>
+                <canvas id="drawCanvas" width="340" height="180" style="background: #000; display: block;"></canvas>
             `;
         }
 
@@ -1499,7 +1311,6 @@
         const uptimeMins = Math.floor((elapsed % 3600) / 60);
         document.getElementById("footerUptime").textContent = "UPTIME " + uptimeHours + ":" + String(uptimeMins).padStart(2, "0");
         document.getElementById("footerLaunches").textContent = "LAUNCHES " + launchCount;
-        document.getElementById("sideLaunchCount").textContent = launchCount;
     }
 
     // ---------- UTILITIES ----------
@@ -1552,9 +1363,6 @@
             if (timerTime > 0) {
                 timerTime--;
                 document.getElementById("timerDisplay").textContent = String(Math.floor(timerTime / 60)).padStart(2, "0") + ":" + String(timerTime % 60).padStart(2, "0");
-            } else {
-                timerPause();
-                addNotification("Timer complete!");
             }
         }, 1000);
     }
@@ -1577,11 +1385,10 @@
         const input = document.getElementById("terminalInput");
         
         const commands = {
-            "help": "Available: help, time, date, echo, clear, version, status",
+            "help": "Available commands: help, time, date, echo, clear, version",
             "time": new Date().toLocaleTimeString(),
             "date": new Date().toLocaleDateString(),
             "version": "APEX ZERO v1.0.0",
-            "status": "System operational. " + launchCount + " launches total.",
             "clear": "___CLEAR___"
         };
 
@@ -1606,7 +1413,7 @@
                     output.appendChild(msg);
                 } else {
                     const msg = document.createElement("div");
-                    msg.textContent = "Command not found: " + cmd;
+                    msg.textContent = "Command not found";
                     output.appendChild(msg);
                 }
                 output.scrollTop = output.scrollHeight;
@@ -1615,26 +1422,9 @@
     }
 
     let drawing = false;
-    let canvasColor = "#fff";
-
     function initCanvas() {
         const canvas = document.getElementById("drawCanvas");
         const ctx = canvas.getContext("2d");
-        
-        // Color picker
-        const colors = ["#fff", "#ccc", "#888", "#444"];
-        const picker = document.getElementById("colorPicker");
-        colors.forEach(color => {
-            const btn = document.createElement("div");
-            btn.className = "colorOption" + (color === "#fff" ? " active" : "");
-            btn.style.background = color;
-            btn.onclick = () => {
-                document.querySelectorAll(".colorOption").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                canvasColor = color;
-            };
-            picker.appendChild(btn);
-        });
         
         canvas.addEventListener("mousedown", () => drawing = true);
         canvas.addEventListener("mouseup", () => drawing = false);
@@ -1643,7 +1433,7 @@
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            ctx.fillStyle = canvasColor;
+            ctx.fillStyle = "#fff";
             ctx.fillRect(x - 2, y - 2, 4, 4);
         });
     }
@@ -1653,19 +1443,6 @@
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        addNotification("Canvas cleared");
-    }
-
-    function canvasEraser() {
-        const canvas = document.getElementById("drawCanvas");
-        const ctx = canvas.getContext("2d");
-        canvas.addEventListener("mousemove", (e) => {
-            if (!drawing) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            ctx.clearRect(x - 4, y - 4, 8, 8);
-        });
     }
 
     function canvasSave() {
@@ -1674,7 +1451,6 @@
         link.href = canvas.toDataURL();
         link.download = "canvas-" + Date.now() + ".png";
         link.click();
-        addNotification("Canvas saved");
     }
 
     // ---------- EVENT LISTENERS ----------
@@ -1697,12 +1473,6 @@
         nc.style.display = nc.style.display === "flex" ? "none" : "flex";
     });
 
-    document.getElementById("themeBtn").addEventListener("click", () => {
-        darkThemeEnabled = !darkThemeEnabled;
-        document.body.style.background = darkThemeEnabled ? "#000" : "#1a1a1a";
-        addNotification("Theme: " + (darkThemeEnabled ? "Dark" : "Light"));
-    });
-
     document.getElementById("toggleFooterBtn").addEventListener("click", (e) => {
         footerEnabled = !footerEnabled;
         document.getElementById("footer").style.display = footerEnabled ? "flex" : "none";
@@ -1712,6 +1482,9 @@
 
     document.getElementById("toggleHoverBtn").addEventListener("click", (e) => {
         hoverEnabled = !hoverEnabled;
+        document.querySelectorAll(".icon").forEach(icon => {
+            icon.style.pointerEvents = hoverEnabled ? "auto" : "none";
+        });
         e.target.textContent = hoverEnabled ? "ON" : "OFF";
         e.target.classList.toggle("active", hoverEnabled);
     });
@@ -1723,28 +1496,13 @@
         e.target.classList.toggle("active", dockEnabled);
     });
 
-    document.getElementById("toggleAnimBtn").addEventListener("click", (e) => {
-        animationsEnabled = !animationsEnabled;
-        e.target.textContent = animationsEnabled ? "ON" : "OFF";
-        e.target.classList.toggle("active", animationsEnabled);
-    });
-
-    document.getElementById("toggleDarkThemeBtn").addEventListener("click", (e) => {
-        darkThemeEnabled = !darkThemeEnabled;
-        document.body.style.background = darkThemeEnabled ? "#000" : "#1a1a1a";
-        e.target.textContent = darkThemeEnabled ? "ON" : "OFF";
-        e.target.classList.toggle("active", darkThemeEnabled);
-    });
-
     document.getElementById("clearRecentSettingsBtn").addEventListener("click", () => {
         recentlyPlayed = [];
         localStorage.removeItem("recentlyPlayed");
         renderRecent();
-        addNotification("Recently played cleared");
     });
 
     document.getElementById("resetLayoutBtn").addEventListener("click", () => {
-        localStorage.clear();
         location.reload();
     });
 
@@ -1762,8 +1520,8 @@
     document.querySelectorAll(".sideLink[data-category]").forEach(link => {
         link.addEventListener("click", (e) => {
             document.querySelectorAll(".sideLink[data-category]").forEach(l => l.classList.remove("active"));
-            e.currentTarget.classList.add("active");
-            currentCategory = e.currentTarget.getAttribute("data-category");
+            e.target.classList.add("active");
+            currentCategory = e.target.getAttribute("data-category");
             renderGrid();
         });
     });
@@ -1831,66 +1589,22 @@
             document.getElementById("adminOverlay").style.display = adminOpen ? "flex" : "none";
             if (adminOpen) renderAdminDashboard();
         }
-        // Escape key to close overlays
-        if (e.key === "Escape") {
-            document.getElementById("overlay").style.display = "none";
-            document.getElementById("settingsOverlay").style.display = "none";
-            if (adminOpen) {
-                adminOpen = false;
-                document.getElementById("adminOverlay").style.display = "none";
-            }
-        }
     });
 
     function renderAdminDashboard() {
+        // Admin dashboard rendering logic...
         const content = document.getElementById("adminContent");
-        const tab = document.querySelector(".adminTab.active").getAttribute("data-tab");
-        
-        let html = "";
-        
-        if (tab === "system") {
-            html = `
-                <div class="adminSectionTitle">SYSTEM INFO</div>
-                <div class="adminRow"><span class="adminLabel">Version:</span><span class="adminValue">1.0.0</span></div>
-                <div class="adminRow"><span class="adminLabel">Games:</span><span class="adminValue">${games.filter(g => g.type === "game").length}</span></div>
-                <div class="adminRow"><span class="adminLabel">Apps:</span><span class="adminValue">${games.filter(g => g.type === "app").length}</span></div>
-                <div class="adminRow"><span class="adminLabel">Launches:</span><span class="adminValue">${launchCount}</span></div>
-                <div class="adminRow"><span class="adminLabel">Uptime:</span><span class="adminValue">${document.getElementById("footerUptime").textContent}</span></div>
-            `;
-        } else if (tab === "performance") {
-            const memory = performance.memory;
-            html = `
-                <div class="adminSectionTitle">PERFORMANCE</div>
-                <div class="adminRow"><span class="adminLabel">Memory Usage:</span><span class="adminValue">${Math.round(memory.usedJSHeapSize / 1048576)}MB</span></div>
-                <div class="adminRow"><span class="adminLabel">Memory Limit:</span><span class="adminValue">${Math.round(memory.jsHeapSizeLimit / 1048576)}MB</span></div>
-                <div class="adminRow"><span class="adminLabel">Windows Open:</span><span class="adminValue">${document.querySelectorAll(".window").length}</span></div>
-                <div class="adminRow"><span class="adminLabel">Z-Index:</span><span class="adminValue">${zCounter}</span></div>
-            `;
-        } else if (tab === "storage") {
-            const storageSize = JSON.stringify(localStorage).length;
-            html = `
-                <div class="adminSectionTitle">LOCAL STORAGE</div>
-                <div class="adminRow"><span class="adminLabel">Used:</span><span class="adminValue">${(storageSize / 1024).toFixed(2)}KB</span></div>
-                <div class="adminRow"><span class="adminLabel">Recently Played:</span><span class="adminValue">${recentlyPlayed.length}</span></div>
-                <div class="adminRow"><span class="adminLabel">Saved Notes:</span><span class="adminValue">${localStorage.getItem("notes-notes") ? "Yes" : "No"}</span></div>
-            `;
-        }
-        
-        content.innerHTML = html;
+        content.innerHTML = `
+            <div class="adminSectionTitle">SYSTEM INFO</div>
+            <div class="adminRow"><span class="adminLabel">Profile:</span><span class="adminValue">${document.getElementById("profileName").textContent}</span></div>
+            <div class="adminRow"><span class="adminLabel">Launches:</span><span class="adminValue">${launchCount}</span></div>
+            <div class="adminRow"><span class="adminLabel">Uptime:</span><span class="adminValue">${document.getElementById("footerUptime").textContent}</span></div>
+        `;
     }
-
-    document.querySelectorAll(".adminTab").forEach(tab => {
-        tab.addEventListener("click", (e) => {
-            document.querySelectorAll(".adminTab").forEach(t => t.classList.remove("active"));
-            e.currentTarget.classList.add("active");
-            renderAdminDashboard();
-        });
-    });
 
     // ---------- INIT ----------
     renderGrid();
     renderRecent();
-    renderNotifications();
     updateFooter();
     setInterval(updateFooter, 1000);
 
@@ -1898,10 +1612,6 @@
     document.getElementById("toggleFooterBtn").classList.add("active");
     document.getElementById("toggleHoverBtn").classList.add("active");
     document.getElementById("toggleDockBtn").classList.add("active");
-    document.getElementById("toggleAnimBtn").classList.add("active");
-    document.getElementById("toggleDarkThemeBtn").classList.add("active");
-
-    addNotification("Welcome to APEX ZERO");
 </script>
 
 </body>
