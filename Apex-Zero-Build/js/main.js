@@ -332,7 +332,7 @@ adminTabs.forEach(tab => {
 });
 
 /* --------------------------------------------------
-   KEYBOARD SHORTCUTS
+   KEYBOARD SHORTCUTS (ALT + A)
 -------------------------------------------------- */
 
 document.addEventListener("keydown", e => {
@@ -344,7 +344,8 @@ document.addEventListener("keydown", e => {
     if (settingsOverlay.style.display === "flex" && e.key === "Escape")
         closeSettings();
 
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a") {
+    // NEW SHORTCUT: ALT + A
+    if (e.altKey && e.key.toLowerCase() === "a") {
         adminOpen ? closeAdmin() : openAdmin();
     }
 
@@ -363,4 +364,3 @@ function init() {
 }
 
 init();
-
