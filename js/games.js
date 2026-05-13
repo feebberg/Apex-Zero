@@ -1,27 +1,25 @@
 /* --------------------------------------------------
-   APEX ZERO — GAME SOURCE CONFIG (AUTO-SCAN)
-   Repo: feebberg / Apex-Zero
+   APEX ZERO — GAME CONFIG (HYBRID + THUMBNAILS)
 -------------------------------------------------- */
 
 window.APEX_CONFIG = {
     repoOwner: "feebberg",
     repoName: "Apex-Zero",
     gamesFolder: "games",
-    autoscanDefault: true
+    autoscanDefault: true,
+    thumbnailName: "thumbnail.png",
+    fallbackThumbnail: "assets/fallback.png"
 };
 
-/*
-   The auto-scan logic lives in main.js.
-   This file just exposes config and a hook
-   for manual/featured games if you ever want them.
-*/
-
+/* Manual + external games (you can add more later) */
 window.APEX_MANUAL_GAMES = [
-    // Example manual/featured game (optional):
+    // Example:
     // {
-    //   id: "external-example",
-    //   name: "External Example",
-    //   desc: "Opens an external site.",
-    //   url: "https://example.com"
+    //   id: "slope",
+    //   name: "Slope",
+    //   desc: "Fast downhill arcade",
+    //   url: "https://example.com/slope/",
+    //   thumbnail: "https://example.com/slope/thumb.png",
+    //   source: "external"
     // }
 ];
