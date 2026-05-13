@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Apex Zero — Game System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- LOADING -->
+  <div id="loadingScreen">
+    <div id="loadingTitle">APEX ZERO</div>
+    <div id="loadingBar"><div id="loadingFill"></div></div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div id="topBar">
+    <div id="logo">APEX ZERO</div>
+    <div id="topBarRight">
+      <input id="searchBox" type="text" placeholder="Search games…">
+      <span id="adminHint">CTRL+SHIFT+A</span>
+      <button id="settingsBtn">SETTINGS</button>
+    </div>
+  </div>
+
+  <!-- MAIN LAUNCHER -->
+  <div id="launcher">
+    <!-- RECENT -->
+    <section id="recentSection">
+      <div class="sectionHeader">
+        <div class="sectionTitle">RECENTLY PLAYED</div>
+        <button id="clearRecentBtn" class="pillBtn">CLEAR</button>
+      </div>
+      <div id="recentList" class="pillRow"></div>
+    </section>
+
+    <!-- ALL GAMES -->
+    <section id="gamesSection">
+      <div class="sectionHeader">
+        <div class="sectionTitle">GAME LIBRARY</div>
+      </div>
+      <div id="grid"></div>
+    </section>
+  </div>
+
+  <!-- LAUNCH OVERLAY -->
+  <div id="overlay">
+    <div id="overlayBox">
+      <div id="overlayTitleBar">LAUNCH GAME</div>
+      <div id="overlayContent">
+        <div id="overlayGameName">Game</div>
+        <div id="overlayGameDesc">Description</div>
+        <div id="buttonRow">
+          <button class="glassBtn" id="launchBtn">Launch</button>
+          <button class="glassBtn" id="cancelBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="settingsOverlay">
+    <div id="settingsBox">
+      <div id="settingsTitleBar">SETTINGS</div>
+      <div id="settingsContent">
+        <div class="settingsRow">
+          <div class="settingsLabel">Hover Lift on Tiles</div>
+          <button class="settingsToggle" id="toggleHoverBtn">ON</button>
+        </div>
+        <div class="settingsRow">
+          <div class="settingsLabel">Clear Recently Played</div>
+          <button class="settingsToggle" id="clearRecentSettingsBtn">CLEAR</button>
+        </div>
+
+        <div id="settingsButtons">
+          <button class="glassBtn" id="closeSettingsBtn">Close</button>
+        </div>
+
+        <div id="aboutText">
+          APEX ZERO — Game System Edition.  
+          Full‑screen launcher. No OS. No windows. Just games.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="adminOverlay">
+    <div id="adminBox">
+      <div id="adminTitleBar">
+        <span>ADMIN DASHBOARD</span>
+        <span style="font-size:10px;opacity:0.7;">CTRL+SHIFT+A TO CLOSE</span>
+      </div>
+      <div id="adminTabs">
+        <div class="adminTab active" data-tab="system">SYSTEM</div>
+        <div class="adminTab" data-tab="games">GAMES</div>
+        <div class="adminTab" data-tab="dev">DEV</div>
+      </div>
+      <div id="adminContent"></div>
+    </div>
+  </div>
+
+  <script src="js/games.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
