@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body data-theme="light">
 
   <!-- LOADING -->
   <div id="loadingScreen">
@@ -20,7 +20,6 @@
     <div id="logo">APEX ZERO</div>
     <div id="topBarRight">
       <input id="searchBox" type="text" placeholder="Search games…">
-      <span id="adminHint">ALT + A</span>
       <button id="settingsBtn" class="pillBtn">SETTINGS</button>
     </div>
   </div>
@@ -63,25 +62,20 @@
     </div>
   </div>
 
-  <!-- SETTINGS -->
+  <!-- SETTINGS OVERLAY -->
   <div id="settingsOverlay">
     <div id="settingsBox">
       <div id="settingsTitleBar">SETTINGS</div>
       <div id="settingsContent">
 
         <div class="settingsRow">
-          <div class="settingsLabel">Hover lift on tiles</div>
-          <button class="settingsToggle" id="toggleHoverBtn">ON</button>
+          <div class="settingsLabel">Dark mode</div>
+          <button class="settingsToggle" id="darkModeToggle">OFF</button>
         </div>
 
         <div class="settingsRow">
           <div class="settingsLabel">Clear recently played</div>
           <button class="settingsToggle" id="clearRecentSettingsBtn">CLEAR</button>
-        </div>
-
-        <div class="settingsRow">
-          <div class="settingsLabel">Auto‑scan /games folder</div>
-          <button class="settingsToggle" id="toggleAutoscanBtn">ON</button>
         </div>
 
         <div id="settingsButtons">
@@ -90,33 +84,14 @@
 
         <div id="aboutText">
           APEX ZERO — Game System Edition.  
-          Full‑screen launcher. No OS. No windows. Just games.
+          Full‑screen launcher. No OS. Just games.
         </div>
 
       </div>
     </div>
   </div>
 
-  <!-- ADMIN -->
-  <div id="adminOverlay">
-    <div id="adminBox">
-      <div id="adminTitleBar">
-        <span>ADMIN DASHBOARD</span>
-        <span style="font-size:10px;opacity:0.7;">ALT + A TO CLOSE</span>
-      </div>
-
-      <div id="adminTabs">
-        <div class="adminTab active" data-tab="system">SYSTEM</div>
-        <div class="adminTab" data-tab="games">GAMES</div>
-        <div class="adminTab" data-tab="dev">DEV</div>
-      </div>
-
-      <div id="adminContent"></div>
-    </div>
-  </div>
-
   <script src="js/games.js"></script>
   <script src="js/main.js"></script>
-
 </body>
 </html>
