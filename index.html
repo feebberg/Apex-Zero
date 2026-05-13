@@ -12,6 +12,7 @@
   <div id="loadingScreen">
     <div id="loadingTitle">APEX ZERO</div>
     <div id="loadingBar"><div id="loadingFill"></div></div>
+    <div id="loadingSub">Booting game system…</div>
   </div>
 
   <!-- TOP BAR -->
@@ -20,7 +21,7 @@
     <div id="topBarRight">
       <input id="searchBox" type="text" placeholder="Search games…">
       <span id="adminHint">ALT + A</span>
-      <button id="settingsBtn">SETTINGS</button>
+      <button id="settingsBtn" class="pillBtn">SETTINGS</button>
     </div>
   </div>
 
@@ -39,6 +40,7 @@
     <section id="gamesSection">
       <div class="sectionHeader">
         <div class="sectionTitle">GAME LIBRARY</div>
+        <div class="sectionSub">Auto‑scanned from /games</div>
       </div>
       <div id="grid"></div>
     </section>
@@ -65,12 +67,16 @@
       <div id="settingsTitleBar">SETTINGS</div>
       <div id="settingsContent">
         <div class="settingsRow">
-          <div class="settingsLabel">Hover Lift on Tiles</div>
+          <div class="settingsLabel">Hover lift on tiles</div>
           <button class="settingsToggle" id="toggleHoverBtn">ON</button>
         </div>
         <div class="settingsRow">
-          <div class="settingsLabel">Clear Recently Played</div>
+          <div class="settingsLabel">Clear recently played</div>
           <button class="settingsToggle" id="clearRecentSettingsBtn">CLEAR</button>
+        </div>
+        <div class="settingsRow">
+          <div class="settingsLabel">Auto‑scan /games folder</div>
+          <button class="settingsToggle" id="toggleAutoscanBtn">ON</button>
         </div>
 
         <div id="settingsButtons">
