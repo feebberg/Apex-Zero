@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apex Zero</title>
 
-    <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
+    <!-- LOADING SCREEN -->
+    <div id="loadingScreen">
+        <div class="loader"></div>
+        <p>Loading Apex Zero…</p>
+    </div>
+
     <!-- HEADER -->
     <header id="topbar">
         <h1 class="logo">Apex Zero</h1>
-
         <div class="top-buttons">
             <button id="settingsBtn" class="icon-btn">⚙</button>
         </div>
@@ -67,7 +69,7 @@
         </div>
     </div>
 
-    <!-- ADMIN PANEL (UPGRADED) -->
+    <!-- ADMIN PANEL -->
     <div id="adminOverlay" class="overlay admin">
         <div class="admin-window">
 
@@ -89,9 +91,7 @@
                 <!-- GAMES TAB -->
                 <div id="gamesTab" class="admin-tab-content active">
                     <h3>Game Manager</h3>
-
                     <div id="gameList"></div>
-
                     <button id="addGameBtn" class="admin-action">Add Game</button>
                 </div>
 
@@ -154,9 +154,21 @@
         </div>
     </div>
 
+    <!-- FPS COUNTER -->
+    <div id="fpsCounter"></div>
+
     <!-- SCRIPTS -->
     <script src="js/games.js"></script>
     <script src="js/main.js"></script>
+
+    <!-- LOADING SCREEN FADE -->
+    <script>
+        window.addEventListener("load", () => {
+            const loader = document.getElementById("loadingScreen");
+            loader.style.opacity = "0";
+            setTimeout(() => loader.style.display = "none", 400);
+        });
+    </script>
 
 </body>
 </html>
