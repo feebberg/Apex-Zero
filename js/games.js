@@ -1,31 +1,31 @@
 /* ============================================================
-   APEX ZERO — MANUAL GAME LIST
-   (Used in addition to autoscan)
+   APEX ZERO — MANUAL GAME LIST (FINAL + STABLE)
+   This file ONLY contains manually added games.
+   Autoscan handles everything inside /games automatically.
 ============================================================ */
 
 /*
-    HOW THIS WORKS:
+ HOW TO USE THIS FILE:
 
-    Autoscan loads all .html files inside /games automatically.
+ Add manual games ONLY when:
 
-    This file is ONLY for:
-    - External games
-    - Custom URLs
-    - Games not stored in /games
-    - Games you want to override manually
+ - The game is hosted externally (not inside /games)
+ - The game uses a custom URL
+ - You want to override autoscan behavior
+ - You want to add hidden/admin‑only games
 
-    Each entry looks like this:
+ Each entry looks like:
 
-    {
-        id: "unique-id",
-        name: "Game Name",
-        desc: "Short description",
-        url: "https://example.com/game/",
-        thumbnail: "https://example.com/thumb.png",
-        source: "manual"
-    }
+ {
+     id: "unique-id",
+     name: "Game Name",
+     desc: "Short description",
+     url: "https://example.com/game/",
+     thumbnail: "assets/thumbnails/example.png",
+     source: "manual"
+ }
 
-    Leave the array empty if you don't need manual games.
+ Leave the array empty if you don't need manual games.
 */
 
 window.APEX_MANUAL_GAMES = [
@@ -37,7 +37,7 @@ window.APEX_MANUAL_GAMES = [
         name: "Example Game",
         desc: "This is a manually added game.",
         url: "https://example.com/game/",
-        thumbnail: "assets/thumbnails/example.png",
+        thumbnail: "assets/fallback.png",
         source: "manual"
     }
     */
