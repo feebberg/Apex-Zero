@@ -1,97 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Apex Zero — Game System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Zero</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body data-theme="light">
 
-  <!-- LOADING -->
-  <div id="loadingScreen">
-    <div id="loadingTitle">APEX ZERO</div>
-    <div id="loadingBar"><div id="loadingFill"></div></div>
-    <div id="loadingSub">Booting game system…</div>
-  </div>
+<body>
 
-  <!-- TOP BAR -->
-  <div id="topBar">
-    <div id="logo">APEX ZERO</div>
-    <div id="topBarRight">
-      <input id="searchBox" type="text" placeholder="Search games…">
-      <button id="settingsBtn" class="pillBtn">SETTINGS</button>
+    <!-- HEADER -->
+    <header id="topbar">
+        <h1 class="logo">Apex Zero</h1>
+
+        <div class="top-buttons">
+            <button id="settingsBtn" class="icon-btn">⚙</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="content">
+        <section id="recentSection">
+            <h2>Recent</h2>
+            <div id="recentGrid" class="grid"></div>
+        </section>
+
+        <section id="gamesSection">
+            <h2>All Games</h2>
+            <div id="gamesGrid" class="grid"></div>
+        </section>
+    </main>
+
+    <!-- SETTINGS OVERLAY -->
+    <div id="settingsOverlay" class="overlay">
+        <div class="overlay-content">
+            <h2>Settings</h2>
+
+            <div class="setting-row">
+                <label>Theme</label>
+                <select id="themeSelect">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <label>Accent Color</label>
+                <input type="color" id="accentPicker" value="#888888">
+            </div>
+
+            <button id="closeSettings" class="close-btn">Close</button>
+        </div>
     </div>
-  </div>
 
-  <!-- MAIN -->
-  <div id="launcher">
-
-    <!-- RECENT -->
-    <section id="recentSection">
-      <div class="sectionHeader">
-        <div class="sectionTitle">RECENTLY PLAYED</div>
-        <button id="clearRecentBtn" class="pillBtn">CLEAR</button>
-      </div>
-      <div id="recentList" class="pillRow"></div>
-    </section>
-
-    <!-- GAME LIBRARY -->
-    <section id="gamesSection">
-      <div class="sectionHeader">
-        <div class="sectionTitle">GAME LIBRARY</div>
-        <div class="sectionSub">Auto‑scanned + Manual + External</div>
-      </div>
-      <div id="grid"></div>
-    </section>
-
-  </div>
-
-  <!-- LAUNCH OVERLAY -->
-  <div id="overlay">
-    <div id="overlayBox">
-      <div id="overlayTitleBar">LAUNCH GAME</div>
-      <div id="overlayContent">
-        <div id="overlayGameName">Game</div>
-        <div id="overlayGameDesc">Description</div>
-        <div id="buttonRow">
-          <button class="glassBtn" id="launchBtn">Launch</button>
-          <button class="glassBtn" id="cancelBtn">Cancel</button>
+    <!-- LAUNCH OVERLAY -->
+    <div id="launchOverlay" class="overlay">
+        <div class="overlay-content launch-box">
+            <h2 id="launchTitle">Launching...</h2>
+            <iframe id="launchFrame" src=""></iframe>
+            <button id="closeLaunch" class="close-btn">Close</button>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- SETTINGS OVERLAY -->
-  <div id="settingsOverlay">
-    <div id="settingsBox">
-      <div id="settingsTitleBar">SETTINGS</div>
-      <div id="settingsContent">
+    <!-- ADMIN PANEL (UPGRADED) -->
+    <div id="adminOverlay" class="overlay admin">
+        <div class="admin-window">
 
-        <div class="settingsRow">
-          <div class="settingsLabel">Dark mode</div>
-          <button class="settingsToggle" id="darkModeToggle">OFF</button>
+            <header class="admin-header">
+                <h2>Developer Console</h2>
+                <button id="closeAdmin" class="close-btn">✕</button>
+            </header>
+
+            <nav class="admin-tabs">
+                <button class="admin-tab active" data-tab="gamesTab">Games</button>
+                <button class="admin-tab" data-tab="autoscanTab">Autoscan</button>
+                <button class="admin-tab" data-tab="themeTab">Theme</button>
+                <button class="admin-tab" data-tab="systemTab">System</button>
+                <button class="admin-tab" data-tab="devTab">Dev Tools</button>
+            </nav>
+
+            <div class="admin-content">
+
+                <!-- GAMES TAB -->
+                <div id="gamesTab" class="admin-tab-content active">
+                    <h3>Game Manager</h3>
+
+                    <div id="gameList"></div>
+
+                    <button id="addGameBtn" class="admin-action">Add Game</button>
+                </div>
+
+                <!-- AUTOSCAN TAB -->
+                <div id="autoscanTab" class="admin-tab-content">
+                    <h3>Autoscan Controls</h3>
+
+                    <div class="setting-row">
+                        <label>Autoscan Enabled</label>
+                        <input type="checkbox" id="autoscanToggle">
+                    </div>
+
+                    <button id="forceScanBtn" class="admin-action">Force Rescan</button>
+
+                    <h4>Autoscan Log</h4>
+                    <pre id="autoscanLog"></pre>
+                </div>
+
+                <!-- THEME TAB -->
+                <div id="themeTab" class="admin-tab-content">
+                    <h3>Theme Tools</h3>
+
+                    <div class="setting-row">
+                        <label>Theme</label>
+                        <select id="adminThemeSelect">
+                            <option value="dark">Dark</option>
+                            <option value="light">Light</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-row">
+                        <label>Accent Color</label>
+                        <input type="color" id="adminAccentPicker">
+                    </div>
+                </div>
+
+                <!-- SYSTEM TAB -->
+                <div id="systemTab" class="admin-tab-content">
+                    <h3>System Tools</h3>
+
+                    <button id="clearRecentBtn" class="admin-action">Clear Recent</button>
+                    <button id="clearCacheBtn" class="admin-action">Clear Cache</button>
+                    <button id="fpsToggleBtn" class="admin-action">Toggle FPS Monitor</button>
+
+                    <h4>LocalStorage</h4>
+                    <pre id="localStorageDump"></pre>
+                </div>
+
+                <!-- DEV TAB -->
+                <div id="devTab" class="admin-tab-content">
+                    <h3>Developer Tools</h3>
+
+                    <button id="editJsonBtn" class="admin-action">Edit Game JSON</button>
+
+                    <h4>Event Log</h4>
+                    <pre id="eventLog"></pre>
+                </div>
+
+            </div>
         </div>
-
-        <div class="settingsRow">
-          <div class="settingsLabel">Clear recently played</div>
-          <button class="settingsToggle" id="clearRecentSettingsBtn">CLEAR</button>
-        </div>
-
-        <div id="settingsButtons">
-          <button class="glassBtn" id="closeSettingsBtn">Close</button>
-        </div>
-
-        <div id="aboutText">
-          APEX ZERO — Game System Edition.  
-          Full‑screen launcher. No OS. Just games.
-        </div>
-
-      </div>
     </div>
-  </div>
 
-  <script src="js/games.js"></script>
-  <script src="js/main.js"></script>
+    <!-- SCRIPTS -->
+    <script src="js/games.js"></script>
+    <script src="js/main.js"></script>
+
 </body>
 </html>
