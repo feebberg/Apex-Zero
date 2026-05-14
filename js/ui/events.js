@@ -1,20 +1,18 @@
 APEX.ui_events = {
     init() {
-        // Keyboard shortcuts
-        document.addEventListener("keydown", e => {
-            // Ctrl + , opens settings
-            if (e.ctrlKey && e.key === ",") {
-                $("settingsPanel").classList.toggle("active");
-            }
-
-            // Escape closes everything
-            if (e.key === "Escape") {
-                APEX.ui_panel.closeAll();
+        document.body.addEventListener("click", e => {
+            const card = e.target.closest(".game-card");
+            if (card) {
+                const id = card.dataset.id;
+                const game = (APEX.ALL_GAMES || []).find(g => g.id === id);
+                if (game) APEX.launch.open(game);
             }
         });
 
-        // Launch prompt buttons
-        $("cancelLaunch").onclick = () => APEX.launch.close();
-        $("confirmLaunch").onclick = () => APEX.launch.confirm();
+        const playBtn = $("playBtn");
+        const cancelBtn = $("cancelLaunch");
+
+        if (playBtn) playBtn.addEventListener("click", () => APEX.launch.play());
+        if (cancelBtn) cancelBtn.addEventListener("click", () => APEX.launch.close());
     }
 };
