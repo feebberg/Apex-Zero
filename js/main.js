@@ -165,10 +165,10 @@ function sortGames(list, mode) {
         return list.sort((a, b) => a.name.localeCompare(b.name));
     }
     if (mode === "recent") {
-        return list; // autoscan order
+        return list;
     }
     if (mode === "played") {
-        return list; // future feature
+        return list;
     }
     return list;
 }
