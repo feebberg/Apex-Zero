@@ -1,24 +1,45 @@
-/* --------------------------------------------------
-   APEX ZERO — GAME CONFIG
--------------------------------------------------- */
+/* ============================================================
+   APEX ZERO — MANUAL GAME LIST
+   (Used in addition to autoscan)
+============================================================ */
 
-window.APEX_CONFIG = {
-  repoOwner: "feebberg",          // change if needed
-  repoName: "Apex-Zero",          // change if needed
-  gamesFolder: "games",
-  thumbnailName: "thumbnail.png",
-  fallbackThumbnail: "assets/fallback.png"
-};
+/*
+    HOW THIS WORKS:
 
-/* Manual / external games (you can add more later) */
+    Autoscan loads all .html files inside /games automatically.
+
+    This file is ONLY for:
+    - External games
+    - Custom URLs
+    - Games not stored in /games
+    - Games you want to override manually
+
+    Each entry looks like this:
+
+    {
+        id: "unique-id",
+        name: "Game Name",
+        desc: "Short description",
+        url: "https://example.com/game/",
+        thumbnail: "https://example.com/thumb.png",
+        source: "manual"
+    }
+
+    Leave the array empty if you don't need manual games.
+*/
+
 window.APEX_MANUAL_GAMES = [
-  // Example:
-  // {
-  //   id: "slope",
-  //   name: "Slope",
-  //   desc: "Fast downhill arcade",
-  //   url: "https://example.com/slope/",
-  //   thumbnail: "https://example.com/slope/thumb.png",
-  //   source: "external"
-  // }
+
+    // Example manual game (you can delete this)
+    /*
+    {
+        id: "example-game",
+        name: "Example Game",
+        desc: "This is a manually added game.",
+        url: "https://example.com/game/",
+        thumbnail: "assets/thumbnails/example.png",
+        source: "manual"
+    }
+    */
+
 ];
