@@ -1,5 +1,5 @@
 /* ============================================================
-   APEX ZERO — MANUAL GAME LIST (FINAL, CLEAN, NO ADMIN PANEL)
+   APEX ZERO — MANUAL GAME LIST (FINAL)
    Autoscan handles all games inside /games automatically.
    This file is ONLY for manually added games.
 ============================================================ */
@@ -19,7 +19,6 @@
  {
      id: "unique-id",
      name: "Game Name",
-     desc: "Short description",
      url: "https://example.com/game/",
      thumbnail: "assets/fallback.png",
      source: "manual"
@@ -35,7 +34,6 @@ window.APEX_MANUAL_GAMES = [
     {
         id: "example-game",
         name: "Example Game",
-        desc: "This is a manually added game.",
         url: "https://example.com/game/",
         thumbnail: "assets/fallback.png",
         source: "manual"
