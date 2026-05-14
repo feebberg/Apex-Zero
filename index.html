@@ -2,107 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Apex Zero Launcher</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex Zero</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+<body data-theme="dark">
+    <div id="app">
+        <header class="top-bar">
+            <div class="logo">APEX ZERO</div>
+            <div class="top-right">
+                <div class="search-wrap">
+                    <input id="search-input" type="text" placeholder="Search games…">
+                </div>
+                <div id="fps-counter" class="fps">FPS</div>
+            </div>
+        </header>
 
-<body>
+        <main class="main-layout">
+            <section class="panel-left">
+                <div class="panel-section">
+                    <div class="panel-title">Categories</div>
+                    <div class="tabs" id="category-tabs">
+                        <button class="tab active" data-category="all">All</button>
+                        <button class="tab" data-category="Arcade">Arcade</button>
+                        <button class="tab" data-category="Puzzle">Puzzle</button>
+                    </div>
+                </div>
+            </section>
 
-    <!-- HEADER -->
-    <div id="topBar">
-        <div id="logo">APEX ZERO</div>
-
-        <div id="searchContainer">
-            <input id="searchInput" type="text" placeholder="Search games...">
-        </div>
-
-        <div id="headerButtons">
-            <button id="openSettings">Settings</button>
-            <button id="toggleFPS">FPS</button>
-        </div>
+            <section class="panel-main">
+                <div class="grid-header">
+                    <h1>Library</h1>
+                    <span class="grid-subtitle">Select a game to launch</span>
+                </div>
+                <div id="game-grid" class="game-grid">
+                    <!-- Filled by APEX_RENDER -->
+                </div>
+            </section>
+        </main>
     </div>
 
-    <!-- TABS -->
-    <div id="tabs">
-        <button class="tab-btn active" data-tab="all">All Games</button>
-        <button class="tab-btn" data-tab="recent">Recent</button>
-        <button class="tab-btn" data-tab="favorites">Favorites</button>
-    </div>
-
-    <!-- TAB CONTENT -->
-    <div id="tab-all" class="tab-content">
-        <div id="gameGrid" class="grid"></div>
-    </div>
-
-    <div id="tab-recent" class="tab-content" style="display:none;">
-        <div id="recentGrid" class="grid"></div>
-    </div>
-
-    <div id="tab-favorites" class="tab-content" style="display:none;">
-        <div id="favoritesGrid" class="grid"></div>
-    </div>
-
-    <!-- SETTINGS PANEL -->
-    <div id="settingsPanel" class="side-panel">
-        <div class="panel-header">
-            <h2>Settings</h2>
-            <button id="closeSettings">Close</button>
-        </div>
-
-        <div class="panel-content">
-            <h3>Theme</h3>
-            <select id="themeSelect">
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-            </select>
-
-            <h3>Layout</h3>
-            <select id="layoutSelect">
-                <option value="grid">Grid</option>
-                <option value="list">List</option>
-            </select>
-        </div>
-    </div>
-
-    <!-- LAUNCH OVERLAY -->
-    <div id="launchOverlay" class="launch-overlay">
-        <div class="launch-box">
-            <img id="launchThumb" src="" alt="">
-            <h2 id="launchTitle"></h2>
-
-            <div class="launch-buttons">
-                <button id="playBtn">Play</button>
-                <button id="cancelLaunch">Cancel</button>
+    <!-- Launch Modal -->
+    <div id="launch-modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">Game Launcher</span>
+                <button id="launch-close" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="launch-frame" src="" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
-    <!-- FPS COUNTER -->
-    <div id="fpsCounter"></div>
-
-    <!-- SCRIPTS -->
-
-    <!-- CORE -->
-    <script src="js/core/autoscan.js"></script>
-    <script src="js/core/storage.js"></script>
-    <script src="js/core/settings.js"></script>
-    <script src="js/core/theme.js"></script>
-    <script src="js/core/layout.js"></script>
-    <script src="js/core/render.js"></script>
-    <script src="js/core/launch.js"></script>
-    <script src="js/core/fps.js"></script>
-    <script src="js/core/search.js"></script>
-
-    <!-- UI -->
-    <script src="js/ui/panel.js"></script>
-    <script src="js/ui/tabs.js"></script>
-    <script src="js/ui/events.js"></script>
-
-    <!-- ROOT -->
-    <script src="js/games.js"></script>
-    <script src="js/main.js"></script>
-
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
-
