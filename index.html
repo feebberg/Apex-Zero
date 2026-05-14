@@ -27,6 +27,7 @@
 
     <!-- MAIN CONTENT -->
     <main id="content">
+
         <section id="recentSection">
             <h2>Recent</h2>
             <div id="recentGrid" class="grid"></div>
@@ -34,8 +35,13 @@
 
         <section id="gamesSection">
             <h2>All Games</h2>
+
+            <!-- SEARCH BAR -->
+            <input id="searchInput" type="text" placeholder="Search games..." />
+
             <div id="gamesGrid" class="grid"></div>
         </section>
+
     </main>
 
     <!-- SETTINGS OVERLAY -->
@@ -54,6 +60,11 @@
             <div class="setting-row">
                 <label>Accent Color</label>
                 <input type="color" id="accentPicker" value="#888888">
+            </div>
+
+            <div class="setting-row">
+                <label>Recently Played</label>
+                <button id="clearRecentSettingsBtn" class="admin-action">Clear Recent</button>
             </div>
 
             <button id="closeSettings" class="close-btn">Close</button>
