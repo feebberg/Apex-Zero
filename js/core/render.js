@@ -1,45 +1,34 @@
 APEX.render = {
-    games(list) {
-        const grid = $("gamesGrid");
-        if (!grid) return;
-
-        const sortMode = $("sortSelect")?.value || "az";
-        const sorted = APEX.search.sort(list, sortMode);
-
-        grid.innerHTML = "";
-
-        sorted.forEach(game => {
-            const card = document.createElement("div");
-            card.className = "game-card";
-
-            card.innerHTML = `
-                <img class="game-thumb" src="${game.thumbnail}" onerror="this.src='assets/fallback.png'">
-                <div class="game-title">${game.name}</div>
-            `;
-
-            card.onclick = () => APEX.launch.open(game);
-            grid.appendChild(card);
-        });
+    all(games) {
+        this._renderGrid("gameGrid", games);
     },
 
     recent() {
-        const grid = $("recentGrid");
-        if (!grid) return;
+        const recentIds = APEX.storage.get("apex_recent", []);
+        const games = (APEX.ALL_GAMES || []).filter(g => recentIds.includes(g.id));
+        this._renderGrid("recentGrid", games);
+    },
 
-        const recent = APEX.storage.load(APEX.storage.keys.recent, []);
-        grid.innerHTML = "";
+    favorites() {
+        const favIds = APEX.storage.get("apex_favorites", []);
+        const games = (APEX.ALL_GAMES || []).filter(g => favIds.includes(g.id));
+        this._renderGrid("favoritesGrid", games);
+    },
 
-        recent.forEach(game => {
+    _renderGrid(id, games) {
+        const el = $(id);
+        if (!el) return;
+        el.innerHTML = "";
+
+        games.forEach(game => {
             const card = document.createElement("div");
             card.className = "game-card";
-
+            card.dataset.id = game.id;
             card.innerHTML = `
-                <img class="game-thumb" src="${game.thumbnail}" onerror="this.src='assets/fallback.png'">
-                <div class="game-title">${game.name}</div>
+                <div class="thumb" style="background-image:url('${game.thumb}')"></div>
+                <div class="title">${game.title}</div>
             `;
-
-            card.onclick = () => APEX.launch.open(game);
-            grid.appendChild(card);
+            el.appendChild(card);
         });
     }
 };
