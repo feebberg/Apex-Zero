@@ -8,39 +8,28 @@
 </head>
 <body data-theme="dark">
     <div id="app">
+
         <header class="top-bar">
             <div class="logo">APEX ZERO</div>
+
             <div class="top-right">
-                <div class="search-wrap">
-                    <input id="search-input" type="text" placeholder="Search games…">
-                </div>
+                <input id="search-input" type="text" placeholder="Search games…">
                 <div id="fps-counter" class="fps">FPS</div>
             </div>
         </header>
 
         <main class="main-layout">
-            <section class="panel-left">
-                <div class="panel-section">
-                    <div class="panel-title">Categories</div>
-                    <div class="tabs" id="category-tabs">
-                        <button class="tab active" data-category="all">All</button>
-                        <button class="tab" data-category="Arcade">Arcade</button>
-                        <button class="tab" data-category="Puzzle">Puzzle</button>
-                    </div>
-                </div>
-            </section>
-
             <section class="panel-main">
                 <div class="grid-header">
-                    <h1>Library</h1>
-                    <span class="grid-subtitle">Select a game to launch</span>
+                    <h1>Game Library</h1>
                 </div>
 
                 <div id="game-grid" class="game-grid">
-                    <!-- Filled by APEX_RENDER -->
+                    <!-- Filled by JS -->
                 </div>
             </section>
         </main>
+
     </div>
 
     <script type="module" src="js/main.js"></script>
