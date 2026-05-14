@@ -1,37 +1,29 @@
 APEX.launch = {
-    selected: null,
+    current: null,
 
     open(game) {
-        this.selected = game;
-
-        $("launchThumb").src = game.thumbnail;
-        $("launchName").textContent = game.name;
-
-        $("launchPrompt").classList.add("active");
+        this.current = game;
+        $("launchTitle").textContent = game.title;
+        $("launchThumb").src = game.thumb;
+        $("launchOverlay").style.display = "flex";
     },
 
     close() {
-        $("launchPrompt").classList.remove("active");
+        this.current = null;
+        $("launchOverlay").style.display = "none";
     },
 
-    confirm() {
-        if (!this.selected) return;
-
-        const recent = APEX.storage.load(APEX.storage.keys.recent, []);
-        const filtered = recent.filter(g => g.id !== this.selected.id);
-        filtered.unshift(this.selected);
-        APEX.storage.save(APEX.storage.keys.recent, filtered);
-
-        APEX.render.recent();
-
-        const a = document.createElement("a");
-        a.href = this.selected.url;
-        a.target = "_blank";
-        a.rel = "noopener";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-
+    play() {
+        if (!this.current) return;
+        window.open(this.current.path, "_blank");
+        this._addRecent(this.current.id);
         this.close();
+        APEX.render.recent();
+    },
+
+    _addRecent(id) {
+        let recent = APEX.storage.get("apex_recent", []);
+        recent = [id, ...recent.filter(x => x !== id)].slice(0, 12);
+        APEX.storage.set("apex_recent", recent);
     }
 };
