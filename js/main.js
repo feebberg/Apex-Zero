@@ -1,5 +1,5 @@
 /* ============================================================
-   APEX ZERO — MAIN SCRIPT (FINAL + STABLE + NULL-SAFE)
+   APEX ZERO — MAIN SCRIPT (FINAL, NO ADMIN PANEL, NEW TAB MODE)
 ============================================================ */
 
 const APEX = {
@@ -40,9 +40,7 @@ function loadTheme() {
     applyAccent(accent);
 
     if ($("themeSelect")) $("themeSelect").value = theme;
-    if ($("adminThemeSelect")) $("adminThemeSelect").value = theme;
     if ($("accentPicker")) $("accentPicker").value = accent;
-    if ($("adminAccentPicker")) $("adminAccentPicker").value = accent;
 }
 
 /* ------------------------------------------------------------
@@ -178,88 +176,45 @@ function setupSearch() {
 }
 
 /* ------------------------------------------------------------
-   LAUNCHER
+   GAME LAUNCHER (NEW TAB MODE)
 ------------------------------------------------------------ */
 function launchGame(game) {
-    if ($("launchTitle")) $("launchTitle").textContent = game.name;
-    if ($("launchFrame")) $("launchFrame").src = game.url;
-
     addRecent(game);
     renderRecent();
-
-    if ($("launchOverlay")) $("launchOverlay").classList.add("active");
-}
-
-if ($("closeLaunch")) {
-    $("closeLaunch").onclick = () => {
-        if ($("launchOverlay")) $("launchOverlay").classList.remove("active");
-        if ($("launchFrame")) $("launchFrame").src = "";
-    };
+    window.open(game.url, "_blank");
 }
 
 /* ------------------------------------------------------------
-   SETTINGS
+   SETTINGS PANEL
 ------------------------------------------------------------ */
 function setupSettings() {
-    if ($("settingsBtn")) $("settingsBtn").onclick = () => $("settingsOverlay").classList.add("active");
-    if ($("closeSettings")) $("closeSettings").onclick = () => $("settingsOverlay").classList.remove("active");
+    if ($("settingsBtn")) $("settingsBtn").onclick = () =>
+        $("settingsOverlay").classList.add("active");
 
-    if ($("themeSelect")) $("themeSelect").onchange = e => applyTheme(e.target.value);
-    if ($("accentPicker")) $("accentPicker").onchange = e => applyAccent(e.target.value);
-    if ($("adminThemeSelect")) $("adminThemeSelect").onchange = e => applyTheme(e.target.value);
-    if ($("adminAccentPicker")) $("adminAccentPicker").onchange = e => applyAccent(e.target.value);
+    if ($("closeSettings")) $("closeSettings").onclick = () =>
+        $("settingsOverlay").classList.remove("active");
 
-    if ($("clearRecentSettingsBtn")) $("clearRecentSettingsBtn").onclick = clearRecent;
-}
+    if ($("themeSelect")) $("themeSelect").onchange = e =>
+        applyTheme(e.target.value);
 
-/* ------------------------------------------------------------
-   ADMIN PANEL (ALT + A)
------------------------------------------------------------- */
-function setupAdmin() {
-    const overlay = $("adminOverlay");
-    if (!overlay) return;
+    if ($("accentPicker")) $("accentPicker").onchange = e =>
+        applyAccent(e.target.value);
 
-    let open = false;
+    if ($("autoscanToggle"))
+        $("autoscanToggle").onchange = e =>
+            APEX.autoscanEnabled = e.target.checked;
 
-    document.addEventListener("keydown", e => {
-        if (e.altKey && e.key.toLowerCase() === "a") {
-            open = !open;
-            overlay.classList.toggle("active", open);
-        }
-    });
+    if ($("clearRecentBtn"))
+        $("clearRecentBtn").onclick = clearRecent;
 
-    if ($("closeAdmin")) {
-        $("closeAdmin").onclick = () => {
-            open = false;
-            overlay.classList.remove("active");
+    if ($("clearCacheBtn"))
+        $("clearCacheBtn").onclick = () => {
+            localStorage.clear();
+            alert("Cache cleared.");
         };
-    }
 
-    document.querySelectorAll(".admin-tab").forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll(".admin-tab").forEach(b => b.classList.remove("active"));
-            document.querySelectorAll(".admin-tab-content").forEach(c => c.classList.remove("active"));
-
-            btn.classList.add("active");
-            $(btn.dataset.tab).classList.add("active");
-        };
-    });
-
-    if ($("autoscanToggle")) $("autoscanToggle").onchange = e => APEX.autoscanEnabled = e.target.checked;
-
-    if ($("forceScanBtn")) $("forceScanBtn").onclick = async () => {
-        APEX_ALL_GAMES = await loadAllGames();
-        renderGames(APEX_ALL_GAMES);
-    };
-
-    if ($("clearRecentBtn")) $("clearRecentBtn").onclick = clearRecent;
-
-    if ($("clearCacheBtn")) $("clearCacheBtn").onclick = () => {
-        localStorage.clear();
-        alert("Cache cleared.");
-    };
-
-    if ($("fpsToggleBtn")) setupFPS();
+    if ($("fpsToggleBtn"))
+        setupFPS();
 }
 
 /* ------------------------------------------------------------
@@ -303,13 +258,15 @@ async function init() {
     renderGames(APEX_ALL_GAMES);
     renderRecent();
 
-    if ($("autoscanToggle")) $("autoscanToggle").checked = APEX.autoscanEnabled;
+    if ($("autoscanToggle"))
+        $("autoscanToggle").checked = APEX.autoscanEnabled;
 
-    if ($("localStorageDump")) $("localStorageDump").textContent = JSON.stringify(localStorage, null, 2);
+    if ($("localStorageDump"))
+        $("localStorageDump").textContent =
+            JSON.stringify(localStorage, null, 2);
 
     setupSearch();
     setupSettings();
-    setupAdmin();
 }
 
 document.addEventListener("DOMContentLoaded", init);
