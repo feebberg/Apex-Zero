@@ -1,10 +1,7 @@
 /* ============================================================
-   APEX ZERO — MAIN SCRIPT (UPGRADED ADMIN PANEL)
+   APEX ZERO — MAIN SCRIPT (FINAL + STABLE + NULL-SAFE)
 ============================================================ */
 
-/* ------------------------------------------------------------
-   CONFIG
------------------------------------------------------------- */
 const APEX = {
     gamesFolder: "games",
     thumbnailName: "thumbnail.png",
@@ -15,16 +12,12 @@ const APEX = {
     manualGames: window.APEX_MANUAL_GAMES || []
 };
 
+let APEX_ALL_GAMES = [];
+
 /* ------------------------------------------------------------
-   UTILITIES
+   UTIL
 ------------------------------------------------------------ */
 function $(id) { return document.getElementById(id); }
-
-function logEvent(msg) {
-    const log = $("eventLog");
-    log.textContent += msg + "\n";
-    log.scrollTop = log.scrollHeight;
-}
 
 /* ------------------------------------------------------------
    THEME ENGINE
@@ -40,16 +33,16 @@ function applyAccent(color) {
 }
 
 function loadTheme() {
-    const savedTheme = localStorage.getItem(APEX.themeKey) || "dark";
-    const savedAccent = localStorage.getItem(APEX.accentKey) || "#888888";
+    const theme = localStorage.getItem(APEX.themeKey) || "dark";
+    const accent = localStorage.getItem(APEX.accentKey) || "#888888";
 
-    applyTheme(savedTheme);
-    applyAccent(savedAccent);
+    applyTheme(theme);
+    applyAccent(accent);
 
-    $("themeSelect").value = savedTheme;
-    $("adminThemeSelect").value = savedTheme;
-    $("accentPicker").value = savedAccent;
-    $("adminAccentPicker").value = savedAccent;
+    if ($("themeSelect")) $("themeSelect").value = theme;
+    if ($("adminThemeSelect")) $("adminThemeSelect").value = theme;
+    if ($("accentPicker")) $("accentPicker").value = accent;
+    if ($("adminAccentPicker")) $("adminAccentPicker").value = accent;
 }
 
 /* ------------------------------------------------------------
@@ -57,12 +50,9 @@ function loadTheme() {
 ------------------------------------------------------------ */
 function addRecent(game) {
     let recent = JSON.parse(localStorage.getItem(APEX.recentKey) || "[]");
-
     recent = recent.filter(g => g.id !== game.id);
     recent.unshift(game);
-
     if (recent.length > 12) recent.pop();
-
     localStorage.setItem(APEX.recentKey, JSON.stringify(recent));
 }
 
@@ -70,19 +60,24 @@ function loadRecent() {
     return JSON.parse(localStorage.getItem(APEX.recentKey) || "[]");
 }
 
+function clearRecent() {
+    localStorage.removeItem(APEX.recentKey);
+    renderRecent();
+}
+
 /* ------------------------------------------------------------
    AUTOSCAN
 ------------------------------------------------------------ */
 async function autoscanGames() {
-    if (!APEX.autoscanEnabled) return [];
-
-    $("autoscanLog").textContent = "Scanning GitHub…\n";
-
     const url = `https://api.github.com/repos/feebberg/Apex-Zero/contents/${APEX.gamesFolder}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    let data = [];
 
-    $("autoscanLog").textContent += "Fetched directory listing.\n";
+    try {
+        const res = await fetch(url);
+        data = await res.json();
+    } catch {
+        return [];
+    }
 
     const games = [];
 
@@ -91,21 +86,15 @@ async function autoscanGames() {
             const name = item.name.replace(".html", "");
             const id = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
-            const thumb = `${APEX.gamesFolder}/${name}/${APEX.thumbnailName}`;
-
             games.push({
                 id,
                 name,
                 url: `${APEX.gamesFolder}/${item.name}`,
-                thumbnail: thumb,
+                thumbnail: `${APEX.gamesFolder}/${name}/${APEX.thumbnailName}`,
                 source: "autoscan"
             });
-
-            $("autoscanLog").textContent += `Found game: ${name}\n`;
         }
     }
-
-    $("autoscanLog").textContent += "Autoscan complete.\n";
 
     return games;
 }
@@ -118,11 +107,8 @@ async function loadAllGames() {
     const manual = APEX.manualGames;
 
     const merged = [...auto];
-
     for (const m of manual) {
-        if (!merged.find(g => g.id === m.id)) {
-            merged.push(m);
-        }
+        if (!merged.find(g => g.id === m.id)) merged.push(m);
     }
 
     return merged;
@@ -133,6 +119,8 @@ async function loadAllGames() {
 ------------------------------------------------------------ */
 function renderGames(list) {
     const grid = $("gamesGrid");
+    if (!grid) return;
+
     grid.innerHTML = "";
 
     list.forEach(game => {
@@ -145,14 +133,15 @@ function renderGames(list) {
         `;
 
         card.onclick = () => launchGame(game);
-
         grid.appendChild(card);
     });
 }
 
 function renderRecent() {
-    const recent = loadRecent();
     const grid = $("recentGrid");
+    if (!grid) return;
+
+    const recent = loadRecent();
     grid.innerHTML = "";
 
     recent.forEach(game => {
@@ -165,8 +154,26 @@ function renderRecent() {
         `;
 
         card.onclick = () => launchGame(game);
-
         grid.appendChild(card);
+    });
+}
+
+/* ------------------------------------------------------------
+   SEARCH BAR
+------------------------------------------------------------ */
+function setupSearch() {
+    const input = $("searchInput");
+    if (!input) return;
+
+    input.addEventListener("input", () => {
+        const q = input.value.toLowerCase().trim();
+        if (!q) return renderGames(APEX_ALL_GAMES);
+
+        const filtered = APEX_ALL_GAMES.filter(g =>
+            g.name.toLowerCase().includes(q)
+        );
+
+        renderGames(filtered);
     });
 }
 
@@ -174,102 +181,117 @@ function renderRecent() {
    LAUNCHER
 ------------------------------------------------------------ */
 function launchGame(game) {
-    $("launchTitle").textContent = game.name;
-    $("launchFrame").src = game.url;
+    if ($("launchTitle")) $("launchTitle").textContent = game.name;
+    if ($("launchFrame")) $("launchFrame").src = game.url;
 
     addRecent(game);
     renderRecent();
 
-    $("launchOverlay").classList.add("active");
+    if ($("launchOverlay")) $("launchOverlay").classList.add("active");
 }
 
-$("closeLaunch").onclick = () => {
-    $("launchOverlay").classList.remove("active");
-    $("launchFrame").src = "";
-};
+if ($("closeLaunch")) {
+    $("closeLaunch").onclick = () => {
+        if ($("launchOverlay")) $("launchOverlay").classList.remove("active");
+        if ($("launchFrame")) $("launchFrame").src = "";
+    };
+}
 
 /* ------------------------------------------------------------
    SETTINGS
 ------------------------------------------------------------ */
-$("settingsBtn").onclick = () => $("settingsOverlay").classList.add("active");
-$("closeSettings").onclick = () => $("settingsOverlay").classList.remove("active");
+function setupSettings() {
+    if ($("settingsBtn")) $("settingsBtn").onclick = () => $("settingsOverlay").classList.add("active");
+    if ($("closeSettings")) $("closeSettings").onclick = () => $("settingsOverlay").classList.remove("active");
 
-$("themeSelect").onchange = e => applyTheme(e.target.value);
-$("accentPicker").onchange = e => applyAccent(e.target.value);
+    if ($("themeSelect")) $("themeSelect").onchange = e => applyTheme(e.target.value);
+    if ($("accentPicker")) $("accentPicker").onchange = e => applyAccent(e.target.value);
+    if ($("adminThemeSelect")) $("adminThemeSelect").onchange = e => applyTheme(e.target.value);
+    if ($("adminAccentPicker")) $("adminAccentPicker").onchange = e => applyAccent(e.target.value);
+
+    if ($("clearRecentSettingsBtn")) $("clearRecentSettingsBtn").onclick = clearRecent;
+}
 
 /* ------------------------------------------------------------
-   ADMIN PANEL
+   ADMIN PANEL (ALT + A)
 ------------------------------------------------------------ */
-let adminOpen = false;
+function setupAdmin() {
+    const overlay = $("adminOverlay");
+    if (!overlay) return;
 
-document.addEventListener("keydown", e => {
-    if (e.altKey && e.key.toLowerCase() === "a") {
-        adminOpen = !adminOpen;
-        $("adminOverlay").classList.toggle("active", adminOpen);
+    let open = false;
+
+    document.addEventListener("keydown", e => {
+        if (e.altKey && e.key.toLowerCase() === "a") {
+            open = !open;
+            overlay.classList.toggle("active", open);
+        }
+    });
+
+    if ($("closeAdmin")) {
+        $("closeAdmin").onclick = () => {
+            open = false;
+            overlay.classList.remove("active");
+        };
     }
-});
 
-$("closeAdmin").onclick = () => {
-    adminOpen = false;
-    $("adminOverlay").classList.remove("active");
-};
+    document.querySelectorAll(".admin-tab").forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll(".admin-tab").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".admin-tab-content").forEach(c => c.classList.remove("active"));
 
-/* Tabs */
-document.querySelectorAll(".admin-tab").forEach(btn => {
-    btn.onclick = () => {
-        document.querySelectorAll(".admin-tab").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".admin-tab-content").forEach(c => c.classList.remove("active"));
+            btn.classList.add("active");
+            $(btn.dataset.tab).classList.add("active");
+        };
+    });
 
-        btn.classList.add("active");
-        $(btn.dataset.tab).classList.add("active");
+    if ($("autoscanToggle")) $("autoscanToggle").onchange = e => APEX.autoscanEnabled = e.target.checked;
+
+    if ($("forceScanBtn")) $("forceScanBtn").onclick = async () => {
+        APEX_ALL_GAMES = await loadAllGames();
+        renderGames(APEX_ALL_GAMES);
     };
-});
 
-/* Autoscan toggle */
-$("autoscanToggle").onchange = e => {
-    APEX.autoscanEnabled = e.target.checked;
-};
+    if ($("clearRecentBtn")) $("clearRecentBtn").onclick = clearRecent;
 
-/* Force rescan */
-$("forceScanBtn").onclick = async () => {
-    const games = await loadAllGames();
-    renderGames(games);
-};
+    if ($("clearCacheBtn")) $("clearCacheBtn").onclick = () => {
+        localStorage.clear();
+        alert("Cache cleared.");
+    };
 
-/* System tools */
-$("clearRecentBtn").onclick = () => {
-    localStorage.removeItem(APEX.recentKey);
-    renderRecent();
-};
+    if ($("fpsToggleBtn")) setupFPS();
+}
 
-$("clearCacheBtn").onclick = () => {
-    localStorage.clear();
-    alert("Cache cleared.");
-};
-
+/* ------------------------------------------------------------
+   FPS MONITOR
+------------------------------------------------------------ */
 let fpsInterval;
-$("fpsToggleBtn").onclick = () => {
+
+function setupFPS() {
     const fps = $("fpsCounter");
+    if (!fps) return;
 
-    if (fps.style.display === "block") {
-        fps.style.display = "none";
-        cancelAnimationFrame(fpsInterval);
-        return;
-    }
+    $("fpsToggleBtn").onclick = () => {
+        if (fps.style.display === "block") {
+            fps.style.display = "none";
+            cancelAnimationFrame(fpsInterval);
+            return;
+        }
 
-    fps.style.display = "block";
+        fps.style.display = "block";
 
-    let last = performance.now();
-    function loop() {
-        const now = performance.now();
-        const fpsVal = Math.round(1000 / (now - last));
-        last = now;
+        let last = performance.now();
+        function loop() {
+            const now = performance.now();
+            const fpsVal = Math.round(1000 / (now - last));
+            last = now;
 
-        fps.textContent = fpsVal + " FPS";
-        fpsInterval = requestAnimationFrame(loop);
-    }
-    loop();
-};
+            fps.textContent = fpsVal + " FPS";
+            fpsInterval = requestAnimationFrame(loop);
+        }
+        loop();
+    };
+}
 
 /* ------------------------------------------------------------
    INIT
@@ -277,13 +299,17 @@ $("fpsToggleBtn").onclick = () => {
 async function init() {
     loadTheme();
 
-    const games = await loadAllGames();
-    renderGames(games);
+    APEX_ALL_GAMES = await loadAllGames();
+    renderGames(APEX_ALL_GAMES);
     renderRecent();
 
-    $("autoscanToggle").checked = APEX.autoscanEnabled;
+    if ($("autoscanToggle")) $("autoscanToggle").checked = APEX.autoscanEnabled;
 
-    $("localStorageDump").textContent = JSON.stringify(localStorage, null, 2);
+    if ($("localStorageDump")) $("localStorageDump").textContent = JSON.stringify(localStorage, null, 2);
+
+    setupSearch();
+    setupSettings();
+    setupAdmin();
 }
 
-init();
+document.addEventListener("DOMContentLoaded", init);
