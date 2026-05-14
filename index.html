@@ -28,11 +28,13 @@
     <!-- MAIN CONTENT -->
     <main id="content">
 
+        <!-- RECENT -->
         <section id="recentSection">
             <h2>Recent</h2>
             <div id="recentGrid" class="grid"></div>
         </section>
 
+        <!-- ALL GAMES -->
         <section id="gamesSection">
             <h2>All Games</h2>
 
@@ -44,7 +46,7 @@
 
     </main>
 
-    <!-- SETTINGS OVERLAY -->
+    <!-- SETTINGS OVERLAY (NOW HOLDS EVERYTHING) -->
     <div id="settingsOverlay" class="overlay">
         <div class="overlay-content">
             <h2>Settings</h2>
@@ -63,105 +65,29 @@
             </div>
 
             <div class="setting-row">
-                <label>Recently Played</label>
-                <button id="clearRecentSettingsBtn" class="admin-action">Clear Recent</button>
+                <label>Autoscan Enabled</label>
+                <input type="checkbox" id="autoscanToggle">
             </div>
+
+            <div class="setting-row">
+                <label>Recently Played</label>
+                <button id="clearRecentBtn" class="admin-action">Clear Recent</button>
+            </div>
+
+            <div class="setting-row">
+                <label>Cache</label>
+                <button id="clearCacheBtn" class="admin-action">Clear Cache</button>
+            </div>
+
+            <div class="setting-row">
+                <label>FPS Monitor</label>
+                <button id="fpsToggleBtn" class="admin-action">Toggle FPS</button>
+            </div>
+
+            <h4>LocalStorage</h4>
+            <pre id="localStorageDump"></pre>
 
             <button id="closeSettings" class="close-btn">Close</button>
-        </div>
-    </div>
-
-    <!-- LAUNCH OVERLAY -->
-    <div id="launchOverlay" class="overlay">
-        <div class="overlay-content launch-box">
-            <h2 id="launchTitle">Launching...</h2>
-            <iframe id="launchFrame" src=""></iframe>
-            <button id="closeLaunch" class="close-btn">Close</button>
-        </div>
-    </div>
-
-    <!-- ADMIN PANEL -->
-    <div id="adminOverlay" class="overlay admin">
-        <div class="admin-window">
-
-            <header class="admin-header">
-                <h2>Developer Console</h2>
-                <button id="closeAdmin" class="close-btn">✕</button>
-            </header>
-
-            <nav class="admin-tabs">
-                <button class="admin-tab active" data-tab="gamesTab">Games</button>
-                <button class="admin-tab" data-tab="autoscanTab">Autoscan</button>
-                <button class="admin-tab" data-tab="themeTab">Theme</button>
-                <button class="admin-tab" data-tab="systemTab">System</button>
-                <button class="admin-tab" data-tab="devTab">Dev Tools</button>
-            </nav>
-
-            <div class="admin-content">
-
-                <!-- GAMES TAB -->
-                <div id="gamesTab" class="admin-tab-content active">
-                    <h3>Game Manager</h3>
-                    <div id="gameList"></div>
-                    <button id="addGameBtn" class="admin-action">Add Game</button>
-                </div>
-
-                <!-- AUTOSCAN TAB -->
-                <div id="autoscanTab" class="admin-tab-content">
-                    <h3>Autoscan Controls</h3>
-
-                    <div class="setting-row">
-                        <label>Autoscan Enabled</label>
-                        <input type="checkbox" id="autoscanToggle">
-                    </div>
-
-                    <button id="forceScanBtn" class="admin-action">Force Rescan</button>
-
-                    <h4>Autoscan Log</h4>
-                    <pre id="autoscanLog"></pre>
-                </div>
-
-                <!-- THEME TAB -->
-                <div id="themeTab" class="admin-tab-content">
-                    <h3>Theme Tools</h3>
-
-                    <div class="setting-row">
-                        <label>Theme</label>
-                        <select id="adminThemeSelect">
-                            <option value="dark">Dark</option>
-                            <option value="light">Light</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-row">
-                        <label>Accent Color</label>
-                        <input type="color" id="adminAccentPicker">
-                    </div>
-                </div>
-
-                <!-- SYSTEM TAB -->
-                <div id="systemTab" class="admin-tab-content">
-                    <h3>System Tools</h3>
-
-                    <button id="clearRecentBtn" class="admin-action">Clear Recent</button>
-                    <button id="clearCacheBtn" class="admin-action">Clear Cache</button>
-                    <button id="fpsToggleBtn" class="admin-action">Toggle FPS Monitor</button>
-
-                    <h4>LocalStorage</h4>
-                    <pre id="localStorageDump"></pre>
-                </div>
-
-                <!-- DEV TAB -->
-                <div id="devTab" class="admin-tab-content">
-                    <h3>Developer Tools</h3>
-
-                    <button id="editJsonBtn" class="admin-action">Edit Game JSON</button>
-
-                    <h4>Event Log</h4>
-                    <pre id="eventLog"></pre>
-                </div>
-
-            </div>
         </div>
     </div>
 
