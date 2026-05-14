@@ -4,158 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apex Zero</title>
-
-    <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <!-- ============================= -->
-    <!-- HEADER BAR -->
-    <!-- ============================= -->
-    <header id="topBar">
-        <div id="logo">Apex Zero</div>
+    <!-- HEADER -->
+    <div id="topBar">
+        <div id="logo">APEX ZERO</div>
 
         <div id="searchContainer">
             <input id="searchInput" type="text" placeholder="Search games...">
         </div>
 
         <div id="headerButtons">
-            <button id="settingsBtn">⚙</button>
+            <button id="openSettings">Settings</button>
+            <button id="toggleFPS">FPS</button>
         </div>
-    </header>
+    </div>
 
-
-    <!-- ============================= -->
     <!-- TABS -->
-    <!-- ============================= -->
     <div id="tabs">
-        <button class="tab-btn active" data-tab="gamesTab">Games</button>
-        <button class="tab-btn" data-tab="recentTab">Recent</button>
+        <button class="tab-btn active" data-tab="all">All Games</button>
+        <button class="tab-btn" data-tab="recent">Recent</button>
+        <button class="tab-btn" data-tab="favorites">Favorites</button>
     </div>
 
-
-    <!-- ============================= -->
-    <!-- TAB CONTENT: GAMES -->
-    <!-- ============================= -->
-    <div id="gamesTab" class="tab-content" style="display:block;">
-        <div id="gamesGrid" class="grid"></div>
+    <!-- TAB CONTENT -->
+    <div id="tab-all" class="tab-content">
+        <div id="gameGrid" class="grid"></div>
     </div>
 
-    <!-- ============================= -->
-    <!-- TAB CONTENT: RECENT -->
-    <!-- ============================= -->
-    <div id="recentTab" class="tab-content" style="display:none;">
+    <div id="tab-recent" class="tab-content" style="display:none;">
         <div id="recentGrid" class="grid"></div>
     </div>
 
+    <div id="tab-favorites" class="tab-content" style="display:none;">
+        <div id="favoritesGrid" class="grid"></div>
+    </div>
 
-    <!-- ============================= -->
     <!-- SETTINGS PANEL -->
-    <!-- ============================= -->
     <div id="settingsPanel" class="side-panel">
         <div class="panel-header">
             <h2>Settings</h2>
-            <button id="closeSettings">✖</button>
+            <button id="closeSettings">Close</button>
         </div>
 
         <div class="panel-content">
-
             <h3>Theme</h3>
             <select id="themeSelect">
                 <option value="dark">Dark</option>
                 <option value="light">Light</option>
-                <option value="mono">Monochrome</option>
             </select>
 
-            <h3>Accent Color</h3>
-            <input id="accentPicker" type="color" value="#888888">
-
-            <h3>Corner Radius</h3>
-            <input id="radiusSelect" type="range" min="0" max="30" value="8">
-
-            <h3>Font Size</h3>
-            <input id="fontSizeSlider" type="range" min="12" max="24" value="16">
-
-            <h3>Card Size</h3>
-            <input id="cardSizeSlider" type="range" min="120" max="240" value="160">
-
-            <h3>Density</h3>
-            <select id="densitySelect">
-                <option value="comfort">Comfort</option>
-                <option value="compact">Compact</option>
-                <option value="spacious">Spacious</option>
-            </select>
-
-            <h3>Layout Mode</h3>
-            <select id="layoutModeSelect">
+            <h3>Layout</h3>
+            <select id="layoutSelect">
                 <option value="grid">Grid</option>
                 <option value="list">List</option>
             </select>
-
-            <h3>Background Style</h3>
-            <select id="backgroundSelect">
-                <option value="solid">Solid</option>
-                <option value="gradient">Gradient</option>
-                <option value="noise">Noise</option>
-            </select>
-
-            <h3>Contrast</h3>
-            <select id="contrastSelect">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-
-            <h3>Sorting</h3>
-            <select id="sortSelect">
-                <option value="az">A → Z</option>
-                <option value="recent">Recently Added</option>
-                <option value="played">Most Played</option>
-            </select>
-
-            <h3>Recent Section</h3>
-            <label>
-                <input id="toggleRecent" type="checkbox" checked>
-                Show Recent Games
-            </label>
-
-            <button id="clearRecentBtn">Clear Recent</button>
-            <button id="clearCacheBtn">Clear Cache</button>
-
-            <h3>Performance</h3>
-            <button id="fpsToggleBtn">Toggle FPS Counter</button>
-
         </div>
     </div>
 
-
-    <!-- ============================= -->
     <!-- LAUNCH PROMPT -->
-    <!-- ============================= -->
-    <div id="launchPrompt" class="launch-overlay">
+    <div id="launchOverlay" class="launch-overlay">
         <div class="launch-box">
             <img id="launchThumb" src="" alt="">
-            <h2 id="launchName"></h2>
+            <h2 id="launchTitle"></h2>
 
             <div class="launch-buttons">
+                <button id="playBtn">Play</button>
                 <button id="cancelLaunch">Cancel</button>
-                <button id="confirmLaunch">Play</button>
             </div>
         </div>
     </div>
 
-
-    <!-- ============================= -->
     <!-- FPS COUNTER -->
-    <!-- ============================= -->
-    <div id="fpsCounter">60 FPS</div>
+    <div id="fpsCounter"></div>
 
-
-    <!-- ============================= -->
-    <!-- JAVASCRIPT MODULES -->
-    <!-- ============================= -->
+    <!-- SCRIPTS -->
 
     <!-- CORE -->
     <script src="js/core/autoscan.js"></script>
