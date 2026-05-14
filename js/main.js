@@ -1,7 +1,23 @@
-/* ============================================================
-   APEX ZERO — MAIN INITIALIZER
-   Loads all modules and boots the launcher.
-============================================================ */
+// --- DIAGNOSTIC MODE ---
+// This will show errors directly on the page so you can see them without devtools.
+
+window.onerror = function (msg, url, line) {
+    document.body.innerHTML = `
+        <div style="
+            background:#300;
+            color:#f88;
+            padding:20px;
+            font-size:20px;
+            font-family:monospace;
+        ">
+            <b>JavaScript Error:</b><br>${msg}<br><br>
+            <b>File:</b> ${url}<br>
+            <b>Line:</b> ${line}
+        </div>
+    `;
+};
+
+// --- NORMAL CODE STARTS HERE ---
 
 window.APEX = {
     ALL_GAMES: []
@@ -12,25 +28,32 @@ function $(id) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        APEX.theme.loadAll();
+        const auto = await APEX.autoscan.scan();
+        const manual = window.APEX_MANUAL_GAMES || [];
+        APEX.ALL_GAMES = APEX.autoscan.merge(auto, manual);
 
-    // Load theme + customization first
-    APEX.theme.loadAll();
+        APEX.render.games(APEX.ALL_GAMES);
+        APEX.render.recent();
 
-    // Autoscan + manual merge
-    const auto = await APEX.autoscan.scan();
-    const manual = window.APEX_MANUAL_GAMES || [];
-    APEX.ALL_GAMES = APEX.autoscan.merge(auto, manual);
-
-    // Render UI
-    APEX.render.games(APEX.ALL_GAMES);
-    APEX.render.recent();
-
-    // Initialize systems
-    APEX.search.init();
-    APEX.settings.init();
-    APEX.ui_panel.init();
-    APEX.ui_tabs.init();
-    APEX.ui_events.init();
-
-    console.log("Apex Zero initialized.");
+        APEX.search.init();
+        APEX.settings.init();
+        APEX.ui_panel.init();
+        APEX.ui_tabs.init();
+        APEX.ui_events.init();
+    } catch (err) {
+        document.body.innerHTML = `
+            <div style="
+                background:#300;
+                color:#f88;
+                padding:20px;
+                font-size:20px;
+                font-family:monospace;
+            ">
+                <b>Runtime Error:</b><br>${err}<br><br>
+                <b>Check missing files or wrong paths.</b>
+            </div>
+        `;
+    }
 });
