@@ -1,14 +1,19 @@
 APEX.ui_panel = {
     init() {
-        $("settingsBtn").onclick = () =>
-            $("settingsPanel").classList.add("active");
+        const openBtn = $("openSettings");
+        const closeBtn = $("closeSettings");
+        const panel = $("settingsPanel");
 
-        $("closeSettings").onclick = () =>
-            $("settingsPanel").classList.remove("active");
-    },
+        if (openBtn && panel) {
+            openBtn.addEventListener("click", () => {
+                panel.classList.add("open");
+            });
+        }
 
-    closeAll() {
-        $("settingsPanel").classList.remove("active");
-        APEX.launch.close();
+        if (closeBtn && panel) {
+            closeBtn.addEventListener("click", () => {
+                panel.classList.remove("open");
+            });
+        }
     }
 };
