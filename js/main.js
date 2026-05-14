@@ -1,6 +1,5 @@
 /* ============================================================
    APEX ZERO — MAIN SCRIPT (UPGRADED ADMIN PANEL)
-   Full autoscan, launcher, admin panel, theme engine
 ============================================================ */
 
 /* ------------------------------------------------------------
@@ -20,6 +19,7 @@ const APEX = {
    UTILITIES
 ------------------------------------------------------------ */
 function $(id) { return document.getElementById(id); }
+
 function logEvent(msg) {
     const log = $("eventLog");
     log.textContent += msg + "\n";
