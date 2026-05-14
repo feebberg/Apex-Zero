@@ -1,5 +1,5 @@
 /* ============================================================
-   APEX ZERO — MAIN SCRIPT (FINAL, NO ADMIN PANEL, NEW TAB MODE)
+   APEX ZERO — MAIN SCRIPT (SIDE PANEL + LAUNCH PROMPT EDITION)
 ============================================================ */
 
 const APEX = {
@@ -9,10 +9,18 @@ const APEX = {
     recentKey: "apex_recent",
     themeKey: "apex_theme",
     accentKey: "apex_accent",
+    radiusKey: "apex_radius",
+    fontKey: "apex_font",
+    cardKey: "apex_card",
+    densityKey: "apex_density",
+    layoutKey: "apex_layout",
+    backgroundKey: "apex_background",
+    contrastKey: "apex_contrast",
     manualGames: window.APEX_MANUAL_GAMES || []
 };
 
 let APEX_ALL_GAMES = [];
+let selectedGame = null;
 
 /* ------------------------------------------------------------
    UTIL
@@ -20,7 +28,7 @@ let APEX_ALL_GAMES = [];
 function $(id) { return document.getElementById(id); }
 
 /* ------------------------------------------------------------
-   THEME ENGINE
+   THEME + CUSTOMIZATION ENGINE
 ------------------------------------------------------------ */
 function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
@@ -32,15 +40,52 @@ function applyAccent(color) {
     localStorage.setItem(APEX.accentKey, color);
 }
 
-function loadTheme() {
-    const theme = localStorage.getItem(APEX.themeKey) || "dark";
-    const accent = localStorage.getItem(APEX.accentKey) || "#888888";
+function applyRadius(px) {
+    document.documentElement.style.setProperty("--radius", px + "px");
+    localStorage.setItem(APEX.radiusKey, px);
+}
 
-    applyTheme(theme);
-    applyAccent(accent);
+function applyFontSize(px) {
+    document.documentElement.style.setProperty("--font-size", px + "px");
+    localStorage.setItem(APEX.fontKey, px);
+}
 
-    if ($("themeSelect")) $("themeSelect").value = theme;
-    if ($("accentPicker")) $("accentPicker").value = accent;
+function applyCardSize(px) {
+    document.documentElement.style.setProperty("--card-size", px + "px");
+    localStorage.setItem(APEX.cardKey, px);
+}
+
+function applyDensity(mode) {
+    const gap = mode === "compact" ? 8 : mode === "spacious" ? 24 : 16;
+    document.documentElement.style.setProperty("--grid-gap", gap + "px");
+    localStorage.setItem(APEX.densityKey, mode);
+}
+
+function applyLayout(mode) {
+    document.body.setAttribute("data-layout", mode);
+    localStorage.setItem(APEX.layoutKey, mode);
+}
+
+function applyBackground(style) {
+    document.body.setAttribute("data-bgstyle", style);
+    localStorage.setItem(APEX.backgroundKey, style);
+}
+
+function applyContrast(level) {
+    document.body.setAttribute("data-contrast", level);
+    localStorage.setItem(APEX.contrastKey, level);
+}
+
+function loadCustomization() {
+    applyTheme(localStorage.getItem(APEX.themeKey) || "dark");
+    applyAccent(localStorage.getItem(APEX.accentKey) || "#888888");
+    applyRadius(localStorage.getItem(APEX.radiusKey) || 8);
+    applyFontSize(localStorage.getItem(APEX.fontKey) || 16);
+    applyCardSize(localStorage.getItem(APEX.cardKey) || 160);
+    applyDensity(localStorage.getItem(APEX.densityKey) || "comfort");
+    applyLayout(localStorage.getItem(APEX.layoutKey) || "grid");
+    applyBackground(localStorage.getItem(APEX.backgroundKey) || "solid");
+    applyContrast(localStorage.getItem(APEX.contrastKey) || "medium");
 }
 
 /* ------------------------------------------------------------
@@ -113,15 +158,34 @@ async function loadAllGames() {
 }
 
 /* ------------------------------------------------------------
+   SORTING
+------------------------------------------------------------ */
+function sortGames(list, mode) {
+    if (mode === "az") {
+        return list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if (mode === "recent") {
+        return list; // autoscan order
+    }
+    if (mode === "played") {
+        return list; // future feature
+    }
+    return list;
+}
+
+/* ------------------------------------------------------------
    RENDERING
 ------------------------------------------------------------ */
 function renderGames(list) {
     const grid = $("gamesGrid");
     if (!grid) return;
 
+    const sortMode = $("sortSelect")?.value || "az";
+    const sorted = sortGames([...list], sortMode);
+
     grid.innerHTML = "";
 
-    list.forEach(game => {
+    sorted.forEach(game => {
         const card = document.createElement("div");
         card.className = "game-card";
 
@@ -130,7 +194,7 @@ function renderGames(list) {
             <div class="game-title">${game.name}</div>
         `;
 
-        card.onclick = () => launchGame(game);
+        card.onclick = () => openLaunchPrompt(game);
         grid.appendChild(card);
     });
 }
@@ -151,7 +215,7 @@ function renderRecent() {
             <div class="game-title">${game.name}</div>
         `;
 
-        card.onclick = () => launchGame(game);
+        card.onclick = () => openLaunchPrompt(game);
         grid.appendChild(card);
     });
 }
@@ -176,45 +240,99 @@ function setupSearch() {
 }
 
 /* ------------------------------------------------------------
-   GAME LAUNCHER (NEW TAB MODE)
+   LAUNCH PROMPT
 ------------------------------------------------------------ */
-function launchGame(game) {
-    addRecent(game);
+function openLaunchPrompt(game) {
+    selectedGame = game;
+
+    $("launchThumb").src = game.thumbnail;
+    $("launchName").textContent = game.name;
+
+    $("launchPrompt").classList.add("active");
+}
+
+function closeLaunchPrompt() {
+    $("launchPrompt").classList.remove("active");
+}
+
+function confirmLaunch() {
+    if (!selectedGame) return;
+
+    addRecent(selectedGame);
     renderRecent();
-    window.open(game.url, "_blank");
+
+    const a = document.createElement("a");
+    a.href = selectedGame.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    closeLaunchPrompt();
 }
 
 /* ------------------------------------------------------------
-   SETTINGS PANEL
+   SETTINGS PANEL + TABS
 ------------------------------------------------------------ */
-function setupSettings() {
-    if ($("settingsBtn")) $("settingsBtn").onclick = () =>
-        $("settingsOverlay").classList.add("active");
+function setupSettingsPanel() {
+    $("settingsBtn").onclick = () =>
+        $("settingsPanel").classList.add("active");
 
-    if ($("closeSettings")) $("closeSettings").onclick = () =>
-        $("settingsOverlay").classList.remove("active");
+    $("closeSettings").onclick = () =>
+        $("settingsPanel").classList.remove("active");
 
-    if ($("themeSelect")) $("themeSelect").onchange = e =>
-        applyTheme(e.target.value);
+    document.addEventListener("keydown", e => {
+        if (e.ctrlKey && e.key === ",") {
+            $("settingsPanel").classList.toggle("active");
+        }
+        if (e.key === "Escape") {
+            $("settingsPanel").classList.remove("active");
+            closeLaunchPrompt();
+        }
+    });
 
-    if ($("accentPicker")) $("accentPicker").onchange = e =>
-        applyAccent(e.target.value);
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
 
-    if ($("autoscanToggle"))
-        $("autoscanToggle").onchange = e =>
-            APEX.autoscanEnabled = e.target.checked;
-
-    if ($("clearRecentBtn"))
-        $("clearRecentBtn").onclick = clearRecent;
-
-    if ($("clearCacheBtn"))
-        $("clearCacheBtn").onclick = () => {
-            localStorage.clear();
-            alert("Cache cleared.");
+            document.querySelectorAll(".tab-content").forEach(tab => tab.style.display = "none");
+            $(btn.dataset.tab).style.display = "block";
         };
+    });
+}
 
-    if ($("fpsToggleBtn"))
-        setupFPS();
+/* ------------------------------------------------------------
+   SETTINGS INPUTS
+------------------------------------------------------------ */
+function setupCustomizationControls() {
+    $("themeSelect").onchange = e => applyTheme(e.target.value);
+    $("accentPicker").onchange = e => applyAccent(e.target.value);
+    $("radiusSelect").onchange = e => applyRadius(e.target.value);
+    $("fontSizeSlider").oninput = e => applyFontSize(e.target.value);
+    $("cardSizeSlider").oninput = e => applyCardSize(e.target.value);
+    $("densitySelect").onchange = e => applyDensity(e.target.value);
+    $("layoutModeSelect").onchange = e => applyLayout(e.target.value);
+    $("backgroundSelect").onchange = e => applyBackground(e.target.value);
+    $("contrastSelect").onchange = e => applyContrast(e.target.value);
+
+    $("sortSelect").onchange = () => renderGames(APEX_ALL_GAMES);
+
+    $("toggleRecent").onchange = e =>
+        $("recentSection").style.display = e.target.checked ? "block" : "none";
+
+    $("autoscanToggle").onchange = e =>
+        APEX.autoscanEnabled = e.target.checked;
+
+    $("clearRecentBtn").onclick = clearRecent;
+
+    $("clearCacheBtn").onclick = () => {
+        localStorage.clear();
+        alert("Cache cleared.");
+    };
+
+    $("fpsToggleBtn").onclick = toggleFPS;
 }
 
 /* ------------------------------------------------------------
@@ -222,51 +340,44 @@ function setupSettings() {
 ------------------------------------------------------------ */
 let fpsInterval;
 
-function setupFPS() {
+function toggleFPS() {
     const fps = $("fpsCounter");
-    if (!fps) return;
+    if (fps.style.display === "block") {
+        fps.style.display = "none";
+        cancelAnimationFrame(fpsInterval);
+        return;
+    }
 
-    $("fpsToggleBtn").onclick = () => {
-        if (fps.style.display === "block") {
-            fps.style.display = "none";
-            cancelAnimationFrame(fpsInterval);
-            return;
-        }
+    fps.style.display = "block";
 
-        fps.style.display = "block";
+    let last = performance.now();
+    function loop() {
+        const now = performance.now();
+        const fpsVal = Math.round(1000 / (now - last));
+        last = now;
 
-        let last = performance.now();
-        function loop() {
-            const now = performance.now();
-            const fpsVal = Math.round(1000 / (now - last));
-            last = now;
-
-            fps.textContent = fpsVal + " FPS";
-            fpsInterval = requestAnimationFrame(loop);
-        }
-        loop();
-    };
+        fps.textContent = fpsVal + " FPS";
+        fpsInterval = requestAnimationFrame(loop);
+    }
+    loop();
 }
 
 /* ------------------------------------------------------------
    INIT
 ------------------------------------------------------------ */
 async function init() {
-    loadTheme();
+    loadCustomization();
 
     APEX_ALL_GAMES = await loadAllGames();
     renderGames(APEX_ALL_GAMES);
     renderRecent();
 
-    if ($("autoscanToggle"))
-        $("autoscanToggle").checked = APEX.autoscanEnabled;
-
-    if ($("localStorageDump"))
-        $("localStorageDump").textContent =
-            JSON.stringify(localStorage, null, 2);
-
     setupSearch();
-    setupSettings();
+    setupSettingsPanel();
+    setupCustomizationControls();
+
+    $("cancelLaunch").onclick = closeLaunchPrompt;
+    $("confirmLaunch").onclick = confirmLaunch;
 }
 
 document.addEventListener("DOMContentLoaded", init);
