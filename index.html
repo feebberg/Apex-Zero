@@ -2,36 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Apex Zero Launcher</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Zero</title>
+
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body data-theme="dark">
-    <div id="app">
 
-        <header class="top-bar">
-            <div class="logo">APEX ZERO</div>
+<body>
 
-            <div class="top-right">
-                <input id="search-input" type="text" placeholder="Search games…">
-                <div id="fps-counter" class="fps">FPS</div>
-            </div>
-        </header>
-
-        <main class="main-layout">
-            <section class="panel-main">
-                <div class="grid-header">
-                    <h1>Game Library</h1>
-                </div>
-
-                <div id="game-grid" class="game-grid">
-                    <!-- Filled by JS -->
-                </div>
-            </section>
-        </main>
-
+    <!-- LOADING SCREEN -->
+    <div id="loadingScreen">
+        <div class="loader"></div>
+        <p>Loading Apex Zero…</p>
     </div>
 
-    <script type="module" src="js/main.js"></script>
+    <!-- HEADER -->
+    <header id="topbar">
+        <h1 class="logo">Apex Zero</h1>
+        <div class="top-buttons">
+            <button id="settingsBtn" class="icon-btn">⚙</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="content">
+
+        <!-- RECENT -->
+        <section id="recentSection">
+            <h2>Recent</h2>
+            <div id="recentGrid" class="grid"></div>
+        </section>
+
+        <!-- ALL GAMES -->
+        <section id="gamesSection">
+            <h2>All Games</h2>
+
+            <!-- SEARCH BAR -->
+            <input id="searchInput" type="text" placeholder="Search games..." />
+
+            <div id="gamesGrid" class="grid"></div>
+        </section>
+
+    </main>
+
+    <!-- SETTINGS OVERLAY (NOW HOLDS EVERYTHING) -->
+    <div id="settingsOverlay" class="overlay">
+        <div class="overlay-content">
+            <h2>Settings</h2>
+
+            <div class="setting-row">
+                <label>Theme</label>
+                <select id="themeSelect">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <label>Accent Color</label>
+                <input type="color" id="accentPicker" value="#888888">
+            </div>
+
+            <div class="setting-row">
+                <label>Autoscan Enabled</label>
+                <input type="checkbox" id="autoscanToggle">
+            </div>
+
+            <div class="setting-row">
+                <label>Recently Played</label>
+                <button id="clearRecentBtn" class="admin-action">Clear Recent</button>
+            </div>
+
+            <div class="setting-row">
+                <label>Cache</label>
+                <button id="clearCacheBtn" class="admin-action">Clear Cache</button>
+            </div>
+
+            <div class="setting-row">
+                <label>FPS Monitor</label>
+                <button id="fpsToggleBtn" class="admin-action">Toggle FPS</button>
+            </div>
+
+            <h4>LocalStorage</h4>
+            <pre id="localStorageDump"></pre>
+
+            <button id="closeSettings" class="close-btn">Close</button>
+        </div>
+    </div>
+
+    <!-- FPS COUNTER -->
+    <div id="fpsCounter"></div>
+
+    <!-- SCRIPTS -->
+    <script src="js/games.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- LOADING SCREEN FADE -->
+    <script>
+        window.addEventListener("load", () => {
+            const loader = document.getElementById("loadingScreen");
+            loader.style.opacity = "0";
+            setTimeout(() => loader.style.display = "none", 400);
+        });
+    </script>
+
 </body>
 </html>
