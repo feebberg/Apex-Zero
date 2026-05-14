@@ -1,10 +1,9 @@
 export const APEX_LAUNCH = {
     init() {
-        console.log("Launch system ready (new tab mode).");
+        console.log("Launch system ready (classic mode)");
     },
 
     open(game) {
-        // Open game in a new browser tab
         window.open(game.url, "_blank");
     }
 };
