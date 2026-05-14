@@ -1,7 +1,7 @@
 /* ============================================================
-   APEX ZERO — MANUAL GAME LIST (FINAL + STABLE)
-   This file ONLY contains manually added games.
-   Autoscan handles everything inside /games automatically.
+   APEX ZERO — MANUAL GAME LIST (FINAL, CLEAN, NO ADMIN PANEL)
+   Autoscan handles all games inside /games automatically.
+   This file is ONLY for manually added games.
 ============================================================ */
 
 /*
@@ -12,7 +12,7 @@
  - The game is hosted externally (not inside /games)
  - The game uses a custom URL
  - You want to override autoscan behavior
- - You want to add hidden/admin‑only games
+ - You want to add hidden or special games
 
  Each entry looks like:
 
@@ -21,7 +21,7 @@
      name: "Game Name",
      desc: "Short description",
      url: "https://example.com/game/",
-     thumbnail: "assets/thumbnails/example.png",
+     thumbnail: "assets/fallback.png",
      source: "manual"
  }
 
