@@ -1,19 +1,10 @@
 export const APEX_LAUNCH = {
     init() {
-        this.modal = document.getElementById("launch-modal");
-        this.frame = document.getElementById("launch-frame");
-        this.closeBtn = document.getElementById("launch-close");
-
-        this.closeBtn.onclick = () => this.close();
+        console.log("Launch system ready (new tab mode).");
     },
 
     open(game) {
-        this.frame.src = game.url;
-        this.modal.classList.add("open");
-    },
-
-    close() {
-        this.modal.classList.remove("open");
-        this.frame.src = "";
+        // Open game in a new browser tab
+        window.open(game.url, "_blank");
     }
 };
