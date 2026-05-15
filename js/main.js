@@ -9,7 +9,6 @@ import { APEX_FPS } from "./core/fps.js";
 import { APEX_UPDATE } from "./core/update.js";
 import { APEX_MANUAL_GAMES } from "./games.js";
 
-// Expose modules globally if you need them
 window.APEX_LAUNCH = APEX_LAUNCH;
 window.APEX_RENDER = APEX_RENDER;
 window.APEX_FPS = APEX_FPS;
@@ -61,14 +60,13 @@ async function apexLoadingSequence() {
 }
 
 async function init() {
-
-    // Start loading animation (runs in parallel)
+    // Start loading animation (parallel)
     apexLoadingSequence();
 
     // Early shutdown / version check
     await APEX_UPDATE.check();
 
-    // Load saved customization
+    // Load customization
     APEX_THEME.loadCustomization();
 
     // Load games
