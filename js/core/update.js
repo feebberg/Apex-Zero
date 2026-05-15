@@ -1,5 +1,5 @@
 export const APEX_UPDATE = {
-    // Saved version or default
+    // Load saved version or default
     currentVersion: localStorage.getItem("apex_version") || "1.0.1",
 
     versionURL: "https://raw.githubusercontent.com/feebberg/Apex-Zero/main/version.txt",
