@@ -9,7 +9,7 @@ import { APEX_FPS } from "./core/fps.js";
 import { APEX_UPDATE } from "./core/update.js";
 import { APEX_MANUAL_GAMES } from "./games.js";
 
-// Expose modules globally
+// Expose modules globally if you need them
 window.APEX_LAUNCH = APEX_LAUNCH;
 window.APEX_RENDER = APEX_RENDER;
 window.APEX_FPS = APEX_FPS;
@@ -20,9 +20,52 @@ window.APEX = {
     autoscanEnabled: true
 };
 
+// PREMIUM LOADING SEQUENCE
+async function apexLoadingSequence() {
+    const loading = document.getElementById("apex-loading");
+    if (!loading) return;
+
+    const bar = document.querySelector(".loading-bar");
+    const status = document.querySelector(".loading-status");
+
+    const steps = [
+        "Initializing UI...",
+        "Loading game library...",
+        "Applying theme...",
+        "Checking for updates...",
+        "Preparing launcher..."
+    ];
+
+    let progress = 0;
+
+    for (let i = 0; i < steps.length; i++) {
+        status.textContent = steps[i];
+
+        await new Promise(resolve => {
+            const target = (i + 1) * (100 / steps.length);
+            const interval = setInterval(() => {
+                progress += 1;
+                if (progress > 100) progress = 100;
+                bar.style.width = progress + "%";
+
+                if (progress >= target) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 20);
+        });
+    }
+
+    loading.classList.add("loading-hidden");
+    setTimeout(() => loading.remove(), 800);
+}
+
 async function init() {
 
-    // 🔥 EARLY SHUTDOWN CHECK — BEFORE ANYTHING LOADS
+    // Start loading animation (runs in parallel)
+    apexLoadingSequence();
+
+    // Early shutdown / version check
     await APEX_UPDATE.check();
 
     // Load saved customization
@@ -39,10 +82,13 @@ async function init() {
     APEX_SETTINGS.setupCustomizationControls();
 
     // Launch prompt buttons
-    document.getElementById("cancelLaunch").onclick = () => APEX_LAUNCH.closeLaunchPrompt();
-    document.getElementById("confirmLaunch").onclick = () => APEX_LAUNCH.confirmLaunch();
+    const cancelBtn = document.getElementById("cancelLaunch");
+    const confirmBtn = document.getElementById("confirmLaunch");
 
-    // Start update checker loop
+    if (cancelBtn) cancelBtn.onclick = () => APEX_LAUNCH.closeLaunchPrompt();
+    if (confirmBtn) confirmBtn.onclick = () => APEX_LAUNCH.confirmLaunch();
+
+    // Start periodic update checks
     APEX_UPDATE.start();
 }
 
