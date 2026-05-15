@@ -8,7 +8,7 @@ import { APEX_SETTINGS } from "./core/settings.js";
 import { APEX_FPS } from "./core/fps.js";
 import { APEX_MANUAL_GAMES } from "./games.js";
 
-// Make modules globally accessible for click handlers
+// Make modules global for click handlers
 window.APEX_LAUNCH = APEX_LAUNCH;
 window.APEX_RENDER = APEX_RENDER;
 window.APEX_FPS = APEX_FPS;
@@ -29,8 +29,9 @@ async function init() {
     APEX_SETTINGS.setupSettingsPanel();
     APEX_SETTINGS.setupCustomizationControls();
 
-    document.getElementById("cancelLaunch").onclick = APEX_LAUNCH.closeLaunchPrompt;
-    document.getElementById("confirmLaunch").onclick = APEX_LAUNCH.confirmLaunch;
+    // FIXED: wrap in function so context is preserved
+    document.getElementById("cancelLaunch").onclick = () => APEX_LAUNCH.closeLaunchPrompt();
+    document.getElementById("confirmLaunch").onclick = () => APEX_LAUNCH.confirmLaunch();
 }
 
 document.addEventListener("DOMContentLoaded", init);
