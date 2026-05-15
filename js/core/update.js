@@ -7,14 +7,27 @@ export const APEX_UPDATE = {
             const res = await fetch(this.versionURL + "?t=" + Date.now());
             const latest = (await res.text()).trim();
 
-            // Remote shutdown
+            // 🔥 HARD SHUTDOWN MODE
             if (latest.toLowerCase() === "shutdown") {
-                alert("Apex Zero has been disabled by the administrator.");
-                location.reload();
-                return;
+                document.body.innerHTML = `
+                    <div style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        height:100vh;
+                        background:black;
+                        color:white;
+                        font-family:Arial, sans-serif;
+                        font-size:32px;
+                        text-align:center;
+                    ">
+                        Apex Zero has been disabled by the administrator.
+                    </div>
+                `;
+                return; // STOP EVERYTHING
             }
 
-            // Version mismatch → force refresh
+            // 🔄 Version mismatch → refresh
             if (latest !== this.currentVersion) {
                 console.log("Update detected:", latest);
                 location.reload();
@@ -25,7 +38,7 @@ export const APEX_UPDATE = {
     },
 
     start() {
-        // Check every 10 seconds
-        setInterval(() => this.check(), 10000);
+        // Check every 5 seconds
+        setInterval(() => this.check(), 5000);
     }
 };
