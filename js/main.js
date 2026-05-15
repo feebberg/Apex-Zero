@@ -9,91 +9,38 @@ import { APEX_FPS } from "./core/fps.js";
 import { APEX_UPDATE } from "./core/update.js";
 import { APEX_MANUAL_GAMES } from "./games.js";
 
-// PREMIUM LOADING SEQUENCE
-function apexLoadingSequence() {
-    const screen = document.getElementById("apexLoading");
-    if (!screen) return;
-
-    const bar = document.querySelector(".apex-loading-bar");
-    const status = document.querySelector(".apex-loading-status");
-
-    const steps = [
-        "Initializing UI…",
-        "Loading game library…",
-        "Applying theme…",
-        "Checking for updates…",
-        "Preparing launcher…"
-    ];
-
-    let progress = 0;
-
-    function animateTo(target, text) {
-        return new Promise(resolve => {
-            status.textContent = text;
-            const interval = setInterval(() => {
-                progress += 1;
-                if (progress > 100) progress = 100;
-                bar.style.width = progress + "%";
-
-                if (progress >= target) {
-                    clearInterval(interval);
-                    resolve();
-                }
-            }, 18);
-        });
-    }
-
-    (async () => {
-        for (let i = 0; i < steps.length; i++) {
-            const target = (i + 1) * (100 / steps.length);
-            await animateTo(target, steps[i]);
-        }
-
-        screen.classList.add("apex-loading-hidden");
-        setTimeout(() => screen.remove(), 800);
-    })();
-}
-
+// Expose modules globally for handlers that reference window.*
 // Expose modules globally
 window.APEX_LAUNCH = APEX_LAUNCH;
 window.APEX_RENDER = APEX_RENDER;
 window.APEX_FPS = APEX_FPS;
-
-window.APEX = {
-    manualGames: APEX_MANUAL_GAMES,
-    allGames: [],
-    autoscanEnabled: true
+@@ -21,15 +21,19 @@
 };
 
 async function init() {
-    // EARLY SHUTDOWN CHECK
+
+    // 🔥 EARLY SHUTDOWN CHECK — BEFORE ANYTHING LOADS
     await APEX_UPDATE.check();
 
-    // Load saved customization
-    APEX_THEME.loadCustomization();
+// Load saved customization
+APEX_THEME.loadCustomization();
 
+    // Load games (autoscan + manual)
     // Load games
-    APEX.allGames = await APEX_AUTOSCAN.loadAllGames();
-    APEX_RENDER.renderGames(APEX.allGames);
-    APEX_RENDER.renderRecent();
+APEX.allGames = await APEX_AUTOSCAN.loadAllGames();
+APEX_RENDER.renderGames(APEX.allGames);
+APEX_RENDER.renderRecent();
 
+    // Wire core systems
     // Wire systems
-    APEX_SEARCH.setupSearch();
-    APEX_SETTINGS.setupSettingsPanel();
-    APEX_SETTINGS.setupCustomizationControls();
+APEX_SEARCH.setupSearch();
+APEX_SETTINGS.setupSettingsPanel();
+APEX_SETTINGS.setupCustomizationControls();
+@@ -38,7 +42,7 @@
+document.getElementById("cancelLaunch").onclick = () => APEX_LAUNCH.closeLaunchPrompt();
+document.getElementById("confirmLaunch").onclick = () => APEX_LAUNCH.confirmLaunch();
 
-    // Launch prompt buttons
-    const cancelBtn = document.getElementById("cancelLaunch");
-    const confirmBtn = document.getElementById("confirmLaunch");
-
-    if (cancelBtn) cancelBtn.onclick = () => APEX_LAUNCH.closeLaunchPrompt();
-    if (confirmBtn) confirmBtn.onclick = () => APEX_LAUNCH.confirmLaunch();
-
+    // Start update checker (remote control)
     // Start update checker loop
-    APEX_UPDATE.start();
+APEX_UPDATE.start();
 }
-
-window.addEventListener("load", () => {
-    apexLoadingSequence();
-    init();
-});
