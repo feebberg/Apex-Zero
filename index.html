@@ -2,176 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apex Zero</title>
-
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- LOADING SCREEN -->
-    <div id="loadingScreen">
-        <div class="loader"></div>
-        <p>Loading Apex Zero…</p>
-    </div>
+    <!-- PREMIUM LOADING SCREEN -->
+    <div id="apex-loading">
+        <div class="loading-bg"></div>
 
-    <!-- HEADER -->
-    <header id="topbar">
-        <h1 class="logo">Apex Zero</h1>
-        <div class="top-buttons">
-            <button id="settingsBtn" class="icon-btn">⚙</button>
-        </div>
-    </header>
+        <div class="loading-center">
+            <div class="loading-logo">APEX ZERO</div>
 
-    <!-- MAIN CONTENT -->
-    <main id="content">
+            <div class="loading-progress">
+                <div class="loading-bar"></div>
+            </div>
 
-        <!-- RECENT -->
-        <section id="recentSection">
-            <h2>Recent</h2>
-            <div id="recentGrid" class="grid"></div>
-        </section>
-
-        <!-- ALL GAMES -->
-        <section id="gamesSection">
-            <h2>All Games</h2>
-
-            <!-- SEARCH BAR -->
-            <input id="searchInput" type="text" placeholder="Search games..." />
-
-            <div id="gamesGrid" class="grid"></div>
-        </section>
-
-    </main>
-
-    <!-- SETTINGS SIDE PANEL -->
-    <div id="settingsPanel" class="side-panel">
-        <div class="side-header">
-            <h2>Settings</h2>
-            <button id="closeSettings" class="close-btn">✕</button>
-        </div>
-
-        <!-- TABS -->
-        <div class="settings-tabs">
-            <button class="tab-btn active" data-tab="appearanceTab">Appearance</button>
-            <button class="tab-btn" data-tab="uiTab">UI Scaling</button>
-            <button class="tab-btn" data-tab="layoutTab">Layout</button>
-            <button class="tab-btn" data-tab="systemTab">System</button>
-        </div>
-
-        <!-- TAB CONTENTS -->
-        <div class="tab-content" id="appearanceTab">
-            <h3>Theme</h3>
-            <select id="themeSelect">
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-            </select>
-
-            <h3>Accent Color</h3>
-            <input type="color" id="accentPicker" value="#888888">
-
-            <div id="accentPresets"></div>
-
-            <h3>Background Style</h3>
-            <select id="backgroundSelect">
-                <option value="solid">Solid</option>
-                <option value="noise">Noise</option>
-                <option value="gradient">Gradient</option>
-                <option value="blur">Blurred Panels</option>
-            </select>
-
-            <h3>Corner Radius</h3>
-            <select id="radiusSelect">
-                <option value="0">Sharp</option>
-                <option value="8">Medium</option>
-                <option value="16">Rounded</option>
-            </select>
-
-            <h3>Contrast</h3>
-            <select id="contrastSelect">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-        </div>
-
-        <div class="tab-content" id="uiTab" style="display:none;">
-            <h3>Font Size</h3>
-            <input type="range" id="fontSizeSlider" min="12" max="22" value="16">
-
-            <h3>Card Size</h3>
-            <input type="range" id="cardSizeSlider" min="120" max="240" value="160">
-
-            <h3>Grid Density</h3>
-            <select id="densitySelect">
-                <option value="compact">Compact</option>
-                <option value="comfort">Comfort</option>
-                <option value="spacious">Spacious</option>
-            </select>
-        </div>
-
-        <div class="tab-content" id="layoutTab" style="display:none;">
-            <h3>Layout Mode</h3>
-            <select id="layoutModeSelect">
-                <option value="grid">Comfort Grid</option>
-                <option value="compact">Compact Grid</option>
-                <option value="list">List View</option>
-            </select>
-
-            <h3>Sorting</h3>
-            <select id="sortSelect">
-                <option value="az">A → Z</option>
-                <option value="recent">Recently Added</option>
-                <option value="played">Most Played</option>
-            </select>
-
-            <h3>Recent Section</h3>
-            <label><input type="checkbox" id="toggleRecent" checked> Show Recent</label>
-        </div>
-
-        <div class="tab-content" id="systemTab" style="display:none;">
-            <h3>Autoscan</h3>
-            <label><input type="checkbox" id="autoscanToggle"> Enable Autoscan</label>
-
-            <h3>Maintenance</h3>
-            <button id="clearRecentBtn" class="admin-action">Clear Recent</button>
-            <button id="clearCacheBtn" class="admin-action">Clear Cache</button>
-
-            <h3>FPS Monitor</h3>
-            <button id="fpsToggleBtn" class="admin-action">Toggle FPS</button>
+            <div class="loading-status">Initializing...</div>
         </div>
     </div>
 
-    <!-- LAUNCH PROMPT -->
-    <div id="launchPrompt" class="overlay">
-        <div class="launch-box">
-            <h2>Launch Game?</h2>
-            <img id="launchThumb" class="launch-thumb">
-            <p id="launchName"></p>
+    <!-- YOUR EXISTING LAUNCHER UI -->
+    <div id="app">
+        <!-- put your launcher layout here -->
+        <div id="launcher-root"></div>
 
-            <div class="launch-buttons">
-                <button id="cancelLaunch" class="cancel-btn">Cancel</button>
-                <button id="confirmLaunch" class="launch-btn">Launch</button>
+        <!-- launch prompt example -->
+        <div id="launchPrompt" class="hidden">
+            <div class="prompt-content">
+                <p>Launch this game?</p>
+                <button id="cancelLaunch">Cancel</button>
+                <button id="confirmLaunch">Launch</button>
             </div>
         </div>
     </div>
 
-    <!-- FPS COUNTER -->
-    <div id="fpsCounter"></div>
-
-    <!-- LOAD MODULAR JS -->
-    <script type="module" src="js/main.js"></script>
-
-    <!-- LOADING SCREEN FADE -->
-    <script>
-        window.addEventListener("load", () => {
-            const loader = document.getElementById("loadingScreen");
-            loader.style.opacity = "0";
-            setTimeout(() => loader.style.display = "none", 400);
-        });
-    </script>
-
+    <script type="module" src="main.js"></script>
 </body>
 </html>
