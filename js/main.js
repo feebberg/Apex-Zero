@@ -8,6 +8,11 @@ import { APEX_SETTINGS } from "./core/settings.js";
 import { APEX_FPS } from "./core/fps.js";
 import { APEX_MANUAL_GAMES } from "./games.js";
 
+// Make modules globally accessible for click handlers
+window.APEX_LAUNCH = APEX_LAUNCH;
+window.APEX_RENDER = APEX_RENDER;
+window.APEX_FPS = APEX_FPS;
+
 window.APEX = {
     manualGames: APEX_MANUAL_GAMES,
     allGames: []
