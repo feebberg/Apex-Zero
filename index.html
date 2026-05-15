@@ -1,176 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex Zero</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Zero</title>
 
-    <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <!-- PREMIUM LOADING SCREEN -->
-    <div id="apexLoading">
-        <div class="apex-loading-bg"></div>
-
-        <div class="apex-loading-center">
-            <div class="apex-loading-logo">APEX ZERO</div>
-
-            <div class="apex-loading-progress">
-                <div class="apex-loading-bar"></div>
-            </div>
-
-            <div class="apex-loading-status">Initializing…</div>
-        </div>
+    <!-- HEADER -->
+    <div id="topBar">
+        <div id="logo">APEX ZERO</div>
+    <!-- LOADING SCREEN -->
+    <div id="loadingScreen">
+        <div class="loader"></div>
+        <p>Loading Apex Zero…</p>
     </div>
 
+        <div id="searchContainer">
+            <input id="searchInput" type="text" placeholder="Search games...">
     <!-- HEADER -->
     <header id="topbar">
         <h1 class="logo">Apex Zero</h1>
         <div class="top-buttons">
             <button id="settingsBtn" class="icon-btn">⚙</button>
-        </div>
+</div>
     </header>
 
+        <div id="headerButtons">
+            <button id="openSettings">Settings</button>
+            <button id="toggleFPS">FPS</button>
+        </div>
+    </div>
     <!-- MAIN CONTENT -->
     <main id="content">
 
-        <!-- TABS -->
-        <div id="tabs">
-            <button class="tab-btn active" data-tab="all">All Games</button>
-            <button class="tab-btn" data-tab="recent">Recent</button>
-            <button class="tab-btn" data-tab="favorites">Favorites</button>
-        </div>
-
-        <!-- TAB CONTENT -->
-        <div id="tab-all" class="tab-content">
-            <div id="gameGrid" class="grid"></div>
-        </div>
-
-        <div id="tab-recent" class="tab-content" style="display:none;">
+    <!-- TABS -->
+    <div id="tabs">
+        <button class="tab-btn active" data-tab="all">All Games</button>
+        <button class="tab-btn" data-tab="recent">Recent</button>
+        <button class="tab-btn" data-tab="favorites">Favorites</button>
+    </div>
+        <!-- RECENT -->
+        <section id="recentSection">
+            <h2>Recent</h2>
             <div id="recentGrid" class="grid"></div>
-        </div>
+        </section>
 
-        <div id="tab-favorites" class="tab-content" style="display:none;">
-            <div id="favoritesGrid" class="grid"></div>
-        </div>
+    <!-- TAB CONTENT -->
+    <div id="tab-all" class="tab-content">
+        <div id="gameGrid" class="grid"></div>
+    </div>
+        <!-- ALL GAMES -->
+        <section id="gamesSection">
+            <h2>All Games</h2>
+
+    <div id="tab-recent" class="tab-content" style="display:none;">
+        <div id="recentGrid" class="grid"></div>
+    </div>
+            <!-- SEARCH BAR -->
+            <input id="searchInput" type="text" placeholder="Search games..." />
+
+    <div id="tab-favorites" class="tab-content" style="display:none;">
+        <div id="favoritesGrid" class="grid"></div>
+    </div>
+            <div id="gamesGrid" class="grid"></div>
+        </section>
 
     </main>
 
     <!-- SETTINGS PANEL -->
-    <div id="settingsPanel" class="side-panel">
+    <!-- SETTINGS SIDE PANEL -->
+<div id="settingsPanel" class="side-panel">
+        <div class="panel-header">
         <div class="side-header">
-            <h2>Settings</h2>
+<h2>Settings</h2>
+            <button id="closeSettings">Close</button>
             <button id="closeSettings" class="close-btn">✕</button>
         </div>
 
+        <!-- TABS -->
         <div class="settings-tabs">
             <button class="tab-btn active" data-tab="appearanceTab">Appearance</button>
             <button class="tab-btn" data-tab="uiTab">UI Scaling</button>
             <button class="tab-btn" data-tab="layoutTab">Layout</button>
             <button class="tab-btn" data-tab="systemTab">System</button>
-        </div>
+</div>
 
         <div class="panel-content">
-            <div class="tab-content" id="appearanceTab">
-                <h3>Theme</h3>
-                <select id="themeSelect">
-                    <option value="dark">Dark</option>
-                    <option value="light">Light</option>
-                </select>
+        <!-- TAB CONTENTS -->
+        <div class="tab-content" id="appearanceTab">
+<h3>Theme</h3>
+<select id="themeSelect">
+<option value="dark">Dark</option>
+<option value="light">Light</option>
+</select>
 
-                <h3>Accent Color</h3>
-                <input type="color" id="accentPicker" value="#888888">
-                <div id="accentPresets"></div>
+            <h3>Layout</h3>
+            <select id="layoutSelect">
+                <option value="grid">Grid</option>
+                <option value="list">List</option>
+            <h3>Accent Color</h3>
+            <input type="color" id="accentPicker" value="#888888">
 
-                <h3>Background Style</h3>
-                <select id="backgroundSelect">
-                    <option value="solid">Solid</option>
-                    <option value="noise">Noise</option>
-                    <option value="gradient">Gradient</option>
-                    <option value="blur">Blurred Panels</option>
-                </select>
+            <div id="accentPresets"></div>
 
-                <h3>Corner Radius</h3>
-                <select id="radiusSelect">
-                    <option value="0">Sharp</option>
-                    <option value="8">Medium</option>
-                    <option value="16">Rounded</option>
-                </select>
+            <h3>Background Style</h3>
+            <select id="backgroundSelect">
+                <option value="solid">Solid</option>
+                <option value="noise">Noise</option>
+                <option value="gradient">Gradient</option>
+                <option value="blur">Blurred Panels</option>
+            </select>
 
-                <h3>Contrast</h3>
-                <select id="contrastSelect">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-            </div>
+            <h3>Corner Radius</h3>
+            <select id="radiusSelect">
+                <option value="0">Sharp</option>
+                <option value="8">Medium</option>
+                <option value="16">Rounded</option>
+</select>
 
-            <div class="tab-content" id="uiTab" style="display:none;">
-                <h3>Font Size</h3>
-                <input type="range" id="fontSizeSlider" min="12" max="22" value="16">
-
-                <h3>Card Size</h3>
-                <input type="range" id="cardSizeSlider" min="120" max="240" value="160">
-
-                <h3>Grid Density</h3>
-                <select id="densitySelect">
-                    <option value="compact">Compact</option>
-                    <option value="comfort">Comfort</option>
-                    <option value="spacious">Spacious</option>
-                </select>
-            </div>
-
-            <div class="tab-content" id="layoutTab" style="display:none;">
-                <h3>Layout Mode</h3>
-                <select id="layoutModeSelect">
-                    <option value="grid">Comfort Grid</option>
-                    <option value="compact">Compact Grid</option>
-                    <option value="list">List View</option>
-                </select>
-
-                <h3>Sorting</h3>
-                <select id="sortSelect">
-                    <option value="az">A → Z</option>
-                    <option value="recent">Recently Added</option>
-                    <option value="played">Most Played</option>
-                </select>
-
-                <h3>Recent Section</h3>
-                <label><input type="checkbox" id="toggleRecent" checked> Show Recent</label>
-            </div>
-
-            <div class="tab-content" id="systemTab" style="display:none;">
-                <h3>Autoscan</h3>
-                <label><input type="checkbox" id="autoscanToggle"> Enable Autoscan</label>
-
-                <h3>Maintenance</h3>
-                <button id="clearRecentBtn" class="admin-action">Clear Recent</button>
-                <button id="clearCacheBtn" class="admin-action">Clear Cache</button>
-
-                <h3>FPS Monitor</h3>
-                <button id="fpsToggleBtn" class="admin-action">Toggle FPS</button>
-            </div>
+            <h3>Contrast</h3>
+            <select id="contrastSelect">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
         </div>
-    </div>
 
+        <div class="tab-content" id="uiTab" style="display:none;">
+            <h3>Font Size</h3>
+            <input type="range" id="fontSizeSlider" min="12" max="22" value="16">
+
+            <h3>Card Size</h3>
+            <input type="range" id="cardSizeSlider" min="120" max="240" value="160">
+
+            <h3>Grid Density</h3>
+            <select id="densitySelect">
+                <option value="compact">Compact</option>
+                <option value="comfort">Comfort</option>
+                <option value="spacious">Spacious</option>
+            </select>
+        </div>
+
+        <div class="tab-content" id="layoutTab" style="display:none;">
+            <h3>Layout Mode</h3>
+            <select id="layoutModeSelect">
+                <option value="grid">Comfort Grid</option>
+                <option value="compact">Compact Grid</option>
+                <option value="list">List View</option>
+            </select>
+
+            <h3>Sorting</h3>
+            <select id="sortSelect">
+                <option value="az">A → Z</option>
+                <option value="recent">Recently Added</option>
+                <option value="played">Most Played</option>
+            </select>
+
+            <h3>Recent Section</h3>
+            <label><input type="checkbox" id="toggleRecent" checked> Show Recent</label>
+        </div>
+
+        <div class="tab-content" id="systemTab" style="display:none;">
+            <h3>Autoscan</h3>
+            <label><input type="checkbox" id="autoscanToggle"> Enable Autoscan</label>
+
+            <h3>Maintenance</h3>
+            <button id="clearRecentBtn" class="admin-action">Clear Recent</button>
+            <button id="clearCacheBtn" class="admin-action">Clear Cache</button>
+
+            <h3>FPS Monitor</h3>
+            <button id="fpsToggleBtn" class="admin-action">Toggle FPS</button>
+</div>
+</div>
+
+    <!-- LAUNCH OVERLAY -->
+    <div id="launchOverlay" class="launch-overlay">
     <!-- LAUNCH PROMPT -->
     <div id="launchPrompt" class="overlay">
-        <div class="launch-box">
+<div class="launch-box">
+            <img id="launchThumb" src="" alt="">
+            <h2 id="launchTitle"></h2>
+            <h2>Launch Game?</h2>
             <img id="launchThumb" class="launch-thumb">
             <p id="launchName"></p>
 
-            <div class="launch-buttons">
+<div class="launch-buttons">
+                <button id="playBtn">Play</button>
+                <button id="cancelLaunch">Cancel</button>
                 <button id="cancelLaunch" class="cancel-btn">Cancel</button>
                 <button id="confirmLaunch" class="launch-btn">Launch</button>
-            </div>
-        </div>
-    </div>
+</div>
+</div>
+</div>
 
-    <!-- FPS COUNTER -->
-    <div id="fpsCounter"></div>
+<!-- FPS COUNTER -->
+<div id="fpsCounter"></div>
 
     <!-- SCRIPTS -->
 
@@ -192,7 +221,18 @@
 
     <!-- ROOT -->
     <script src="js/games.js"></script>
+    <script src="js/main.js"></script>
+    <!-- LOAD MODULAR JS -->
     <script type="module" src="js/main.js"></script>
+
+    <!-- LOADING SCREEN FADE -->
+    <script>
+        window.addEventListener("load", () => {
+            const loader = document.getElementById("loadingScreen");
+            loader.style.opacity = "0";
+            setTimeout(() => loader.style.display = "none", 400);
+        });
+    </script>
 
 </body>
 </html>
