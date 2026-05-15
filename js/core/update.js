@@ -27,18 +27,19 @@ export const APEX_UPDATE = {
                 return; // STOP EVERYTHING
             }
 
-            // 🔄 Version mismatch → refresh
+            // 🔄 ONLY reload if version number changed
             if (latest !== this.currentVersion) {
-                console.log("Update detected:", latest);
+                console.log("New version detected:", latest);
                 location.reload();
             }
+
         } catch (err) {
             console.warn("Update check failed:", err);
         }
     },
 
     start() {
-        // Check every 5 seconds
-        setInterval(() => this.check(), 5000);
+        // Check every 1 minute (60000 ms)
+        setInterval(() => this.check(), 60000);
     }
 };
