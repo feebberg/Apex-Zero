@@ -1,4 +1,52 @@
-/* ===== GLOBAL BASE ===== */
+/* ============================================================
+   APEX ZERO — FULL MONOCHROME UI THEME
+============================================================ */
+
+/* ROOT VARIABLES */
+:root {
+    --bg: #f2f2f2;
+    --panel: #ffffff;
+    --border: #dcdcdc;
+    --text: #111;
+    --text-soft: #444;
+    --hover: #e6e6e6;
+    --accent: #888;
+    --shadow: rgba(0,0,0,0.08);
+
+    --radius: 8px;
+    --font-size: 16px;
+    --card-size: 160px;
+    --grid-gap: 16px;
+}
+
+/* DARK THEME */
+[data-theme="dark"] {
+    --bg: #0f0f0f;
+    --panel: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #f5f5f5;
+    --text-soft: #bbb;
+    --hover: #222;
+    --shadow: rgba(0,0,0,0.4);
+    --accent: #888;
+
+    --radius: 8px;
+    --font-size: 16px;
+    --card-size: 160px;
+    --grid-gap: 16px;
+}
+
+/* LIGHT THEME */
+[data-theme="light"] {
+    --bg: #f2f2f2;
+    --panel: #ffffff;
+    --border: #dcdcdc;
+    --text: #111;
+    --text-soft: #444;
+    --hover: #e6e6e6;
+}
+
+/* GLOBAL */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,17 +54,288 @@
 }
 
 body {
-    background: #050505;
-    color: #f5f5f5;
-    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden;
+    font-size: var(--font-size);
 }
 
-/* ===== PREMIUM LOADING SCREEN ===== */
+h1, h2, h3, h4 {
+    font-weight: 600;
+}
 
-#apex-loading {
+/* HEADER */
+#topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 4px var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.top-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: 0.15s;
+    color: var(--text);
+}
+
+.icon-btn:hover {
+    background: var(--hover);
+}
+
+/* MAIN CONTENT */
+#content {
+    padding: 16px 20px;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
+    gap: var(--grid-gap);
+}
+
+/* SEARCH (if used) */
+#searchInput {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    transition: 0.15s;
+    font-size: var(--font-size);
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* GAME CARDS */
+.game-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.15s;
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+.game-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--shadow);
+}
+
+.game-thumb {
+    width: 100%;
+    height: calc(var(--card-size) * 0.75);
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.game-title {
+    margin-top: 8px;
+    font-size: calc(var(--font-size) * 0.9);
+    font-weight: 500;
+}
+
+/* SIDE PANEL (SETTINGS) */
+.side-panel {
+    position: fixed;
+    top: 0;
+    right: -380px;
+    width: 360px;
+    height: 100%;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 12px rgba(0,0,0,0.4);
+    padding: 20px;
+    z-index: 200;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+}
+
+.side-panel.active {
+    right: 0;
+}
+
+.side-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    background: var(--panel);
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+/* SETTINGS TABS */
+.settings-tabs {
+    display: flex;
+    gap: 6px;
+    margin: 16px 0;
+}
+
+.settings-tabs .tab-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--panel);
+    cursor: pointer;
+    color: var(--text);
+}
+
+.settings-tabs .tab-btn.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* TAB CONTENT */
+.panel-content .tab-content {
+    margin-top: 10px;
+}
+
+.panel-content .tab-content h3 {
+    margin-top: 16px;
+    margin-bottom: 6px;
+}
+
+.panel-content .tab-content select,
+.panel-content .tab-content input[type="range"],
+.panel-content .tab-content input[type="color"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+}
+
+/* ADMIN ACTION BUTTONS */
+.admin-action {
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--panel);
+    cursor: pointer;
+    transition: 0.15s;
+    color: var(--text);
+}
+
+.admin-action:hover {
+    background: var(--hover);
+}
+
+/* LAUNCH PROMPT */
+.overlay {
     position: fixed;
     inset: 0;
-    background: #000;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+}
+
+.overlay.active {
+    display: flex;
+}
+
+.launch-box {
+    background: var(--panel);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    width: 320px;
+    text-align: center;
+}
+
+.launch-thumb {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin: 10px 0;
+}
+
+.launch-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.cancel-btn,
+.launch-btn {
+    flex: 1;
+    padding: 10px;
+    margin: 0 4px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    cursor: pointer;
+}
+
+.launch-btn {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* FPS COUNTER */
+#fpsCounter {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    box-shadow: 0 2px 4px var(--shadow);
+    display: none;
+    color: var(--text);
+}
+
+/* ============================================================
+   PREMIUM LOADING SCREEN
+============================================================ */
+
+#apexLoading {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -26,108 +345,60 @@ body {
     transition: opacity 0.8s ease;
 }
 
-/* Animated background */
-.loading-bg {
+.apex-loading-bg {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, #222, #000);
-    animation: bgMove 6s infinite alternate ease-in-out;
+    background: radial-gradient(circle at center, var(--panel), var(--bg));
+    animation: apexBGmove 6s infinite alternate ease-in-out;
     filter: blur(40px);
 }
 
-@keyframes bgMove {
+@keyframes apexBGmove {
     0% { transform: scale(1) translateY(0px); }
     100% { transform: scale(1.2) translateY(-20px); }
 }
 
-/* Center content */
-.loading-center {
+.apex-loading-center {
     position: relative;
     z-index: 10;
     text-align: center;
-    color: white;
+    color: var(--text);
 }
 
-/* Logo reveal */
-.loading-logo {
-    font-size: 48px;
+.apex-loading-logo {
+    font-size: 42px;
     letter-spacing: 6px;
     opacity: 0;
-    animation: logoFade 1.8s ease forwards;
+    animation: apexLogoFade 1.8s ease forwards;
 }
 
-@keyframes logoFade {
+@keyframes apexLogoFade {
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Progress bar */
-.loading-progress {
+.apex-loading-progress {
     width: 320px;
     height: 6px;
-    background: rgba(255,255,255,0.1);
+    background: var(--border);
     margin: 30px auto 10px;
-    border-radius: 4px;
+    border-radius: var(--radius);
     overflow: hidden;
 }
 
-.loading-bar {
+.apex-loading-bar {
     width: 0%;
     height: 100%;
-    background: #ffffff;
+    background: var(--accent);
 }
 
-/* Status text */
-.loading-status {
+.apex-loading-status {
     font-size: 14px;
     opacity: 0.7;
     margin-top: 6px;
 }
 
-/* Fade out */
-.loading-hidden {
+.apex-loading-hidden {
     opacity: 0;
     pointer-events: none;
-}
-
-/* ===== LAUNCHER SHELL ===== */
-
-#app {
-    position: relative;
-    min-height: 100vh;
-}
-
-/* Launch prompt */
-#launchPrompt {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#launchPrompt.hidden {
-    display: none;
-}
-
-#launchPrompt .prompt-content {
-    background: #111;
-    padding: 20px 30px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-#launchPrompt button {
-    margin: 10px;
-    padding: 8px 16px;
-    border: none;
-    background: #fff;
-    color: #000;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-#launchPrompt button:hover {
-    background: #ddd;
 }
