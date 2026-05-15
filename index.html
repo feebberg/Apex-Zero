@@ -1,84 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apex Zero</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Zero</title>
 
-<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <!-- HEADER -->
-    <div id="topBar">
-        <div id="logo">APEX ZERO</div>
     <!-- LOADING SCREEN -->
     <div id="loadingScreen">
         <div class="loader"></div>
         <p>Loading Apex Zero…</p>
     </div>
 
-        <div id="searchContainer">
-            <input id="searchInput" type="text" placeholder="Search games...">
     <!-- HEADER -->
     <header id="topbar">
         <h1 class="logo">Apex Zero</h1>
         <div class="top-buttons">
             <button id="settingsBtn" class="icon-btn">⚙</button>
-</div>
+        </div>
     </header>
 
-        <div id="headerButtons">
-            <button id="openSettings">Settings</button>
-            <button id="toggleFPS">FPS</button>
-        </div>
-    </div>
     <!-- MAIN CONTENT -->
     <main id="content">
 
-    <!-- TABS -->
-    <div id="tabs">
-        <button class="tab-btn active" data-tab="all">All Games</button>
-        <button class="tab-btn" data-tab="recent">Recent</button>
-        <button class="tab-btn" data-tab="favorites">Favorites</button>
-    </div>
         <!-- RECENT -->
         <section id="recentSection">
             <h2>Recent</h2>
             <div id="recentGrid" class="grid"></div>
         </section>
 
-    <!-- TAB CONTENT -->
-    <div id="tab-all" class="tab-content">
-        <div id="gameGrid" class="grid"></div>
-    </div>
         <!-- ALL GAMES -->
         <section id="gamesSection">
             <h2>All Games</h2>
 
-    <div id="tab-recent" class="tab-content" style="display:none;">
-        <div id="recentGrid" class="grid"></div>
-    </div>
             <!-- SEARCH BAR -->
             <input id="searchInput" type="text" placeholder="Search games..." />
 
-    <div id="tab-favorites" class="tab-content" style="display:none;">
-        <div id="favoritesGrid" class="grid"></div>
-    </div>
             <div id="gamesGrid" class="grid"></div>
         </section>
 
     </main>
 
-    <!-- SETTINGS PANEL -->
     <!-- SETTINGS SIDE PANEL -->
-<div id="settingsPanel" class="side-panel">
-        <div class="panel-header">
+    <div id="settingsPanel" class="side-panel">
         <div class="side-header">
-<h2>Settings</h2>
-            <button id="closeSettings">Close</button>
+            <h2>Settings</h2>
             <button id="closeSettings" class="close-btn">✕</button>
         </div>
 
@@ -88,21 +59,16 @@
             <button class="tab-btn" data-tab="uiTab">UI Scaling</button>
             <button class="tab-btn" data-tab="layoutTab">Layout</button>
             <button class="tab-btn" data-tab="systemTab">System</button>
-</div>
+        </div>
 
-        <div class="panel-content">
         <!-- TAB CONTENTS -->
         <div class="tab-content" id="appearanceTab">
-<h3>Theme</h3>
-<select id="themeSelect">
-<option value="dark">Dark</option>
-<option value="light">Light</option>
-</select>
+            <h3>Theme</h3>
+            <select id="themeSelect">
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+            </select>
 
-            <h3>Layout</h3>
-            <select id="layoutSelect">
-                <option value="grid">Grid</option>
-                <option value="list">List</option>
             <h3>Accent Color</h3>
             <input type="color" id="accentPicker" value="#888888">
 
@@ -121,7 +87,7 @@
                 <option value="0">Sharp</option>
                 <option value="8">Medium</option>
                 <option value="16">Rounded</option>
-</select>
+            </select>
 
             <h3>Contrast</h3>
             <select id="contrastSelect">
@@ -175,53 +141,26 @@
 
             <h3>FPS Monitor</h3>
             <button id="fpsToggleBtn" class="admin-action">Toggle FPS</button>
-</div>
-</div>
+        </div>
+    </div>
 
-    <!-- LAUNCH OVERLAY -->
-    <div id="launchOverlay" class="launch-overlay">
     <!-- LAUNCH PROMPT -->
     <div id="launchPrompt" class="overlay">
-<div class="launch-box">
-            <img id="launchThumb" src="" alt="">
-            <h2 id="launchTitle"></h2>
+        <div class="launch-box">
             <h2>Launch Game?</h2>
             <img id="launchThumb" class="launch-thumb">
             <p id="launchName"></p>
 
-<div class="launch-buttons">
-                <button id="playBtn">Play</button>
-                <button id="cancelLaunch">Cancel</button>
+            <div class="launch-buttons">
                 <button id="cancelLaunch" class="cancel-btn">Cancel</button>
                 <button id="confirmLaunch" class="launch-btn">Launch</button>
-</div>
-</div>
-</div>
+            </div>
+        </div>
+    </div>
 
-<!-- FPS COUNTER -->
-<div id="fpsCounter"></div>
+    <!-- FPS COUNTER -->
+    <div id="fpsCounter"></div>
 
-    <!-- SCRIPTS -->
-
-    <!-- CORE -->
-    <script src="js/core/autoscan.js"></script>
-    <script src="js/core/storage.js"></script>
-    <script src="js/core/settings.js"></script>
-    <script src="js/core/theme.js"></script>
-    <script src="js/core/layout.js"></script>
-    <script src="js/core/render.js"></script>
-    <script src="js/core/launch.js"></script>
-    <script src="js/core/fps.js"></script>
-    <script src="js/core/search.js"></script>
-
-    <!-- UI -->
-    <script src="js/ui/panel.js"></script>
-    <script src="js/ui/tabs.js"></script>
-    <script src="js/ui/events.js"></script>
-
-    <!-- ROOT -->
-    <script src="js/games.js"></script>
-    <script src="js/main.js"></script>
     <!-- LOAD MODULAR JS -->
     <script type="module" src="js/main.js"></script>
 
