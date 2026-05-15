@@ -6,32 +6,40 @@ import { APEX_SEARCH } from "./core/search.js";
 import { APEX_LAUNCH } from "./core/launch.js";
 import { APEX_SETTINGS } from "./core/settings.js";
 import { APEX_FPS } from "./core/fps.js";
+import { APEX_UPDATE } from "./core/update.js";
 import { APEX_MANUAL_GAMES } from "./games.js";
 
-// Make modules global for click handlers
+// Expose modules globally for handlers that reference window.*
 window.APEX_LAUNCH = APEX_LAUNCH;
 window.APEX_RENDER = APEX_RENDER;
 window.APEX_FPS = APEX_FPS;
 
 window.APEX = {
     manualGames: APEX_MANUAL_GAMES,
-    allGames: []
+    allGames: [],
+    autoscanEnabled: true
 };
 
 async function init() {
+    // Load saved customization
     APEX_THEME.loadCustomization();
 
+    // Load games (autoscan + manual)
     APEX.allGames = await APEX_AUTOSCAN.loadAllGames();
     APEX_RENDER.renderGames(APEX.allGames);
     APEX_RENDER.renderRecent();
 
+    // Wire core systems
     APEX_SEARCH.setupSearch();
     APEX_SETTINGS.setupSettingsPanel();
     APEX_SETTINGS.setupCustomizationControls();
 
-    // FIXED: wrap in function so context is preserved
+    // Launch prompt buttons
     document.getElementById("cancelLaunch").onclick = () => APEX_LAUNCH.closeLaunchPrompt();
     document.getElementById("confirmLaunch").onclick = () => APEX_LAUNCH.confirmLaunch();
+
+    // Start update checker (remote control)
+    APEX_UPDATE.start();
 }
 
 document.addEventListener("DOMContentLoaded", init);
