@@ -11,6 +11,7 @@ export const APEX_SEARCH = {
                 g.name.toLowerCase().includes(q)
             );
 
+            // FIXED: use global APEX_RENDER
             window.APEX_RENDER.renderGames(filtered);
         });
     }
