@@ -90,14 +90,14 @@ body {
     pointer-events: none;
 }
 
-/* ===== LAUNCHER UI (minimal shell, you can replace with your real layout) ===== */
+/* ===== LAUNCHER SHELL ===== */
 
 #app {
     position: relative;
     min-height: 100vh;
 }
 
-/* Example launch prompt */
+/* Launch prompt */
 #launchPrompt {
     position: fixed;
     inset: 0;
