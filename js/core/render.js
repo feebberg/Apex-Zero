@@ -1,5 +1,3 @@
-import { APEX_RECENT } from "./recent.js";
-
 export const APEX_RENDER = {
     renderGames(list) {
         const grid = document.getElementById("gamesGrid");
@@ -19,7 +17,9 @@ export const APEX_RENDER = {
                 <div class="game-title">${game.name}</div>
             `;
 
+            // FIXED: use global APEX_LAUNCH
             card.onclick = () => window.APEX_LAUNCH.openLaunchPrompt(game);
+
             grid.appendChild(card);
         });
     },
@@ -28,7 +28,7 @@ export const APEX_RENDER = {
         const grid = document.getElementById("recentGrid");
         if (!grid) return;
 
-        const recent = APEX_RECENT.load();
+        const recent = JSON.parse(localStorage.getItem("apex_recent") || "[]");
         grid.innerHTML = "";
 
         recent.forEach(game => {
@@ -40,7 +40,9 @@ export const APEX_RENDER = {
                 <div class="game-title">${game.name}</div>
             `;
 
+            // FIXED: use global APEX_LAUNCH
             card.onclick = () => window.APEX_LAUNCH.openLaunchPrompt(game);
+
             grid.appendChild(card);
         });
     }
