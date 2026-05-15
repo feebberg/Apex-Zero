@@ -60,6 +60,7 @@ export const APEX_SETTINGS = {
             alert("Cache cleared.");
         };
 
+        // FIXED: use global APEX_FPS
         document.getElementById("fpsToggleBtn").onclick = () =>
             window.APEX_FPS.toggleFPS();
     }
