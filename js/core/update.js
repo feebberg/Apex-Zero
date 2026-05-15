@@ -1,5 +1,5 @@
 export const APEX_UPDATE = {
-    // 🔥 This will be overwritten by saved version so reload loops NEVER happen
+    // Load saved version or default to 1.0.1
     currentVersion: localStorage.getItem("apex_version") || "1.0.1",
 
     versionURL: "https://raw.githubusercontent.com/feebberg/Apex-Zero/main/version.txt",
@@ -9,7 +9,7 @@ export const APEX_UPDATE = {
             const res = await fetch(this.versionURL + "?t=" + Date.now());
             const latest = (await res.text()).trim();
 
-            // 🔥 HARD SHUTDOWN MODE
+            // SHUTDOWN MODE
             if (latest.toLowerCase() === "shutdown") {
                 document.body.innerHTML = `
                     <div style="
@@ -26,14 +26,13 @@ export const APEX_UPDATE = {
                         Apex Zero has been disabled by the administrator.
                     </div>
                 `;
-                return; // STOP EVERYTHING
+                return;
             }
 
-            // 🔄 ONLY reload if version number changed
+            // VERSION CHANGE → SAVE + RELOAD ONCE
             if (latest !== this.currentVersion) {
                 console.log("New version detected:", latest);
 
-                // 🔥 Save new version so reload loop NEVER happens
                 localStorage.setItem("apex_version", latest);
                 this.currentVersion = latest;
 
@@ -46,7 +45,7 @@ export const APEX_UPDATE = {
     },
 
     start() {
-        // Check every 1 minute (60000 ms)
+        // Check every 1 minute
         setInterval(() => this.check(), 60000);
     }
 };
